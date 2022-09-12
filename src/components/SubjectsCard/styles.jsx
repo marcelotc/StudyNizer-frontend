@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { NavLink } from "react-router-dom";
 
 export const Container = styled.div`
     display: flex;
@@ -7,10 +8,10 @@ export const Container = styled.div`
     flex-direction: row;
     flex-wrap: wrap;
     margin: 100px;
+`;
 
+export const CardLink = styled(NavLink)`
     .subjectCard {
-        width: 20%;
-        height: 20%;
         margin: 20px;
         background: lightgray;
         border-radius: 10px;
