@@ -1,11 +1,14 @@
 import { createGlobalStyle } from 'styled-components';
 
-import 'antd/dist/antd.css'
-
 export const GlobalStyle = createGlobalStyle`
   body {
     background: #fff;
   }
+
+  #root {
+    height: 100%;
+  }
+
   * {
     box-sizing: border-box;
     margin:0;

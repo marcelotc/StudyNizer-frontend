@@ -1,21 +1,43 @@
-import React, { useState } from 'react';
-import Kalend, { CalendarView } from 'kalend' // import component
-import 'kalend/dist/styles/index.css'; // import styles
+import React, { useState, useRef } from 'react';
 import { AppstoreOutlined, BookOutlined, CalendarOutlined } from '@ant-design/icons';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { GlobalStyle } from '../../styles/globalStyles';
 import { Menu } from 'antd';
 import Board from '../../components/Board';
+import { DateTime } from 'luxon';
+import { CALENDAR_VIEW } from 'kalend-layout';
 
 import SubjectsCard from '../../components/SubjectsCard';
+import Calendar from '../../components/Calendar';
 
 export const Main = () => {
+  const kalendRef = useRef();
+
+  const [selectedView, setSelectedView] = useState(CALENDAR_VIEW.MONTH);
+  const [selectedDate, setSelectedDate] = useState(
+    DateTime.now().toFormat('MM.yyyy')
+  );
+
   const [current, setCurrent] = useState('subjects');
 
   const onClick = e => {
     console.log('click ', e);
     setCurrent(e.key);
+  };
+
+  const goForward = () => {
+    kalendRef?.current?.navigateForward();
+  };
+  const goBack = () => {
+    kalendRef?.current?.navigateBackwards();
+  };
+  const goToday = () => {
+    kalendRef?.current?.navigateToTodayDate();
+  };
+
+  const onStateChange = (state) => {
+    setSelectedDate(DateTime.fromISO(state.selectedDate).toFormat('MM.yyyy'));
   };
 
   const items = [
@@ -62,22 +84,7 @@ export const Main = () => {
       case 'subjects': return <SubjectsCard />;
       case 'board': return <Board />;
       case 'calendar': return (
-        <Kalend
-          onEventClick={() => { }}
-          onNewEventClick={() => { }}
-          events={events}
-          initialDate={new Date().toISOString()}
-          hourHeight={60}
-          initialView={CalendarView.WEEK}
-          disabledViews={[CalendarView.DAY]}
-          onSelectView={() => { }}
-          selectedView={() => { }}
-          onPageChange={() => { }}
-          timeFormat={'24'}
-          weekDayStart={'Monday'}
-          calendarIDsHidden={['work']}
-          language={'ptBR'}
-        />
+        <Calendar />
       )
       default: return <h1>DISCIPLINAS</h1>;
     }
@@ -86,7 +93,7 @@ export const Main = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} />
-      {renderSection()}
+        {renderSection()}
       <GlobalStyle />
     </DndProvider>
   );
