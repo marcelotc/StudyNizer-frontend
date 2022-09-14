@@ -19,7 +19,7 @@ export const Main = () => {
     DateTime.now().toFormat('MM.yyyy')
   );
 
-  const [current, setCurrent] = useState('subjects');
+  const [current, setCurrent] = useState('board');
 
   const onClick = e => {
     console.log('click ', e);
@@ -42,15 +42,15 @@ export const Main = () => {
 
   const items = [
     {
-      label: 'Disciplinas',
-      key: 'subjects',
-      icon: <BookOutlined />,
-    },
-    {
       label: 'Board',
       key: 'board',
       icon: <AppstoreOutlined />,
       //disabled: true,
+    },
+    {
+      label: 'Disciplinas',
+      key: 'subjects',
+      icon: <BookOutlined />,
     },
     {
       label: 'Calendário',
@@ -81,8 +81,8 @@ export const Main = () => {
 
   const renderSection = () => {
     switch (current) {
-      case 'subjects': return <SubjectsCard />;
       case 'board': return <Board />;
+      case 'subjects': return <SubjectsCard />;
       case 'calendar': return (
         <Calendar />
       )

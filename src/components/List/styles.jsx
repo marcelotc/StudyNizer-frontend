@@ -1,11 +1,10 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
+    width: 100%;
     padding: 15px; 
     margin: 0 10px 0 0;
-    height: 100%;
     border-radius: 10px;
-    flex: 0 0 320px;
     opacity: ${props => props.done ? 0.6 : 1};
     background: lightgray;
 

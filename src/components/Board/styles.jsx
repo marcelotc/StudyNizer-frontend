@@ -6,7 +6,6 @@ export const Container = styled.div`
 
 export const ListContainer = styled.div`
     display: flex;
-    padding: 30px 0;
     height: calc(100% - 80px);
 `;
 
