@@ -11,6 +11,14 @@ export default function List({ data, index: listIndex }) {
     alert(':)')
   }
 
+  const cardTest = 
+    {
+      id: -1,
+      content: '',
+      labels: [],
+      user: ''
+    }
+
   return (
     <Container done={data.done}>
       <header>
@@ -23,14 +31,27 @@ export default function List({ data, index: listIndex }) {
       </header>
 
       <ul>
-        {data.cards.map((card, index) => (
+        {data.cards.map((card, index) => {
+          console.log('index', index)
+          return (
           <Card
-            key={card.id}
+            key={card?.id}
             listIndex={listIndex}
             index={index}
             data={card}
+            invalid={false}
           ></Card>
-        ))}
+          )
+        })}
+        {data.cards.length === 0 && (
+          <Card
+            key={-1}
+            listIndex={listIndex}
+            index={-1}
+            data={cardTest}
+            invalid={true}
+          ></Card>
+        )}
       </ul>
     </Container>
   );

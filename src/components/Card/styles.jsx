@@ -2,12 +2,14 @@ import styled, { css } from "styled-components";
 
 export const Container = styled.div`
     position: relative;
-    background: #fff;
+    background: ${(props) => props.invalid ? 'none' : '#fff'};
     border-radius: 5px;
     margin-bottom: 10px;
     padding: 15px;
-    box-shadow: 0 1px 4px 0 rgba(192, 208, 230, 0.8);
-    border-top: 20px solid rgba(230, 236, 245, 0.4);
+    box-shadow: ${(props) => props.invalid ? 'none' : '0 1px 4px 0 rgba(192, 208, 230, 0.8)'};
+    border-top: ${(props) => props.invalid ? 'none' : '20px solid rgba(230, 236, 245, 0.4)'};
+    border: ${(props) => props.invalid ? '2px dashed rgba(0,0,0,0.2)' : ''};
+    min-height: ${(props) => props.invalid ? '113px' : ''};
     cursor: grab;
 
     header {

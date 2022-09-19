@@ -9,7 +9,7 @@ export function Result(props) {
     return (
         <ResultContainer>
             <ResultTitle>Converted Text</ResultTitle>
-            <ResultArea>{}
+            <ResultArea>
                 <ReactMarkdown children={markdownText} />
             </ResultArea>
         </ResultContainer>

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import editorContext from "../editorContext";
-import { MarkedInputContainer, MarketdInputTitle, MarketdInputTextArea } from "./styles";
+import { MarkedInputContainer, MarketdInputTitle, MarketdInputTextArea, MarketdInputTextAreaTest } from "./styles";
 
 export function MarkedInput(props) {
     const { setMarkdownText } = useContext(editorContext);
@@ -13,7 +13,12 @@ export function MarkedInput(props) {
     return (
         <MarkedInputContainer>
             <MarketdInputTitle>Markdown Text</MarketdInputTitle>
-            <MarketdInputTextArea onChange={onInputChange} />
+            <MarketdInputTextAreaTest 
+                contentEditable
+                onInput={e => console.log('Text inside div', e.currentTarget.textContent)}
+            > 
+            </MarketdInputTextAreaTest>
+            {/*<MarketdInputTextArea onChange={onInputChange} />*/}
         </MarkedInputContainer>
     );
 }

@@ -5,7 +5,7 @@ import BoardContext from '../Board/context';
 
 import { Container, Label } from './styles';
 
-export default function Card({ data, index, listIndex }) {
+export default function Card({ data, index, listIndex, invalid }) {
   const ref = useRef();
   const { move } = useContext(BoardContext);
 
@@ -54,12 +54,12 @@ export default function Card({ data, index, listIndex }) {
   dragRef(dropRef(ref));
 
   return (
-    <Container ref={ref} isDragging={isDragging}>
+    <Container ref={ref} isDragging={isDragging} invalid={invalid}>
       <header>
-        {data.labels.map(label => <Label key={label} color={label}></Label>)}
+        {data?.labels.map(label => <Label key={label} color={label}></Label>)}
       </header>
-      <p>{data.content}</p>
-      {data.user && <img src={data.user} alt=""></img>}
+      <p>{data?.content}</p>
+      {data?.user && <img src={data.user} alt=""></img>}
     </Container>
   );
 }

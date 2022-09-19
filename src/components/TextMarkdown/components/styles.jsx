@@ -16,9 +16,30 @@ export const MarketdInputTitle = styled.div`
   border-bottom: 1px solid rgba(15, 15, 15, 0.3);
 `;
 
+export const MarketdInputTextAreaTest = styled.div`
+  outline: none;
+
+  > div:hover {
+      border-bottom: 1px solid lightgray;
+  }
+
+  > div:hover:before {
+      content: "\f055";
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 900;
+      font-size: 30px;
+      font-weight: bold;
+      vertical-align: middle;
+  }
+
+  > div:hover:before {
+      pointer-events: all;
+  }
+`;
+
 export const MarketdInputTextArea = styled.textarea`
-  width: 100%;
   height: 100%;
+  width: 100%;
   resize: none;
   border: none;
   outline: none;
