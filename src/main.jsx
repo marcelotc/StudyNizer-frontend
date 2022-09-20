@@ -5,7 +5,11 @@ import 'antd/dist/antd.css';
 import App from './App'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+ /* <React.StrictMode> */
     <App />
-  </React.StrictMode>
+ /* </React.StrictMode> */
 )
+
+/**
+  Strict mode removido devido a lib react-beautiful-dnd
+ */
