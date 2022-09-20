@@ -1,36 +1,93 @@
 import React, { useState } from 'react';
-import produce from 'immer';
+import initialData from './data';
+import Column from './column';
+import styled from 'styled-components';
+import { DragDropContext } from 'react-beautiful-dnd';
 
-import { loadLists } from '../../services/api';
+const Container = styled.div`
+  display: flex;
+  padding: 30px;
+`;
 
-import BoardContext from './context';
+const Board = () => {
+  const [initialDataState, setInitialDataState] = useState(initialData);
 
-import List from '../List';
+  const onDragEnd = result => {
+    const { destination, source, draggableId } = result;
 
-import { Container, ListContainer } from './styles';
+    if (!destination) { return }
 
-const data = loadLists();
+    if (destination.droppableId === source.droppableId &&
+      destination.index === source.index) {
+      return;
+    }
 
-export default function Board() {
-  const [lists, setLists] = useState(data);
+    const start = initialDataState.columns[source.droppableId];
+    const finish = initialDataState.columns[destination.droppableId];
 
-  function move(fromList, toList , from, to) {
-    setLists(produce(lists, draft => {
-      const dragged = draft[fromList].cards[from];
+    if (start === finish) {
+      const newTaskIds = Array.from(start.taskIds);
+      newTaskIds.splice(source.index, 1);
+      newTaskIds.splice(destination.index, 0, draggableId);
 
-      draft[fromList].cards.splice(from, 1);
-      draft[toList].cards.splice(to, 0, dragged)
-    }))
+      const newColumn = {
+        ...start,
+        taskIds: newTaskIds,
+      }
+
+      const newState = {
+        ...initialDataState,
+        columns: {
+          ...initialDataState.columns,
+          [newColumn.id]: newColumn,
+        }
+      }
+
+      setInitialDataState(newState)
+      return;
+    }
+
+    const startTaskIds = Array.from(start.taskIds);
+    startTaskIds.splice(source.index, 1);
+    const newStart = {
+      ...start,
+      taskIds: startTaskIds,
+    };
+
+    const finishTaskIds = Array.from(finish.taskIds);
+    finishTaskIds.splice(destination.index, 0, draggableId);
+    const newFinish = {
+      ...finish,
+      taskIds: finishTaskIds,
+    };
+
+    const newState = {
+      ...initialDataState,
+      columns: {
+        ...initialDataState.columns,
+        [newStart.id]: newStart,
+        [newFinish.id]: newFinish,
+      }
+    }
+
+    setInitialDataState(newState);
+  };
+    return (
+    <Container>
+      <DragDropContext
+        onDragEnd={onDragEnd}
+      >
+        {
+          initialDataState.columnOrder.map((columnId) => {
+            const column = initialDataState.columns[columnId];
+            const tasks = column.taskIds.map(taskId => initialDataState.tasks[taskId]);
+
+            return <Column key={column.id} column={column} tasks={tasks} />;
+          })
+        }
+        </DragDropContext>
+      </Container>
+    )
   }
 
-  return (
-    <BoardContext.Provider value={{ lists, move }}>
-      <Container>
-        <h1>Board</h1>
-        <ListContainer>
-          {lists.map((list, index) => <List key={list.title} index={index} data={list}></List>)}
-        </ListContainer>
-      </Container>
-    </BoardContext.Provider>
-  );
-}
+export default Board
