@@ -17,6 +17,7 @@ const Title = styled.h3`
 
 const TaskList = styled.div`
   padding: 8px;
+  height: 100%;
 `;
 
 const Column = (props) => {

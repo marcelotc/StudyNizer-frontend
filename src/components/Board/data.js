@@ -5,7 +5,6 @@ const initialData = {
     'task-3' : { id: 'task-3', content: 'Hire Poison Ivy'},
     'task-4' : { id: 'task-4', content: 'Hire Bane'},
     'task-5' : { id: 'task-5', content: 'Kill Batman'},
-    'task-6' : { id: 'task-6', content: 'Rule Gotham City'},
   },
   columns: {
     'column-1' : {
