@@ -1,93 +1,153 @@
-import React, { useState } from 'react';
-import initialData from './data';
-import Column from './column';
-import styled from 'styled-components';
-import { DragDropContext } from 'react-beautiful-dnd';
+import React, {useState} from 'react';
+import './styles.jsx';
+import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
+import _ from "lodash";
+import {v4} from "uuid";
 
-const Container = styled.div`
-  display: flex;
-  padding: 30px;
-`;
+import { Container, AddTaskContainer, BoardContainer, Column, Card, Item } from "./styles";
 
-const Board = () => {
-  const [initialDataState, setInitialDataState] = useState(initialData);
+const item = {
+  id: v4(),
+  name: "item"
+}
 
-  const onDragEnd = result => {
-    const { destination, source, draggableId } = result;
+const item2 = {
+  id: v4(),
+  name: "item2"
+}
 
-    if (!destination) { return }
+const item3 = {
+  id: v4(),
+  name: "item3"
+}
 
-    if (destination.droppableId === source.droppableId &&
-      destination.index === source.index) {
-      return;
+const item4 = {
+  id: v4(),
+  name: "item4"
+}
+
+const item5 = {
+  id: v4(),
+  name: "item5"
+}
+
+const item6 = {
+  id: v4(),
+  name: "item6"
+}
+
+function Board() {
+  const [text, setText] = useState("")
+  const [state, setState] = useState({
+    "todo": {
+      title: "Tarefas",
+      items: [item, item2, item3, item4, item5, item6]
+    },
+    "in-progress": {
+      title: "Fazendo",
+      items: []
+    },
+    "done": {
+      title: "Concluído",
+      items: []
+    }
+  })
+
+  const handleDragEnd = ({destination, source}) => {
+    if (!destination) {
+      return
     }
 
-    const start = initialDataState.columns[source.droppableId];
-    const finish = initialDataState.columns[destination.droppableId];
-
-    if (start === finish) {
-      const newTaskIds = Array.from(start.taskIds);
-      newTaskIds.splice(source.index, 1);
-      newTaskIds.splice(destination.index, 0, draggableId);
-
-      const newColumn = {
-        ...start,
-        taskIds: newTaskIds,
-      }
-
-      const newState = {
-        ...initialDataState,
-        columns: {
-          ...initialDataState.columns,
-          [newColumn.id]: newColumn,
-        }
-      }
-
-      setInitialDataState(newState)
-      return;
+    if (destination.index === source.index && destination.droppableId === source.droppableId) {
+      return
     }
 
-    const startTaskIds = Array.from(start.taskIds);
-    startTaskIds.splice(source.index, 1);
-    const newStart = {
-      ...start,
-      taskIds: startTaskIds,
-    };
+    // Creating a copy of item before removing it from state
+    const itemCopy = {...state[source.droppableId].items[source.index]}
 
-    const finishTaskIds = Array.from(finish.taskIds);
-    finishTaskIds.splice(destination.index, 0, draggableId);
-    const newFinish = {
-      ...finish,
-      taskIds: finishTaskIds,
-    };
+    setState(prev => {
+      prev = {...prev}
+      // Remove from previous items array
+      prev[source.droppableId].items.splice(source.index, 1)
 
-    const newState = {
-      ...initialDataState,
-      columns: {
-        ...initialDataState.columns,
-        [newStart.id]: newStart,
-        [newFinish.id]: newFinish,
-      }
-    }
 
-    setInitialDataState(newState);
-  };
-    return (
-    <Container>
-      <DragDropContext
-        onDragEnd={onDragEnd}
-      >
-        {
-          initialDataState.columnOrder.map((columnId) => {
-            const column = initialDataState.columns[columnId];
-            const tasks = column.taskIds.map(taskId => initialDataState.tasks[taskId]);
+      // Adding to new items array location
+      prev[destination.droppableId].items.splice(destination.index, 0, itemCopy)
 
-            return <Column key={column.id} column={column} tasks={tasks} />;
-          })
-        }
-        </DragDropContext>
-      </Container>
-    )
+      return prev
+    })
   }
 
-export default Board
+  const addItem = () => {
+    setState(prev => {
+      return {
+        ...prev,
+        todo: {
+          title: "Todo",
+          items: [
+            {
+              id: v4(),
+              name: text
+            },
+            ...prev.todo.items
+          ]
+        }
+      }
+    })
+
+    setText("")
+  }
+
+  return (
+    <Container>
+      <AddTaskContainer>
+        <input type="text" value={text} onChange={(e) => setText(e.target.value)}/>
+        <button onClick={addItem}>Adicionar Tarefa</button>
+      </AddTaskContainer>
+      <BoardContainer>
+        <DragDropContext onDragEnd={handleDragEnd}>
+          {_.map(state, (data, key) => {
+            return(
+              <Column key={key}>
+                <h3>{data.title}</h3>
+                <Droppable droppableId={key}>
+                  {(provided, snapshot) => {
+                    return(
+                      <Card
+                        ref={provided.innerRef}
+                        {...provided.droppableProps}
+                      >
+                        {data.items.map((el, index) => {
+                          return(
+                            <Draggable key={el.id} index={index} draggableId={el.id}>
+                              {(provided, snapshot) => {
+                                console.log(snapshot)
+                                return(
+                                  <Item
+                                    isDragging={snapshot.isDragging}
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                  >
+                                    {el.name}
+                                  </Item>
+                                )
+                              }}
+                            </Draggable>
+                          )
+                        })}
+                        {provided.placeholder}
+                      </Card>
+                    )
+                  }}
+                </Droppable>
+              </Column>
+            )
+          })}
+        </DragDropContext>
+      </BoardContainer>
+    </Container>
+  );
+}
+
+export default Board;
