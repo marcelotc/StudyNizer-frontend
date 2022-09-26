@@ -143,8 +143,9 @@ function Board() {
                         {...provided.droppableProps}
                       >
                         {data.items.map((el, index) => {
+                         if (el !== undefined) {
                           return(
-                            <Draggable key={el.id} index={index} draggableId={el.id}>
+                            <Draggable key={el?.id} index={index} draggableId={el?.id}>
                               {(provided, snapshot) => {
                                 return(
                                   <Item
@@ -154,12 +155,12 @@ function Board() {
                                     {...provided.dragHandleProps}
                                   >
                                     <span style={{cursor: 'pointer'}} onClick={() => removeitem(data, index)}>X</span>
-                                    {el.name}
+                                    {el?.name}
                                   </Item>
                                 )
                               }}
                             </Draggable>
-                          )
+                          )}
                         })}
                         {provided.placeholder}
                       </Card>
