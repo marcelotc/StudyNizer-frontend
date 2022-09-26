@@ -114,7 +114,7 @@ function Board() {
     <Container>
       <AddTaskContainer>
         <input type="text" value={text} onChange={(e) => setText(e.target.value)}/>
-        <label for="cars">Coluna:</label>
+        <label htmlFor='coluna'>Coluna:</label>
 
         <select name="coluna" id="coluna" value ={column} onChange={(e) => setColumn(e.target.value)}>
           <option value="Fazendo">Fazendo</option>
