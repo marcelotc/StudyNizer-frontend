@@ -9,10 +9,6 @@ export const Container = styled.div`
     margin-bottom: 10px;
     padding: 15px;
     height: 100%;
-
-    &:hover {
-    cursor: grabbing;
-    }
 `;
 
 export const Column= styled.div`
@@ -52,11 +48,27 @@ export const Item = styled.div`
     margin-bottom: 10px;
     padding: 15px;
     box-shadow: 0 1px 4px 0 rgba(192, 208, 230, 0.8);
-    border-top: 20px solid rgba(154, 155, 156, 0.226);
+    border-top: 28px solid rgba(154, 155, 156, 0.226);
     min-height: 113px;
     
-    &:hover {
+    span {
+        display: block;
+        float: right;
+        position: relative;
+        bottom: 40px;
+        font-weight: bold;
+        font-size: 15px;
+        display: none;
+
+        &:hover {
+            color: red;
+            transition: 0.2s;
+        }
+    }
+
+    &:hover > span {
         cursor: grabbing;
+        display: block;
     }
 
     & {

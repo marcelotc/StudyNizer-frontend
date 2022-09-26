@@ -39,19 +39,20 @@ const item6 = {
 function Board() {
   const [text, setText] = useState("")
   const [state, setState] = useState({
-    "todo": {
+    "Tarefas": {
       title: "Tarefas",
-      items: [item, item2, item3, item4, item5, item6]
+      items: [item, item2]
     },
-    "in-progress": {
+    "Fazendo": {
       title: "Fazendo",
-      items: []
+      items: [item3, item4, item5]
     },
-    "done": {
+    "Concluído": {
       title: "Concluído",
-      items: []
+      items: [item6]
     }
   })
+  const [column, setColumn] = useState('Tarefas');
 
   const handleDragEnd = ({destination, source}) => {
     if (!destination) {
@@ -82,14 +83,14 @@ function Board() {
     setState(prev => {
       return {
         ...prev,
-        todo: {
-          title: "Todo",
+        [column]: {
+          title: column,
           items: [
             {
               id: v4(),
               name: text
             },
-            ...prev.todo.items
+            ...prev?.[column].items
           ]
         }
       }
@@ -98,11 +99,35 @@ function Board() {
     setText("")
   }
 
+  const removeitem = (data, index) => {
+
+    setState(current => {
+      const copy = {...current};
+
+      delete copy[data.title].items[index];
+
+      return copy;
+    })
+  }
+
   return (
     <Container>
       <AddTaskContainer>
         <input type="text" value={text} onChange={(e) => setText(e.target.value)}/>
-        <button onClick={addItem}>Adicionar Tarefa</button>
+        <label for="cars">Coluna:</label>
+
+        <select name="coluna" id="coluna" value ={column} onChange={(e) => setColumn(e.target.value)}>
+          <option value="Fazendo">Fazendo</option>
+          <option value="Tarefas">Tarefas</option>
+          <option value="Concluído">Concluído</option>
+        </select>
+        
+        <button 
+          disabled={text.trim() === "" ? true : false} 
+          style={{ opacity: text.trim() === "" ? '' : '0.8', 
+          cursor: text.trim() === "" ? 'not-allowed' : ''}} 
+          onClick={addItem}
+        >Adicionar Tarefa</button>
       </AddTaskContainer>
       <BoardContainer>
         <DragDropContext onDragEnd={handleDragEnd}>
@@ -121,7 +146,6 @@ function Board() {
                           return(
                             <Draggable key={el.id} index={index} draggableId={el.id}>
                               {(provided, snapshot) => {
-                                console.log(snapshot)
                                 return(
                                   <Item
                                     isDragging={snapshot.isDragging}
@@ -129,6 +153,7 @@ function Board() {
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
                                   >
+                                    <span style={{cursor: 'pointer'}} onClick={() => removeitem(data, index)}>X</span>
                                     {el.name}
                                   </Item>
                                 )
