@@ -21,7 +21,7 @@ export const AddTaskContainer= styled.div`
     margin: 0 auto;
     width: 50%;
 
-    button, input {
+    button, input, select {
         margin: 5px;
         width: 100%;
     }

@@ -3,6 +3,7 @@ import './styles.jsx';
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
 import _ from "lodash";
 import {v4} from "uuid";
+import { Popconfirm } from 'antd';
 
 import { Container, AddTaskContainer, BoardContainer, Column, Card, Item } from "./styles";
 
@@ -35,6 +36,8 @@ const item6 = {
   id: v4(),
   name: "item6"
 }
+
+const dialogText = 'Tem certeza que deseja excluir esta tarefa?';
 
 function Board() {
   const [text, setText] = useState("")
@@ -110,15 +113,17 @@ function Board() {
     })
   }
 
+  const confirm = (data, index) => {
+    removeitem(data, index);
+  };
+
   return (
     <Container>
       <AddTaskContainer>
         <input type="text" value={text} onChange={(e) => setText(e.target.value)}/>
-        <label htmlFor='coluna'>Coluna:</label>
-
         <select name="coluna" id="coluna" value ={column} onChange={(e) => setColumn(e.target.value)}>
-          <option value="Fazendo">Fazendo</option>
           <option value="Tarefas">Tarefas</option>
+          <option value="Fazendo">Fazendo</option>
           <option value="Concluído">Concluído</option>
         </select>
         
@@ -153,8 +158,10 @@ function Board() {
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
-                                  >
-                                    <span style={{cursor: 'pointer'}} onClick={() => removeitem(data, index)}>X</span>
+                                  >      
+                                  <Popconfirm placement="right" title={dialogText} onConfirm={() => confirm(data, index)} okText="Sim" cancelText="Não">
+                                    <span style={{cursor: 'pointer'}}>X</span>
+                                  </Popconfirm>
                                     {el?.name}
                                   </Item>
                                 )
