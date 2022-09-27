@@ -37,8 +37,6 @@ export const BoardContainer= styled.div`
 export const CardTaskDetails = styled.div`
 
     &:hover {
-        border: 2px dashed gray;
-        padding: 4px;
         border-radius: 5px;
         cursor: pointer;
         opacity: 0.60;
