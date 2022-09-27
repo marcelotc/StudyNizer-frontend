@@ -22,12 +22,13 @@ export const BoardFilter = styled.div`
         padding: 5px;
         border-radius: 5px;
 
-        > input, .ant-select {
-            width: 50%;
+        > input {
+            width: 60%;
+            margin-right: 10px;
         }
 
-        > input {
-            margin-right: 10px;
+        > .ant-select {
+            width: 50%;
         }
     }
 `;

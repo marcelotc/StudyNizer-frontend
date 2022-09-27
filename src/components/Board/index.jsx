@@ -302,7 +302,9 @@ function Board() {
                                         {...provided.dragHandleProps}
                                       >      
                                         <Popconfirm placement="right" title={dialogText} onConfirm={() => confirm(data, index)} okText="Sim" cancelText="Não">
-                                          <FaTrash />
+                                          <Tooltip placement="right" title="Excluir Tarefa">
+                                            <FaTrash />
+                                          </Tooltip>
                                         </Popconfirm>
                                         <Tooltip placement="bottom" title={cardTaskDetailsText}>
                                           <CardTaskDetails onClick={() => showModal(data, el, 'edit')}>
