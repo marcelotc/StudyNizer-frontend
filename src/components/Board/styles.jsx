@@ -17,18 +17,13 @@ export const BoardFilter = styled.div`
     
     > div {
         display: flex;
-        width: 35%;
+        width: 60%;
         background: lightgray;
         padding: 5px;
         border-radius: 5px;
 
-        > input {
-            width: 60%;
-            margin-right: 10px;
-        }
-
-        > .ant-select {
-            width: 50%;
+        > input, .ant-select, .ant-picker {
+            width: 100%;
         }
     }
 `;

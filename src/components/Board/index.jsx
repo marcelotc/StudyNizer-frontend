@@ -17,7 +17,7 @@ const item = {
   name: "Revisar conteúdo",
   description: "Lorem celou is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
   priority: "Alta",
-  date: "05-04-2022 18:32:05",
+  date: "05-04-2022",
 }
 
 const item2 = {
@@ -25,7 +25,7 @@ const item2 = {
   name: "Resumo de programação",
   description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
   priority: "Média",
-  date: "28-02-2022 17:11:06",
+  date: "28-02-2022",
 }
 
 const item3 = {
@@ -33,7 +33,7 @@ const item3 = {
   name: "Revisar SO",
   description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
   priority: "Baixa",
-  date: "01-01-2022 16:23:11",
+  date: "01-01-2022",
 }
 
 const item4 = {
@@ -41,7 +41,7 @@ const item4 = {
   name: "Revisar matéria",
   description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
   priority: "Alta",
-  date: "09-03-2022 10:33:09",
+  date: "09-03-2022",
 }
 
 const item5 = {
@@ -49,7 +49,7 @@ const item5 = {
   name: "Estudar para prova",
   description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
   priority: "Média",
-  date: "15-06-2022 13:19:11",
+  date: "15-06-2022",
 }
 
 const item6 = {
@@ -57,13 +57,13 @@ const item6 = {
   name: "Fazer trabalho",
   description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
   priority: "Baixa",
-  date: "11-04-2022 23:39:13",
+  date: "11-04-2022",
 }
 
 const dialogText = 'Tem certeza que deseja excluir esta tarefa?';
 const cardTaskDetailsText = 'Clique para ver detalhes desta tarefa';
 
-const dateFormat = "DD-MM-YYYY HH:mm:ss";
+const dateFormat = "DD-MM-YYYY";
 
 function Board() {
   const [text, setText] = useState("")
@@ -89,6 +89,7 @@ function Board() {
   const [modalMode, setModalMode] = useState("Adicionar");
   const [searchTermTitleDescription, setSearchTermTitleDescription] = useState("");
   const [searchTermPriority, setSearchTermPriority] = useState(undefined);
+  const [searchTermTaskDueData, setSearchTermTaskDueData] = useState("");
 
   const handleDragEnd = ({destination, source}) => {
     if (!destination) {
@@ -181,7 +182,7 @@ function Board() {
 
   const handleDateChange = (value) => {
     const date = value;
-    setTaskDueDate(date.format(dateFormat));
+    setTaskDueDate(date?.format(dateFormat));
   };
 
   const renderPriorityColor = (priority) => {
@@ -195,7 +196,10 @@ function Board() {
   }
 
   const handleFilterCard = (el) => {
-    if (searchTermPriority === undefined && 
+    console.log('el?.date?.toLogcaleLowerCase()', el?.date?.toLocaleLowerCase())
+    console.log('searchTermTaskDueData', searchTermTaskDueData)
+    console.log('search', el?.date?.toLocaleLowerCase().includes(searchTermTaskDueData?.toLocaleLowerCase()))
+    if (searchTermPriority === undefined && searchTermTaskDueData === "" &&
         el?.name?.toLocaleLowerCase().includes(searchTermTitleDescription?.toLocaleLowerCase())) {
       return el;
     } else if (
@@ -210,8 +214,17 @@ function Board() {
       el?.description?.toLocaleLowerCase().includes(searchTermTitleDescription?.toLocaleLowerCase()))
     ) {
       return el;
+    } else if (
+      el?.date?.toLocaleLowerCase().includes(searchTermTaskDueData?.toLocaleLowerCase())
+    ) {
+      return el;
     }
   }
+
+  const handleDateChangeFilter = (value) => {
+    const date = value;
+    setSearchTermTaskDueData(date.format(dateFormat));
+  };
 
   const taskTextsBlank = text?.trim() === "" || description?.trim() === "" || taskDueDate === undefined || priority === undefined;
 
@@ -240,7 +253,7 @@ function Board() {
             <Option value="Média">Média</Option>
             <Option value="Baixa">Baixa</Option>
           </Select>
-          <DatePicker showTime format={dateFormat} value={taskDueDate !== undefined ? moment(taskDueDate, dateFormat) : null}  onChange={handleDateChange} />
+          <DatePicker format={dateFormat} value={taskDueDate !== undefined ? moment(taskDueDate, dateFormat) : null}  onChange={handleDateChange} />
           <Button
             type='primary'
             disabled={taskTextsBlank ? true : false}
@@ -264,7 +277,8 @@ function Board() {
             <Option value="Alta">Alta</Option>
             <Option value="Média">Média</Option>
             <Option value="Baixa">Baixa</Option>
-          </Select>            
+          </Select> 
+          <DatePicker format={dateFormat} onChange={handleDateChangeFilter} />
         </div>
       </BoardFilter>
       <BoardContainer>
