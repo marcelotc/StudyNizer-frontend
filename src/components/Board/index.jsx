@@ -4,60 +4,66 @@ import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
 import _ from "lodash";
 import {v4} from "uuid";
 import { Popconfirm, Modal, Input, Button, Tooltip, Select, DatePicker } from 'antd';
-import { FaPlus } from "react-icons/fa";
- 
-import { Container, AddTaskContainer, BoardContainer, Column, Card, Item, CardHeader } from "./styles";
+import { FaPlus, FaCalendarAlt, FaTrash } from "react-icons/fa";
+import moment from 'moment';
+
+import { Container, AddTaskContainer, BoardContainer, Column, Card, Item, CardHeader, PriorityColor, CardTaskDetails } from "./styles";
 
 const { Option } = Select;
+const { TextArea } = Input;
 
 const item = {
   id: v4(),
-  name: "item",
-  description: "Blablabla"
+  name: "Revisar conteúdo",
+  description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+  priority: "Alta",
+  date: "05-04-2022 18:32:05",
 }
 
 const item2 = {
   id: v4(),
-  name: "item2",
-  description: "Blablabla",
-  priority: "Baixo",
-  date: "2022-09-21 23:39:13",
+  name: "Resumo de programação",
+  description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+  priority: "Média",
+  date: "28-02-2022 17:11:06",
 }
 
 const item3 = {
   id: v4(),
-  name: "item3",
-  description: "Blablabla",
-  priority: "Baixo",
-  date: "2022-09-21 23:39:13",
+  name: "Revisar SO",
+  description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+  priority: "Baixa",
+  date: "01-01-2022 16:23:11",
 }
 
 const item4 = {
   id: v4(),
-  name: "item4",
-  description: "Blablabla",
-  priority: "Baixo",
-  date: "2022-09-21 23:39:13",
+  name: "Revisar matéria",
+  description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+  priority: "Alta",
+  date: "09-03-2022 10:33:09",
 }
 
 const item5 = {
   id: v4(),
-  name: "item5",
-  description: "Blablabla",
-  priority: "Baixo",
-  date: "2022-09-21 23:39:13",
+  name: "Estudar para prova",
+  description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+  priority: "Média",
+  date: "15-06-2022 13:19:11",
 }
 
 const item6 = {
   id: v4(),
-  name: "item6",
-  description: "Blablabla",
-  priority: "Baixo",
-  date: "2022-09-21 23:39:13",
+  name: "Fazer trabalho",
+  description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+  priority: "Baixa",
+  date: "11-04-2022 23:39:13",
 }
 
 const dialogText = 'Tem certeza que deseja excluir esta tarefa?';
-const toolTipText = 'Adicionar Tarefa';
+const cardTaskDetailsText = 'Clique para ver detalhes desta tarefa';
+
+const dateFormat = "DD-MM-YYYY HH:mm:ss";
 
 function Board() {
   const [text, setText] = useState("")
@@ -80,6 +86,7 @@ function Board() {
   const [open, setOpen] = useState(false);
   const [taskDueDate, setTaskDueDate] = useState("");
   const [priority, setPriority] = useState("");
+  const [modalMode, setModalMode] = useState("Adicionar");
 
   const handleDragEnd = ({destination, source}) => {
     if (!destination) {
@@ -90,16 +97,13 @@ function Board() {
       return
     }
 
-    // Creating a copy of item before removing it from state
     const itemCopy = {...state[source.droppableId].items[source.index]}
 
     setState(prev => {
       prev = {...prev}
-      // Remove from previous items array
       prev[source.droppableId].items.splice(source.index, 1)
 
 
-      // Adding to new items array location
       prev[destination.droppableId].items.splice(destination.index, 0, itemCopy)
 
       return prev
@@ -148,9 +152,20 @@ function Board() {
     removeitem(data, index);
   };
 
-  const showModal = (data) => {
+  const showModal = (data, el, modalMode) => {
     setOpen(true);
     setColumn(data.title)
+
+    setText(el?.name);
+    setDescription(el?.description);
+    setPriority(el?.priority);
+    setTaskDueDate(el?.date);
+
+    if(modalMode === "edit") {
+      setModalMode("Editar");
+    } else {
+      setModalMode("Adicionar");
+    }
   };
 
   const handleCancel = () => {
@@ -158,25 +173,25 @@ function Board() {
   };
 
   const handleChange = (value) => {
-    setPriority(value)
+    setPriority(value);
   };
 
   const handleDateChange = (value) => {
     const date = value;
-    setTaskDueDate(date.format("YYYY-MM-DD HH:mm:ss"));
+    setTaskDueDate(date.format(dateFormat));
   };
 
   const renderPriorityColor = (priority) => {
-    if(priority === 'Baixo') {
-      return <div style={{background: 'green', color: '#fff', fontWeight: 'bold'}}>{priority}</div>
-    } else if (priority === 'Médio') {
-      return <div style={{ background: 'yellow', color: '#fff', fontWeight: 'bold' }}>{priority}</div>
+    if(priority === 'Baixa') {
+      return <PriorityColor color='#BEEC5A'><p>{priority}</p></PriorityColor>
+    } else if (priority === 'Média') {
+      return <PriorityColor color='#EEE950'><p>{priority}</p></PriorityColor>
     } else {
-      return <div style={{ background: 'red', color: '#fff', fontWeight: 'bold' }}>{priority}</div>
-  }
+      return <PriorityColor color='#E77669'><p>{priority}</p></PriorityColor>
+    }
   }
 
-  const taskTextsBlank = text.trim() === "" || description.trim() === "";
+  const taskTextsBlank = text?.trim() === "" || description?.trim() === "" || taskDueDate === undefined || priority === undefined;
 
   return (
     <Container>
@@ -193,16 +208,17 @@ function Board() {
       >
         <AddTaskContainer>
           <Input placeholder="Título" value={text} onChange={(e) => setText(e.target.value)} />
-          <Input placeholder="Descrição" value={description} onChange={(e) => setDescription(e.target.value)} />
+          <TextArea rows={6} placeholder="Descrição" value={description} onChange={(e) => setDescription(e.target.value)} />
           <Select
             placeholder="Prioridade"
             onChange={handleChange}
+            value={priority}
           >
-            <Option value="alta">Alta</Option>
-            <Option value="media">Média</Option>
-            <Option value="baixa">Baixa</Option>
+            <Option value="Alta">Alta</Option>
+            <Option value="Média">Média</Option>
+            <Option value="Baixa">Baixa</Option>
           </Select>
-          <DatePicker showTime onChange={handleDateChange} />
+          <DatePicker showTime format={dateFormat} value={taskDueDate !== undefined ? moment(taskDueDate, dateFormat) : null}  onChange={handleDateChange} />
           <Button
             type='primary'
             disabled={taskTextsBlank ? true : false}
@@ -211,7 +227,7 @@ function Board() {
               cursor: taskTextsBlank ? 'not-allowed' : ''
             }}
             onClick={addItem}
-          >Adicionar Tarefa</Button>
+          >{`${modalMode} Tarefa`}</Button>
         </AddTaskContainer>
       </Modal>
       <BoardContainer>
@@ -228,8 +244,8 @@ function Board() {
                             <h3>{data.title}</h3>
                             <span>{state?.[data.title].items.length}</span>
                           </div>
-                          <Tooltip placement="top" title={toolTipText}>
-                            <FaPlus onClick={() => showModal(data)} />
+                          <Tooltip placement="top" title="Adicionar Tarefa">
+                            <FaPlus color='#fff' onClick={() => showModal(data)} />
                           </Tooltip>
                         </CardHeader> 
                         <Card
@@ -249,13 +265,20 @@ function Board() {
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
                                     >      
-                                    <Popconfirm placement="right" title={dialogText} onConfirm={() => confirm(data, index)} okText="Sim" cancelText="Não">
-                                      <span style={{cursor: 'pointer'}}>X</span>
-                                    </Popconfirm>
-                                      <h3>{el?.name}</h3>
-                                      <p>{el?.description}</p>
-                                      {renderPriorityColor(el?.priority)}
-                                      <p>{el?.date}</p>
+                                      <Popconfirm placement="right" title={dialogText} onConfirm={() => confirm(data, index)} okText="Sim" cancelText="Não">
+                                        <FaTrash />
+                                      </Popconfirm>
+                                      <Tooltip placement="bottom" title={cardTaskDetailsText}>
+                                        <CardTaskDetails onClick={() => showModal(data, el, 'edit')}>
+                                          <h3>{el?.name}</h3>
+                                          <p className='taskDescription'>{el?.description}</p>
+                                          {renderPriorityColor(el?.priority)}
+                                          <div className='taskDate'>
+                                            <p>{el?.date}</p>
+                                            <FaCalendarAlt />
+                                          </div>
+                                        </CardTaskDetails>
+                                      </Tooltip>
                                     </Item>
                                   )
                                 }}

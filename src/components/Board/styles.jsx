@@ -20,7 +20,7 @@ export const AddTaskContainer= styled.div`
     display: table;
     margin: 0 auto;
 
-    button, input, select, .ant-select, .ant-picker {
+    button, input, select, textarea, .ant-select, .ant-picker {
         margin: 5px;
         width: 100%;
     }
@@ -32,6 +32,45 @@ export const AddTaskContainer= styled.div`
 
 export const BoardContainer= styled.div`
     display: flex;
+`;
+
+export const CardTaskDetails = styled.div`
+
+    &:hover {
+        border: 2px dashed gray;
+        padding: 4px;
+        border-radius: 5px;
+        cursor: pointer;
+        opacity: 0.60;
+        transition: 0.2s;
+    }   
+
+    h3 {
+        font-weight: bold;
+    }
+
+    .taskDescription {
+        white-space: nowrap; 
+        width: 200px; 
+        overflow: hidden;
+        text-overflow: ellipsis; 
+    }
+
+    .taskDate {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #000;
+        color: #fff;
+        font-weight: bold;
+        width: 100%;
+        text-align: center;
+        border-radius: 5px;
+
+        > p {
+            margin: 0 15px 0 0;
+        }
+    }
 `;
 
 export const Card = styled.div`
@@ -93,13 +132,15 @@ export const Item = styled.div`
     border-top: 28px solid rgba(154, 155, 156, 0.226);
     min-height: 113px;
     
-    span {
-        display: block;
+    > svg {
         float: right;
         position: relative;
         bottom: 40px;
         font-weight: bold;
         font-size: 15px;
+        margin-top: 3px;
+        font-size: 16px;
+        cursor: pointer;
         display: none;
 
         &:hover {
@@ -108,12 +149,25 @@ export const Item = styled.div`
         }
     }
 
-    &:hover > span {
-        cursor: grabbing;
+    &:hover > svg {
         display: block;
     }
 
     & {
         background: ${props => props.isDragging ? 'rgba(218, 218, 221, 0.8)' : '' };
+    }
+`;
+
+export const PriorityColor = styled.div`
+    background: ${props => props.color}; 
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 5px;
+
+    > p {
+        border-radius: 5px;
+        background: #000;
+        width: 20%;
     }
 `;
