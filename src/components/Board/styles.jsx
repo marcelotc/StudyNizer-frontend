@@ -11,6 +11,27 @@ export const Container = styled.div`
     height: 100%;
 `;
 
+export const BoardFilter = styled.div`
+    display: flex;
+    justify-content: center;
+    
+    > div {
+        display: flex;
+        width: 35%;
+        background: lightgray;
+        padding: 5px;
+        border-radius: 5px;
+
+        > input, .ant-select {
+            width: 50%;
+        }
+
+        > input {
+            margin-right: 10px;
+        }
+    }
+`;
+
 export const Column= styled.div`
     width: 100%;
     padding: 10px;

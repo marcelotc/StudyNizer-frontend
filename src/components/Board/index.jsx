@@ -3,11 +3,11 @@ import './styles.jsx';
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
 import _ from "lodash";
 import {v4} from "uuid";
-import { Popconfirm, Modal, Input, Button, Tooltip, Select, DatePicker } from 'antd';
+import { Popconfirm, Modal, Input, Button, Tooltip, Select, DatePicker, message } from 'antd';
 import { FaPlus, FaCalendarAlt, FaTrash } from "react-icons/fa";
 import moment from 'moment';
 
-import { Container, AddTaskContainer, BoardContainer, Column, Card, Item, CardHeader, PriorityColor, CardTaskDetails } from "./styles";
+import { Container, BoardFilter, AddTaskContainer, BoardContainer, Column, Card, Item, CardHeader, PriorityColor, CardTaskDetails } from "./styles";
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -15,7 +15,7 @@ const { TextArea } = Input;
 const item = {
   id: v4(),
   name: "Revisar conteúdo",
-  description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+  description: "Lorem celou is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
   priority: "Alta",
   date: "05-04-2022 18:32:05",
 }
@@ -87,6 +87,8 @@ function Board() {
   const [taskDueDate, setTaskDueDate] = useState("");
   const [priority, setPriority] = useState("");
   const [modalMode, setModalMode] = useState("Adicionar");
+  const [searchTermTitleDescription, setSearchTermTitleDescription] = useState("");
+  const [searchTermPriority, setSearchTermPriority] = useState(undefined);
 
   const handleDragEnd = ({destination, source}) => {
     if (!destination) {
@@ -135,10 +137,10 @@ function Board() {
     setTaskDueDate("");
     setPriority("");
     setOpen(false);
+    message.success('Tarefa adicionada!');
   }
 
   const removeitem = (data, index) => {
-
     setState(current => {
       const copy = {...current};
 
@@ -150,6 +152,7 @@ function Board() {
 
   const confirm = (data, index) => {
     removeitem(data, index);
+    message.success('Tarefa removida!');
   };
 
   const showModal = (data, el, modalMode) => {
@@ -188,6 +191,25 @@ function Board() {
       return <PriorityColor color='#EEE950'><p>{priority}</p></PriorityColor>
     } else {
       return <PriorityColor color='#E77669'><p>{priority}</p></PriorityColor>
+    }
+  }
+
+  const handleFilterCard = (el) => {
+    if (searchTermPriority === undefined && 
+        el.name.toLocaleLowerCase().includes(searchTermTitleDescription.toLocaleLowerCase())) {
+      return el;
+    } else if (
+      searchTermTitleDescription === "" && 
+      el.priority.toLocaleLowerCase().includes(searchTermPriority.toLocaleLowerCase())
+      ) {
+      return el;
+    } else if (
+      (searchTermPriority === "" && 
+      el.name.toLocaleLowerCase().includes(searchTermTitleDescription.toLocaleLowerCase())) || 
+      (searchTermPriority === "" && 
+      el.description.toLocaleLowerCase().includes(searchTermTitleDescription.toLocaleLowerCase()))
+    ) {
+      return el;
     }
   }
 
@@ -230,6 +252,21 @@ function Board() {
           >{`${modalMode} Tarefa`}</Button>
         </AddTaskContainer>
       </Modal>
+      <BoardFilter>
+        <div>
+          <Input placeholder='Buscar por título ou descrição' value={searchTermTitleDescription} onChange={(e) => setSearchTermTitleDescription(e.target.value)} />
+          <Select
+            placeholder="Prioridade"
+            onChange={(value) => setSearchTermPriority(value)}
+            value={searchTermPriority}
+            allowClear
+          >
+            <Option value="Alta">Alta</Option>
+            <Option value="Média">Média</Option>
+            <Option value="Baixa">Baixa</Option>
+          </Select>            
+        </div>
+      </BoardFilter>
       <BoardContainer>
         <DragDropContext onDragEnd={handleDragEnd}>
           {_.map(state, (data, key) => {
@@ -252,39 +289,38 @@ function Board() {
                           ref={provided.innerRef}
                           {...provided.droppableProps}
                         >
-                    
-                          {data.items.map((el, index) => {
-                          if (el !== undefined) {
-                            return(
-                              <Draggable key={el?.id} index={index} draggableId={el?.id}>
-                                {(provided, snapshot) => {
-                                  return(
-                                    <Item
-                                      isDragging={snapshot.isDragging}
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                    >      
-                                      <Popconfirm placement="right" title={dialogText} onConfirm={() => confirm(data, index)} okText="Sim" cancelText="Não">
-                                        <FaTrash />
-                                      </Popconfirm>
-                                      <Tooltip placement="bottom" title={cardTaskDetailsText}>
-                                        <CardTaskDetails onClick={() => showModal(data, el, 'edit')}>
-                                          <h3>{el?.name}</h3>
-                                          <p className='taskDescription'>{el?.description}</p>
-                                          {renderPriorityColor(el?.priority)}
-                                          <div className='taskDate'>
-                                            <p>{el?.date}</p>
-                                            <FaCalendarAlt />
-                                          </div>
-                                        </CardTaskDetails>
-                                      </Tooltip>
-                                    </Item>
-                                  )
-                                }}
-                              </Draggable>
-                            )}
-                          })}
+                          {data.items.filter((el) => handleFilterCard(el)).map((el, index) => {
+                            if (el !== undefined) {
+                              return(
+                                <Draggable key={el?.id} index={index} draggableId={el?.id}>
+                                  {(provided, snapshot) => {
+                                    return(
+                                      <Item
+                                        isDragging={snapshot.isDragging}
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                      >      
+                                        <Popconfirm placement="right" title={dialogText} onConfirm={() => confirm(data, index)} okText="Sim" cancelText="Não">
+                                          <FaTrash />
+                                        </Popconfirm>
+                                        <Tooltip placement="bottom" title={cardTaskDetailsText}>
+                                          <CardTaskDetails onClick={() => showModal(data, el, 'edit')}>
+                                            <h3>{el?.name}</h3>
+                                            <p className='taskDescription'>{el?.description}</p>
+                                            {renderPriorityColor(el?.priority)}
+                                            <div className='taskDate'>
+                                              <p>{el?.date}</p>
+                                              <FaCalendarAlt />
+                                            </div>
+                                          </CardTaskDetails>
+                                        </Tooltip>
+                                      </Item>
+                                    )
+                                  }}
+                                </Draggable>
+                              )}
+                            })}
                           {provided.placeholder}
                         </Card>
                     </>
