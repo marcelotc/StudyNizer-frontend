@@ -196,18 +196,18 @@ function Board() {
 
   const handleFilterCard = (el) => {
     if (searchTermPriority === undefined && 
-        el.name.toLocaleLowerCase().includes(searchTermTitleDescription.toLocaleLowerCase())) {
+        el?.name.toLocaleLowerCase().includes(searchTermTitleDescription.toLocaleLowerCase())) {
       return el;
     } else if (
       searchTermTitleDescription === "" && 
-      el.priority.toLocaleLowerCase().includes(searchTermPriority.toLocaleLowerCase())
+      el?.priority.toLocaleLowerCase().includes(searchTermPriority.toLocaleLowerCase())
       ) {
       return el;
     } else if (
       (searchTermPriority === "" && 
-      el.name.toLocaleLowerCase().includes(searchTermTitleDescription.toLocaleLowerCase())) || 
+      el?.name.toLocaleLowerCase().includes(searchTermTitleDescription.toLocaleLowerCase())) || 
       (searchTermPriority === "" && 
-      el.description.toLocaleLowerCase().includes(searchTermTitleDescription.toLocaleLowerCase()))
+      el?.description.toLocaleLowerCase().includes(searchTermTitleDescription.toLocaleLowerCase()))
     ) {
       return el;
     }
