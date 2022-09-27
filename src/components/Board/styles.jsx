@@ -19,11 +19,14 @@ export const Column= styled.div`
 export const AddTaskContainer= styled.div`
     display: table;
     margin: 0 auto;
-    width: 50%;
 
-    button, input, select {
+    button, input, select, .ant-select, .ant-picker {
         margin: 5px;
         width: 100%;
+    }
+
+    .ant-picker-dropdown, .ant-picker-dropdown-range, .ant-picker-dropdown-placement-bottomLeft  {
+        height: 100% !important;
     }
 `;
 
@@ -32,13 +35,52 @@ export const BoardContainer= styled.div`
 `;
 
 export const Card = styled.div`
+    display: flex;
     width: 100%;
     height: 100%;
     background-color: lightgray;
     padding: 10px 10px 0 10px;
-    border-radius: 7px;
-    display: flex;
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;    
     flex-direction: column;
+`;
+
+export const CardHeader = styled.div`
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px; 
+    background: gray;
+    padding: 5px;
+
+    > div {
+        display: flex;
+
+        h3 {
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            margin-left: 8px;
+            margin-bottom: 0;
+        }
+
+        span {
+            background: #000;
+            color: #fff;
+            font-size: 12px;
+            padding: 5px 10px 0px 10px;
+            font-weight: bold;
+            margin-left: 8px;
+            margin-right: 8px;
+            border-radius: 17px;
+        }
+    }
+
+    svg {
+        font-size: 25px;
+        cursor: pointer;
+    }
 `;
 
 export const Item = styled.div`
