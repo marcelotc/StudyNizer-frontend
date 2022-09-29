@@ -3,14 +3,33 @@ import { NavLink } from "react-router-dom";
 
 export const Container = styled.div`
     display: flex;
-    justify-content: space-between;
+    -webkit-box-pack: center;
+    justify-content: center;
+    margin-top: 60px;
+`;
+
+export const InnerContainer = styled.div`
+    width: 86.5%;
+`;
+
+export const CardContainerList = styled.div`
+    display: flex;
     flex-wrap: wrap;
+    -webkit-box-align: center;
+    align-items: center;
+    align-content: center;
+
+    @media (max-width: 393px) {
+        display: unset;
+    }
 `;
 
 export const CardContainer = styled.div`
     margin: 20px;
     background: lightgray;
     border-radius: 10px;
+    margin: 0px 30px 30px 0px;
+    width: calc(20% - 30px);
 
     > div {
         display: flex;
@@ -26,7 +45,17 @@ export const CardContainer = styled.div`
             margin-right: 10px;
             cursor: pointer;
         }
+    }
 
+    @media (max-width: 990px) {
+        width: calc(50% - 30px);
+        margin: 0 15px 30px 15px;
+    }
+    @media (max-width: 510px) {
+        width: 100%;
+    }
+    @media (max-width: 394px) {
+        margin: 30px 0 30px 0;
     }
 `;
 
@@ -51,10 +80,9 @@ export const AddCard = styled.div`
     align-items: center;
     justify-content: center;
     border: 1px dashed black;
-    margin: 20px;
     border-radius: 10px;
-    height: 350px;
-    width: 238px;
+    height: 298px;
+    width: calc(20% - 30px);
 
     &:hover {
         cursor: pointer;
@@ -70,6 +98,17 @@ export const AddCard = styled.div`
     > svg {
         font-size: 100px;
         color: #BEEC5A;
+    }
+
+    @media (max-width: 990px) {
+        width: calc(50% - 30px);
+        margin: 0 15px 30px 15px;
+    }
+    @media (max-width: 510px) {
+        width: 100%;
+    }
+    @media (max-width: 394px) {
+        margin: 30px 0 30px 0;
     }
 `;
 

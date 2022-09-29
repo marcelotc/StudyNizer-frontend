@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Button, Input, Tooltip } from 'antd';
 import { FaPlus, FaPencilAlt } from "react-icons/fa";
  
-import { Container, CardLink, CardContainer, Card, AddCard, AddSubjectModal } from './styles';
+import { Container, CardLink, CardContainer, Card, AddCard, AddSubjectModal, InnerContainer, CardContainerList } from './styles';
 
 export default function SubjectsCard() {
 
@@ -88,26 +88,30 @@ export default function SubjectsCard() {
           >Salvar</Button>
         </AddSubjectModal>
       </Modal>
-      {subjects.map((subject) => (
-        <CardContainer>
-          <div>
-            <Tooltip placement="top" title="Editar nome da disicplina">
-              <FaPencilAlt onClick={() => showModal(subject.title, 'Editar')} />
-            </Tooltip>
-          </div>
-          <CardLink to={`/subject/${subject.id}`} title={subject.title}>
-            <Tooltip placement="bottom" title="Ver resumos da disicplina">
-              <Card key={subject.id} className="subjectCard">
-                <img alt="example" src="https://static.thenounproject.com/png/3282617-200.png" />
-                <h1>{subject.title}</h1>
-              </Card>
-            </Tooltip>
-          </CardLink>
-        </CardContainer>
-      ))}
-      <AddCard onClick={() => showModal("", 'Adicionar')}>
-        <FaPlus />
-      </AddCard>
+      <InnerContainer>
+        <CardContainerList>
+          {subjects.map((subject) => (
+            <CardContainer>
+              <div>
+                <Tooltip placement="top" title="Editar nome da disicplina">
+                  <FaPencilAlt onClick={() => showModal(subject.title, 'Editar')} />
+                </Tooltip>
+              </div>
+              <CardLink to={`/subject/${subject.id}`} title={subject.title}>
+                <Tooltip placement="bottom" title="Ver resumos da disicplina">
+                  <Card key={subject.id} className="subjectCard">
+                    <img alt="example" src="https://static.thenounproject.com/png/3282617-200.png" />
+                    <h1>{subject.title}</h1>
+                  </Card>
+                </Tooltip>
+              </CardLink>
+            </CardContainer>
+          ))}
+          <AddCard onClick={() => showModal("", 'Adicionar')}>
+            <FaPlus />
+          </AddCard>
+        </CardContainerList>
+      </InnerContainer>
     </Container>
   );
 }
