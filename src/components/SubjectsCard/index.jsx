@@ -144,14 +144,14 @@ export default function SubjectsCard() {
                 </CardLink>
               </CardContainer>
             )})}
-          <AddCard onClick={() => showModal("", 'Adicionar')}>
-            <div className='addCardHeader'>
-
-            </div>
-            <div className='addCardBody'>
-              <FaPlus />
-            </div>
-          </AddCard>
+          <Tooltip placement="bottom" title="Adicionar Disciplina">
+            <AddCard onClick={() => showModal("", 'Adicionar')}>
+              <div className='addCardHeader'></div>
+              <div className='addCardBody'>
+                <FaPlus />
+              </div>
+            </AddCard>
+          </Tooltip>
         </CardContainerList>
       </InnerContainer>
     </Container>
