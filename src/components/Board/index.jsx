@@ -201,8 +201,8 @@ function Board() {
 
   const handleFilterCard = (el) => {
     if (
-      (el.date.getTime()) >= searchTermTaskDueData.min && 
-      (el.date.getTime()) <= searchTermTaskDueData.max
+      (el?.date?.getTime()) >= searchTermTaskDueData.min && 
+      (el?.date?.getTime()) <= searchTermTaskDueData.max
     ) {
       return el;
     } else if (
