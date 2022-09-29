@@ -11,13 +11,14 @@ import { Container, BoardFilter, AddTaskContainer, BoardContainer, Column, Card,
 
 const { Option } = Select;
 const { TextArea } = Input;
+const { RangePicker } = DatePicker;
 
 const item = {
   id: v4(),
   name: "Revisar conteúdo",
   description: "Lorem celou is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
   priority: "Alta",
-  date: "05-04-2022",
+  date: new Date(2022, 1, 10),
 }
 
 const item2 = {
@@ -25,7 +26,7 @@ const item2 = {
   name: "Resumo de programação",
   description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
   priority: "Média",
-  date: "28-02-2022",
+  date: new Date(2022, 2, 10),
 }
 
 const item3 = {
@@ -33,7 +34,7 @@ const item3 = {
   name: "Revisar SO",
   description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
   priority: "Baixa",
-  date: "01-01-2022",
+  date: new Date(2022, 3, 10),
 }
 
 const item4 = {
@@ -41,7 +42,7 @@ const item4 = {
   name: "Revisar matéria",
   description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
   priority: "Alta",
-  date: "09-03-2022",
+  date: new Date(2022, 4, 10),
 }
 
 const item5 = {
@@ -49,7 +50,7 @@ const item5 = {
   name: "Estudar para prova",
   description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
   priority: "Média",
-  date: "15-06-2022",
+  date: new Date(2022, 5, 10),
 }
 
 const item6 = {
@@ -57,7 +58,7 @@ const item6 = {
   name: "Fazer trabalho",
   description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
   priority: "Baixa",
-  date: "11-04-2022",
+  date: new Date(2023, 1, 10),
 }
 
 const dialogText = 'Tem certeza que deseja excluir esta tarefa?';
@@ -87,9 +88,12 @@ function Board() {
   const [taskDueDate, setTaskDueDate] = useState("");
   const [priority, setPriority] = useState("");
   const [modalMode, setModalMode] = useState("Adicionar");
-  const [searchTermTitleDescription, setSearchTermTitleDescription] = useState("");
+  const [searchTermTitle, setSearchTermTitle] = useState("");
   const [searchTermPriority, setSearchTermPriority] = useState(undefined);
-  const [searchTermTaskDueData, setSearchTermTaskDueData] = useState("");
+  const [searchTermTaskDueData, setSearchTermTaskDueData] = useState({
+    min: 0,
+    max: 0
+  });
 
   const handleDragEnd = ({destination, source}) => {
     if (!destination) {
@@ -125,7 +129,7 @@ function Board() {
               name: text,
               description: description,
               priority: priority,
-              date: taskDueDate,
+              date: moment(taskDueDate).toDate(),
             },
             ...prev?.[column].items
           ]
@@ -182,7 +186,7 @@ function Board() {
 
   const handleDateChange = (value) => {
     const date = value;
-    setTaskDueDate(date?.format(dateFormat));
+    setTaskDueDate(date);
   };
 
   const renderPriorityColor = (priority) => {
@@ -196,34 +200,45 @@ function Board() {
   }
 
   const handleFilterCard = (el) => {
-    console.log('el?.date?.toLogcaleLowerCase()', el?.date?.toLocaleLowerCase())
-    console.log('searchTermTaskDueData', searchTermTaskDueData)
-    console.log('search', el?.date?.toLocaleLowerCase().includes(searchTermTaskDueData?.toLocaleLowerCase()))
-    if (searchTermPriority === undefined && searchTermTaskDueData === "" &&
-        el?.name?.toLocaleLowerCase().includes(searchTermTitleDescription?.toLocaleLowerCase())) {
+    if (
+      (el.date.getTime()) >= searchTermTaskDueData.min && 
+      (el.date.getTime()) <= searchTermTaskDueData.max
+    ) {
       return el;
     } else if (
-      searchTermTitleDescription === "" && 
+      (searchTermTaskDueData.min === 0 && searchTermTaskDueData.max === 0) && 
+      (searchTermPriority === undefined || searchTermPriority === "") && 
+      el?.name?.toLocaleLowerCase().includes(searchTermTitle?.toLocaleLowerCase())
+    ) {
+      return el;
+    } else if (
+      searchTermTitle === "" && 
       el?.priority?.toLocaleLowerCase().includes(searchTermPriority?.toLocaleLowerCase())
       ) {
       return el;
-    } else if (
-      (searchTermPriority === "" && 
-      el?.name?.toLocaleLowerCase().includes(searchTermTitleDescription?.toLocaleLowerCase())) || 
-      (searchTermPriority === "" && 
-      el?.description?.toLocaleLowerCase().includes(searchTermTitleDescription?.toLocaleLowerCase()))
-    ) {
-      return el;
-    } else if (
-      el?.date?.toLocaleLowerCase().includes(searchTermTaskDueData?.toLocaleLowerCase())
-    ) {
-      return el;
-    }
+    } 
   }
-
+  
   const handleDateChangeFilter = (value) => {
     const date = value;
-    setSearchTermTaskDueData(date.format(dateFormat));
+    
+    if(date === null) {
+      setSearchTermTaskDueData((prevState) => ({
+        ...prevState,
+            min: 0,
+            max: 0
+        }));
+    } else {
+      let min = date[0].toDate().getTime();
+      let max = date[1].toDate().getTime();
+  
+  
+      setSearchTermTaskDueData((prevState) => ({
+      ...prevState,
+          min: min,
+          max: max
+      }));
+    }
   };
 
   const taskTextsBlank = text?.trim() === "" || description?.trim() === "" || taskDueDate === undefined || priority === undefined;
@@ -253,7 +268,7 @@ function Board() {
             <Option value="Média">Média</Option>
             <Option value="Baixa">Baixa</Option>
           </Select>
-          <DatePicker format={dateFormat} value={taskDueDate !== undefined ? moment(taskDueDate, dateFormat) : null}  onChange={handleDateChange} />
+          <DatePicker format={dateFormat} value={taskDueDate !== undefined ? moment(taskDueDate) : null}  onChange={handleDateChange} />
           <Button
             type='primary'
             disabled={taskTextsBlank ? true : false}
@@ -267,18 +282,26 @@ function Board() {
       </Modal>
       <BoardFilter>
         <div>
-          <Input placeholder='Buscar por título ou descrição' value={searchTermTitleDescription} onChange={(e) => setSearchTermTitleDescription(e.target.value)} />
+          <Input 
+            allowClear
+            placeholder='Buscar tarefa pelo título' 
+            value={searchTermTitle} 
+            onChange={(e) => setSearchTermTitle(e.target.value)} 
+          />
           <Select
+            allowClear
             placeholder="Prioridade"
             onChange={(value) => setSearchTermPriority(value)}
             value={searchTermPriority}
-            allowClear
           >
             <Option value="Alta">Alta</Option>
             <Option value="Média">Média</Option>
             <Option value="Baixa">Baixa</Option>
           </Select> 
-          <DatePicker format={dateFormat} onChange={handleDateChangeFilter} />
+          <RangePicker
+            format={dateFormat} 
+            onChange={handleDateChangeFilter} 
+          />
         </div>
       </BoardFilter>
       <BoardContainer>
@@ -326,7 +349,7 @@ function Board() {
                                             <p className='taskDescription'>{el?.description}</p>
                                             {renderPriorityColor(el?.priority)}
                                             <div className='taskDate'>
-                                              <p>{el?.date}</p>
+                                              <p>{moment(el?.date).format(dateFormat)}</p>
                                               <FaCalendarAlt />
                                             </div>
                                           </CardTaskDetails>

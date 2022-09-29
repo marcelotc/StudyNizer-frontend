@@ -17,7 +17,7 @@ export const BoardFilter = styled.div`
     
     > div {
         display: flex;
-        width: 60%;
+        width: 70%;
         background: lightgray;
         padding: 5px;
         border-radius: 5px;
