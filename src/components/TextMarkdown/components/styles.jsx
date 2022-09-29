@@ -16,7 +16,7 @@ export const MarketdInputTitle = styled.div`
   border-bottom: 1px solid rgba(15, 15, 15, 0.3);
 `;
 
-export const MarketdInputTextAreaTest = styled.div`
+export const MarketdInputTextArea = styled.div`
   outline: none;
 
   > div:hover {
@@ -35,15 +35,6 @@ export const MarketdInputTextAreaTest = styled.div`
   > div:hover:before {
       pointer-events: all;
   }
-`;
-
-export const MarketdInputTextArea = styled.textarea`
-  height: 100%;
-  width: 100%;
-  resize: none;
-  border: none;
-  outline: none;
-  font-size: 17px;
 `;
 
 export const ResultContainer = styled.div`
