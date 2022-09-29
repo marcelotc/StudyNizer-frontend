@@ -37,11 +37,23 @@ export const CardContainer = styled.div`
 
         background: #c3c3c3;
 
-        > svg {
+        svg {
             color: #000;
             font-size: 18px;
             margin-right: 10px;
             cursor: pointer;
+        }
+
+        > svg:nth-child(1):hover {
+            color: blue;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        > svg:nth-child(2):hover {
+            color: red;
+            cursor: pointer;
+            transition: 0.2s;
         }
     }
 
