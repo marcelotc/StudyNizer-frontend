@@ -3,7 +3,6 @@ import { NavLink } from "react-router-dom";
 
 export const Container = styled.div`
     display: flex;
-    -webkit-box-pack: center;
     justify-content: center;
     margin-top: 60px;
 `;
@@ -15,7 +14,6 @@ export const InnerContainer = styled.div`
 export const CardContainerList = styled.div`
     display: flex;
     flex-wrap: wrap;
-    -webkit-box-align: center;
     align-items: center;
     align-content: center;
 
@@ -76,13 +74,10 @@ export const Card = styled.div`
 `;
 
 export const AddCard = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px dashed black;
     border-radius: 10px;
-    height: 298px;
+    margin: 0px 30px 30px 0px;
     width: calc(20% - 30px);
+    border: 1px dashed gray;
 
     &:hover {
         cursor: pointer;
@@ -95,10 +90,27 @@ export const AddCard = styled.div`
         }
     }
 
-    > svg {
-        font-size: 100px;
-        color: #BEEC5A;
+    .addCardHeader {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        height: 30px;
     }
+
+    .addCardBody {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 297px;
+        border-radius: 10px;
+
+        > svg {
+            font-size: 100px;
+            color: #BEEC5A;
+            margin-bottom: 50px;
+        }
+    }
+    
 
     @media (max-width: 990px) {
         width: calc(50% - 30px);

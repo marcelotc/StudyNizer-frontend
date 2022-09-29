@@ -108,7 +108,12 @@ export default function SubjectsCard() {
             </CardContainer>
           ))}
           <AddCard onClick={() => showModal("", 'Adicionar')}>
-            <FaPlus />
+            <div className='addCardHeader'>
+
+            </div>
+            <div className='addCardBody'>
+              <FaPlus />
+            </div>
           </AddCard>
         </CardContainerList>
       </InnerContainer>
