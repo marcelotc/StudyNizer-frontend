@@ -147,6 +147,7 @@ function Board() {
     message.success('Tarefa adicionada!');
   }
 
+  // TODO - Remover task pelo ID e não pelo index
   const removeitem = (data, index) => {
     setState(current => {
       const copy = {...current};
