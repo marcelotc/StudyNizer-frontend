@@ -4,11 +4,10 @@ import styled from 'styled-components';
 export const Container = styled.div`
     display: flex;
     flex-direction: column;
-    background: #fff;
+    background: #f6efdf;
     border-radius: 5px;
     margin-bottom: 10px;
     padding: 15px;
-    height: 100%;
 `;
 
 export const BoardFilter = styled.div`
@@ -103,8 +102,7 @@ export const CardHeader = styled.div`
     display: flex;
     justify-content: space-between;
     width: 100%;
-    border-top-left-radius: 7px;
-    border-top-right-radius: 7px; 
+
     background: gray;
     padding: 5px;
 

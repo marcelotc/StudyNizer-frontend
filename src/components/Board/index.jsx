@@ -87,13 +87,15 @@ function Board() {
   const [open, setOpen] = useState(false);
   const [taskDueDate, setTaskDueDate] = useState("");
   const [priority, setPriority] = useState("");
-  const [modalMode, setModalMode] = useState("Adicionar");
+  const [modalMode, setModalMode] = useState("Salvar");
   const [searchTermTitle, setSearchTermTitle] = useState("");
   const [searchTermPriority, setSearchTermPriority] = useState(undefined);
   const [searchTermTaskDueData, setSearchTermTaskDueData] = useState({
     min: 0,
     max: 0
   });
+
+  const taskTextsBlank = text?.trim() === "" || description?.trim() === "" || taskDueDate === undefined || priority === undefined;
 
   const handleDragEnd = ({destination, source}) => {
     if (!destination) {
@@ -172,7 +174,7 @@ function Board() {
     if(modalMode === "edit") {
       setModalMode("Editar");
     } else {
-      setModalMode("Adicionar");
+      setModalMode("Salvar");
     }
   };
 
@@ -240,8 +242,6 @@ function Board() {
       }));
     }
   };
-
-  const taskTextsBlank = text?.trim() === "" || description?.trim() === "" || taskDueDate === undefined || priority === undefined;
 
   return (
     <Container>
