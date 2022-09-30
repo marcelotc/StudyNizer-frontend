@@ -1,16 +1,24 @@
 import React, { useContext, useState } from "react";
 import editorContext from "../editorContext";
-import { MarkedInputContainer, MarketdInputTitle, MarketdInputTextArea } from "./styles";
+import { MarkedInputContainer, MarketdInputTitle, MarketdInputTextArea, MarkdownPanel } from "./styles";
 
-export function MarkedInput() {
+export function MarkedInput(props) {
     const { setMarkdownText } = useContext(editorContext);
-    const [selectedWord, setSelectedWord] = useState("");
+    const [selectedWord, setSelectedWord] = useState('');
+    const [selectedText, setSelectedText] = useState('');
+    const [selectedCoordinates, setSelecterdCoordinates] = useState('');
+    const [markdownPanelVisible, setMarkdownPanelVisible] = useState('none');
 
     const onInputChange = value => {
         setMarkdownText(value);
     };
 
-	const handleCLick=()=>{
+	const handleSelectedText=()=>{
+        let selectedText = window.getSelection().toString() ? window.getSelection().toString() : null;
+        setSelectedText(selectedText);
+    }
+
+    const handleSelectedWord=()=>{
         let b;
         let sel=window.getSelection();
         let str=sel.anchorNode.nodeValue;
@@ -24,15 +32,40 @@ export function MarkedInput() {
         }
     }
 
+    const handleOnPointerUp = () => {
+        let selection = document.getSelection()
+        
+        let rect = selection.getRangeAt(0).getBoundingClientRect();
+
+        if(rect !== undefined) {
+            setSelecterdCoordinates(rect);
+        }
+        setMarkdownPanelVisible('unset');
+    }
+
+
     return (
         <MarkedInputContainer>
-            <div>Palavra selecionada: {selectedWord}</div>
+            Selected word: <strong>{selectedWord}</strong> <br />
+            Selected wordsss: <strong>{selectedText}</strong>
             <MarketdInputTitle>Markdown Text</MarketdInputTitle>
             <MarketdInputTextArea 
                 contentEditable
                 onInput={e => onInputChange(e.currentTarget.textContent)}
-                onClick={() => handleCLick()}
+                onClick={() => handleSelectedWord()}
+                onMouseUp={() => handleSelectedText()}
+                onPointerUp={(e) => handleOnPointerUp(e)}
+                onKeyUp={() => setMarkdownPanelVisible('none')}
             />
+            <MarkdownPanel 
+                markdownPanelVisible={markdownPanelVisible} 
+                rect={selectedCoordinates}
+                onClick={() => props.handleMardownModal()}
+            >
+                <div>
+                    Utilizar Markdown
+                </div>
+            </MarkdownPanel>
         </MarkedInputContainer>
     );
 }

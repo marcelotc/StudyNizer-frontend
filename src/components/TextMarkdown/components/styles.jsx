@@ -8,6 +8,34 @@ export const MarkedInputContainer = styled.div`
   font-family: "Lato", sans-serif;
 `;
 
+export const MarkdownPanel = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: absolute;
+  display: ${props => props.markdownPanelVisible};
+  width: 220px; 
+  padding: 8px;
+  border-radius: 2px;
+  background-color: #fff;
+  left: ${props => `calc(${props?.rect.left}px + calc(${props?.rect.width}px / 2) - 40px)`};
+  top:  ${props => `calc(${props?.rect.top}px - 48px)`};
+  box-shadow: 0 1px 2px rgba(0,0,0,0.07), 
+                0 2px 4px rgba(0,0,0,0.07), 
+                0 4px 8px rgba(0,0,0,0.07), 
+                0 8px 16px rgba(0,0,0,0.07),
+                0 16px 32px rgba(0,0,0,0.07), 
+                0 32px 64px rgba(0,0,0,0.07);
+  
+  > div {
+    display: table;
+    margin: 0 auto;
+    height: 100%;
+    font-weight: bold;
+  }
+`;
+
 export const MarketdInputTitle = styled.div`
   font-size: 22px;
   font-weight: 600;
