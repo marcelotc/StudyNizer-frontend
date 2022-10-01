@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { FaTimes } from "react-icons/fa";
-import { MarkedInputContainer, MarketdInputTextArea, MarkdownPanel } from "./styles";
+import { FaTimes, FaPlus, FaRegFile } from "react-icons/fa";
+import { MarkedInputContainer, MarkedInputMenu, MarketdInputTextArea, MarkdownPanel } from "./styles";
 
 export function MarkedInput() {
     const [selectedCoordinates, setSelecterdCoordinates] = useState('');
@@ -35,6 +35,16 @@ export function MarkedInput() {
 
     return (
         <MarkedInputContainer>
+            <MarkedInputMenu>
+                <section>
+                    <div><FaRegFile />Página 1</div>
+                    <div><FaRegFile />Página 2</div>
+                    <div><FaRegFile />Página 3</div>
+                    <div><FaRegFile />Página 4</div>
+                    <div><FaRegFile />Página 5</div>
+                </section>
+                <footer><FaPlus /> Adicionar página</footer>
+            </MarkedInputMenu>
             <MarketdInputTextArea 
                 onInput={e => onInputChange(e.currentTarget.textContent)}
                 onPointerUp={(e) => handleRemoveMarkuptPanel(e)}

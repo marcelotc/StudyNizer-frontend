@@ -1,10 +1,63 @@
 import styled from "styled-components";
 
 export const MarkedInputContainer = styled.div`
+  display: flex;
   width: 100%;
   height: 100%;
-  padding: 13px;
+  padding: 13px 13px 13px 0;
   font-family: "Lato", sans-serif;
+`;
+
+export const MarkedInputMenu = styled.div`
+  display: flex ;
+  flex-direction: column;
+  height: 500px;
+  width: 18%;
+  margin-right: 50px;
+  border-top: 1px solid #000;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+
+  section {
+    height: 100%;
+
+    > div {
+      cursor: pointer;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-weight: bold;
+
+      &:hover {
+        background: lightgray;
+        transition: 0.3s;
+      }
+
+      > svg {
+        margin-right: 10px;
+        margin-bottom: -2px;
+      }
+    }
+  }
+
+  footer {
+    font-size: 15px;
+    width: 100%;
+    text-align: center;
+
+    > svg {
+      margin-bottom: -2px;
+    }
+
+    &:hover {
+      cursor: pointer;
+      background: lightgray;
+      transition: 0.3s;
+    }
+  }
 `;
 
 export const MarkdownPanel = styled.div`
@@ -62,6 +115,7 @@ export const MarkdownPanel = styled.div`
 
 export const MarketdInputTextArea = styled.div`
   outline: none;
+  width: 100%;
 
   > div {
       border-bottom: 1px solid lightgray;
