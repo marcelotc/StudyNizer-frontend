@@ -40,8 +40,8 @@ export const CardContainer = styled.div`
 
         background: #c3c3c3;
 
-        svg {
-            color: #000;
+        > svg {
+            display: none;
             font-size: 18px;
             margin-right: 10px;
             cursor: pointer;
@@ -59,6 +59,13 @@ export const CardContainer = styled.div`
             transition: 0.2s;
         }
     }
+
+    &:hover > div {
+        > svg {
+            display: unset;
+        }
+    }
+    
 
     @media (max-width: 990px) {
         width: calc(50% - 30px);

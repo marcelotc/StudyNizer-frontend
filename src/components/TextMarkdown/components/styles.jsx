@@ -47,6 +47,7 @@ export const MarkedInputMenu = styled.div`
     font-size: 15px;
     width: 100%;
     text-align: center;
+    font-weight: bold;
 
     > svg {
       margin-bottom: -2px;
