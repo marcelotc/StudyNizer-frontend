@@ -63,22 +63,29 @@ export const MarkdownPanel = styled.div`
 export const MarketdInputTextArea = styled.div`
   outline: none;
 
-  > div:hover {
+  > div {
       border-bottom: 1px solid lightgray;
+
+      &:hover {
+        border-bottom: 1px solid #000;
+        transition: 0.4s;
+      }
   }
 
-  /*> div:hover:before {
-      content: "\f055";
-      font-family: 'Font Awesome 5 Free';
-      font-weight: 900;
-      font-size: 30px;
-      font-weight: bold;
-      vertical-align: middle;
-  }*/
+  /*
+    > div:hover:before {
+        content: "\f055";
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        font-size: 30px;
+        font-weight: bold;
+        vertical-align: middle;
+    }
 
-  > div:hover:before {
-      pointer-events: all;
-  }
+    > div:hover:before {
+        pointer-events: all;
+    }
+  */
 `;
 
 export const ResultContainer = styled.div`

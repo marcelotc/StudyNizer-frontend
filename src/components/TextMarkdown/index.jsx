@@ -2,18 +2,11 @@ import React, { useState } from "react";
 import { useLocation } from 'react-router-dom';
 import { MarkedInput } from "./components/markedInput";
 import { Button, Modal } from 'antd';
-import { EditorContainer, TextMarkdownContainer, Title } from './styles';
+import { TextMarkdownContainer, Title } from './styles';
 
 export function TextMarkdown() {
     const { state } = useLocation();
-
-    const [markdownText, setMarkdownText] = useState("");
     const [open, setOpen] = useState(false);
-
-    const contextValue = {
-        markdownText,
-        setMarkdownText
-    };
 
     const showModal = () => {
         setOpen(true);
@@ -50,11 +43,9 @@ export function TextMarkdown() {
                 <p>* Lista</p>
                 <p>`texto` destaque</p>
             </Modal>
-            <EditorContainer>
-                <MarkedInput 
-                    handleMardownModal={{showModal, handleCancel}} 
-                />
-            </EditorContainer>
+            <MarkedInput 
+                handleMardownModal={{showModal, handleCancel}} 
+            />
         </TextMarkdownContainer>
     );
 }

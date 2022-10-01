@@ -40,7 +40,9 @@ export function MarkedInput() {
                 onPointerUp={(e) => handleRemoveMarkuptPanel(e)}
                 onKeyUp={() => setMarkdownPanelVisible('none')}
                 contentEditable
-            />
+            >
+                { [...Array(15)].map((_, index) =>  <div key={index}><br /></div>) }
+            </MarketdInputTextArea>
             <MarkdownPanel 
                 markdownPanelVisible={markdownPanelVisible} 
                 rect={selectedCoordinates}

@@ -2,10 +2,6 @@ import styled from 'styled-components'
 import { NavLink } from 'react-router-dom';
 
 export const Container = styled.div`
-    height: 100%;
-`
-export const TextAreaContainer = styled.div`
-    height: 100%;
 `
 
 export const BackButton = styled(NavLink)`
@@ -20,5 +16,6 @@ export const BackButton = styled(NavLink)`
 
     &:hover {
         color: gray;
+        transition: 0.3s;
     }
 `
