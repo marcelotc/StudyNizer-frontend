@@ -1,11 +1,8 @@
 import React, { useContext, useState } from "react";
-import editorContext from "../editorContext";
+import { FaTimes } from "react-icons/fa";
 import { MarkedInputContainer, MarketdInputTitle, MarketdInputTextArea, MarkdownPanel } from "./styles";
 
 export function MarkedInput(props) {
-    const { setMarkdownText } = useContext(editorContext);
-    const [selectedWord, setSelectedWord] = useState('');
-    const [selectedText, setSelectedText] = useState('');
     const [selectedCoordinates, setSelecterdCoordinates] = useState('');
     const [markdownPanelVisible, setMarkdownPanelVisible] = useState('none');
 
@@ -13,26 +10,7 @@ export function MarkedInput(props) {
         setMarkdownText(value);
     };
 
-	const handleSelectedText=()=>{
-        let selectedText = window.getSelection().toString() ? window.getSelection().toString() : null;
-        setSelectedText(selectedText);
-    }
-
-    const handleSelectedWord=()=>{
-        let b;
-        let sel=window.getSelection();
-        let str=sel.anchorNode.nodeValue;
-        let len=str?.length;
-        let a=b=sel.anchorOffset;
-        
-        if(str !== null) {
-            while(str[a]!=' '&&a--){}; if (str[a]==' ') a++; // start of word
-            while(str[b]!=' '&&b++<len){};                   // end of word+1
-            setSelectedWord(str.substring(a,b));
-        }
-    }
-
-    const handleOnPointerUp = () => {
+    const handleRemoveMarkuptPanel = () => {
         let selection = document.getSelection()
         
         let rect = selection.getRangeAt(0).getBoundingClientRect();
@@ -43,27 +21,37 @@ export function MarkedInput(props) {
         setMarkdownPanelVisible('unset');
     }
 
+    function handleApplyMarkup(markup) {
+        if (markup === "text") {
+            document.execCommand("removeformat");
+        } else if (markup === "bold") {
+            document.execCommand("bold");
+        } else if (markup === "italic") {
+            document.execCommand("italic");
+        } else if (markup === "title") {
+            document.execCommand("fontSize", false, "10");
+        }
+    }
 
     return (
         <MarkedInputContainer>
-            Selected word: <strong>{selectedWord}</strong> <br />
-            Selected wordsss: <strong>{selectedText}</strong>
-            <MarketdInputTitle>Markdown Text</MarketdInputTitle>
+            <MarketdInputTitle>Disciplina 1</MarketdInputTitle>
             <MarketdInputTextArea 
-                contentEditable
                 onInput={e => onInputChange(e.currentTarget.textContent)}
-                onClick={() => handleSelectedWord()}
-                onMouseUp={() => handleSelectedText()}
-                onPointerUp={(e) => handleOnPointerUp(e)}
+                onPointerUp={(e) => handleRemoveMarkuptPanel(e)}
                 onKeyUp={() => setMarkdownPanelVisible('none')}
+                contentEditable
             />
             <MarkdownPanel 
                 markdownPanelVisible={markdownPanelVisible} 
                 rect={selectedCoordinates}
-                onClick={() => props.handleMardownModal()}
             >
-                <div>
-                    Utilizar Markdown
+                <div className="markdownPanel" onMouseDown={(event) => event.preventDefault()}>
+                    <div onClick={() => handleApplyMarkup('text')}>Texto</div>
+                    <div onClick={() => handleApplyMarkup('bold')}>Negrito</div>
+                    <div onClick={() => handleApplyMarkup('italic')}>Itálico</div>
+                    <div onClick={() => handleApplyMarkup('title')}>Título</div>
+                    <FaTimes onClick={() => setMarkdownPanelVisible('none')} />
                 </div>
             </MarkdownPanel>
         </MarkedInputContainer>

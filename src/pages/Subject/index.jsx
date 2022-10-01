@@ -7,7 +7,6 @@ import { TextMarkdown } from '../../components/TextMarkdown';
 export function Subject() {
   return (
     <Container>
-      <h1>Disciplinas</h1>
       <NavLink to="/">
         Voltar
       </NavLink>

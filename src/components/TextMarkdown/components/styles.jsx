@@ -1,10 +1,9 @@
 import styled from "styled-components";
 
 export const MarkedInputContainer = styled.div`
-  width: 50%;
+  width: 100%;
   height: 100%;
   padding: 13px;
-  border-right: 1.5px solid rgba(15, 15, 15, 0.4);
   font-family: "Lato", sans-serif;
 `;
 
@@ -12,11 +11,10 @@ export const MarkdownPanel = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
   position: absolute;
   display: ${props => props.markdownPanelVisible};
-  width: 220px; 
-  padding: 8px;
+  width: 305px;
+  height: 40px; 
   border-radius: 2px;
   background-color: #fff;
   left: ${props => `calc(${props?.rect.left}px + calc(${props?.rect.width}px / 2) - 40px)`};
@@ -28,11 +26,37 @@ export const MarkdownPanel = styled.div`
                 0 16px 32px rgba(0,0,0,0.07), 
                 0 32px 64px rgba(0,0,0,0.07);
   
-  > div {
-    display: table;
-    margin: 0 auto;
-    height: 100%;
-    font-weight: bold;
+  .markdownPanel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%; 
+
+    > svg {
+      position: absolute;
+      right: 10px;
+      top: 5px;
+      font-size: 15px;
+      cursor: pointer;
+
+      &:hover {
+        color: gray;
+      }
+    }
+
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      margin: 0 10px;
+      font-weight: bold;
+
+      &:hover{
+        background: #ebe8e8;
+        cursor: pointer;
+      }
+    }
   }
 `;
 
@@ -51,14 +75,14 @@ export const MarketdInputTextArea = styled.div`
       border-bottom: 1px solid lightgray;
   }
 
-  > div:hover:before {
+  /*> div:hover:before {
       content: "\f055";
       font-family: 'Font Awesome 5 Free';
       font-weight: 900;
       font-size: 30px;
       font-weight: bold;
       vertical-align: middle;
-  }
+  }*/
 
   > div:hover:before {
       pointer-events: all;
