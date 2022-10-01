@@ -1,16 +1,17 @@
 import { Route, Routes } from 'react-router-dom'
-import { DefaultLayout } from './layouts/DefaultLayout'
-import { Subject } from './pages/Subject'
 
-import { Main } from './pages/Main'
+import { Board } from './pages/Board'
+import { SubjectsList } from './pages/SubjectsList'
+import { SubjectAnotations } from './pages/SubjectAnotations'
+import { CalendComponent } from './pages/Calendar'
 
 export function Router() {
     return (
         <Routes>
-            <Route path="/" element={<DefaultLayout />}>
-                <Route path="/" element={<Main />} />
-                <Route path="/subject/:subject" element={<Subject />} />
-            </Route>
+            <Route path="/" element={<Board />} />
+            <Route path="/subjectsList" element={<SubjectsList />} />
+            <Route path="/subjectAnotations/:subject" element={<SubjectAnotations />} />
+            <Route path="/calendar" element={<CalendComponent />} />
         </Routes>
     )
 }

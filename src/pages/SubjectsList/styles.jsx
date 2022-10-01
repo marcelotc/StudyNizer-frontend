@@ -2,12 +2,15 @@ import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 
 export const Container = styled.div`
-    display: flex;
-    justify-content: center;
-    margin-top: 60px;
+
 `;
 
-export const InnerContainer = styled.div`
+export const ListContainer = styled.div`
+    display: flex;
+    justify-content: center;
+`;
+
+export const ListInnerContainer = styled.div`
     width: 86.5%;
 `;
 

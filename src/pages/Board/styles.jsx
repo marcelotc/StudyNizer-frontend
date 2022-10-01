@@ -7,7 +7,6 @@ export const Container = styled.div`
     background: #fff;
     border-radius: 5px;
     margin-bottom: 10px;
-    padding: 15px;
 `;
 
 export const BoardFilter = styled.div`

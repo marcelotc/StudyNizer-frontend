@@ -1,8 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
-import { MarkedInputContainer, MarketdInputTitle, MarketdInputTextArea, MarkdownPanel } from "./styles";
+import { MarkedInputContainer, MarketdInputTextArea, MarkdownPanel } from "./styles";
 
-export function MarkedInput(props) {
+export function MarkedInput() {
     const [selectedCoordinates, setSelecterdCoordinates] = useState('');
     const [markdownPanelVisible, setMarkdownPanelVisible] = useState('none');
 
@@ -35,7 +35,6 @@ export function MarkedInput(props) {
 
     return (
         <MarkedInputContainer>
-            <MarketdInputTitle>Disciplina 1</MarketdInputTitle>
             <MarketdInputTextArea 
                 onInput={e => onInputChange(e.currentTarget.textContent)}
                 onPointerUp={(e) => handleRemoveMarkuptPanel(e)}

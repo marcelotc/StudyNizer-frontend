@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import './styles.jsx';
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
 import _ from "lodash";
 import {v4} from "uuid";
@@ -7,7 +6,10 @@ import { Popconfirm, Modal, Input, Button, Tooltip, Select, DatePicker, message 
 import { FaPlus, FaCalendarAlt, FaTrash } from "react-icons/fa";
 import moment from 'moment';
 
+import { Header } from '../../components/Header'
+
 import { Container, BoardFilter, AddTaskContainer, BoardContainer, Column, Card, Item, CardHeader, PriorityColor, CardTaskDetails } from "./styles";
+import './styles.jsx';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -66,7 +68,7 @@ const cardTaskDetailsText = 'Clique para ver detalhes desta tarefa';
 
 const dateFormat = "DD-MM-YYYY";
 
-function Board() {
+export function Board() {
   const [text, setText] = useState("")
   const [description, setDescription] = useState("")
   const [state, setState] = useState({
@@ -246,6 +248,7 @@ function Board() {
 
   return (
     <Container>
+      <Header/>
       <Modal
         open={open}
         title={`Coluna "${column}"`}
@@ -375,5 +378,3 @@ function Board() {
     </Container>
   );
 }
-
-export default Board;

@@ -60,14 +60,6 @@ export const MarkdownPanel = styled.div`
   }
 `;
 
-export const MarketdInputTitle = styled.div`
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 1em;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(15, 15, 15, 0.3);
-`;
-
 export const MarketdInputTextArea = styled.div`
   outline: none;
 
