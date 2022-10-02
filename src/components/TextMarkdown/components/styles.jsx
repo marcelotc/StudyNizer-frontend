@@ -76,13 +76,12 @@ export const MarkedInputMenu = styled.div`
   footer {
     font-size: 15px;
     width: 100%;
-    text-align: center;
     font-weight: bold;
     display: ${props => props.hideMarkdownMenu ? 'none' : 'block'};
-    padding: 10px;
+    padding: 10px 0;
 
     > svg {
-      margin: 0 10px -2px 0;
+      margin: 0 10px -2px 10px;
     }
 
     &:hover {

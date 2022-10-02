@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Dropdown, Menu, Tooltip } from 'antd';
+import { Dropdown, Menu, Tooltip, Popconfirm, message } from 'antd';
 import { FaTimes, FaPlus, FaRegFile, FaTimesCircle, FaAngleDoubleLeft, FaAngleDoubleRight, FaAngleDown } from "react-icons/fa";
 import { MarkedInputContainer, MarkedInputMenu, MarketdInputTextArea, MarkdownPanel } from "./styles";
 import { v4 } from 'uuid';
@@ -161,7 +161,22 @@ export function MarkedInput() {
 
     const handleCreateNewPage = () => {
         let pageId = v4();
-        let newPage = <div id={pageId}><FaRegFile /><input placeholder="Nome da página" autocomplete="new-password" /><FaTimesCircle onClick={() => handleRemovePage(pageId)} /></div>;
+        let newPage = 
+            <div id={pageId}>
+                <FaRegFile />
+                <input placeholder="Nome da página" autocomplete="new-password" />
+                <Popconfirm 
+                    placement="right" 
+                    title={'Tem certeza que deseja excluir esta página?'} 
+                    onConfirm={() => confirm(pageId)} 
+                    okText="Sim" 
+                    cancelText="Não"
+                >                                          
+                <Tooltip placement="right" title="Excluir página">
+                    <FaTimesCircle />
+                </Tooltip>
+                </Popconfirm>
+            </div>;
 
         setPageArray(oldPageArray => [...oldPageArray, newPage])
     }
@@ -172,6 +187,11 @@ export function MarkedInput() {
               return props.id !== pageId;
         }));
     }
+
+    const confirm = (pageId) => {
+        handleRemovePage(pageId);
+        message.success('Página removida!');
+    };
 
     return (
         <MarkedInputContainer>
