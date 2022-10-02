@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Dropdown, Menu, Tooltip, Popconfirm, message } from 'antd';
+import { Dropdown, Menu, Tooltip, message, Modal, Button, Input } from 'antd';
 import { FaTimes, FaPlus, FaRegFile, FaTimesCircle, FaAngleDoubleLeft, FaAngleDoubleRight, FaAngleDown } from "react-icons/fa";
-import { MarkedInputContainer, MarkedInputMenu, MarketdInputTextArea, MarkdownPanel } from "./styles";
+import { MarkedInputContainer, MarkedInputMenu, MarketdInputTextAreaContainer, MarketdInputTextArea, MarkdownPanel, AddNewPageModal } from "./styles";
 import { v4 } from 'uuid';
 
 export function MarkedInput() {
@@ -9,6 +9,8 @@ export function MarkedInput() {
     const [markdownPanelVisible, setMarkdownPanelVisible] = useState('none');
     const [hideMarkdownMenu, setHideMarkdownMenu] = useState(true);
     const [pageArray, setPageArray] = useState([]);
+    const [openNewPageModal, setOpenNewPageModal] = useState(false);
+    const [newPageName, setNewPageName] = useState('');
 
     const onInputChange = value => {
         setMarkdownText(value);
@@ -154,31 +156,25 @@ export function MarkedInput() {
         setMarkdownPanelVisible('block');
     }
 
-    const handleShowPagesMenu = () => {
-        setHideMarkdownMenu(false); 
-        setMarkdownPanelVisible('none');
-    }
-
     const handleCreateNewPage = () => {
         let pageId = v4();
         let newPage = 
             <div id={pageId}>
                 <FaRegFile />
-                <input placeholder="Nome da página" autocomplete="new-password" />
-                <Popconfirm 
-                    placement="right" 
-                    title={'Tem certeza que deseja excluir esta página?'} 
-                    onConfirm={() => confirm(pageId)} 
-                    okText="Sim" 
-                    cancelText="Não"
-                >                                          
+                <input 
+                    id={pageId}
+                    placeholder="Nome da página" 
+                    autocomplete="new-password" 
+                    value={newPageName}
+                />
                 <Tooltip placement="right" title="Excluir página">
-                    <FaTimesCircle />
+                    <FaTimesCircle onClick={() => handleRemovePage(pageId)} />
                 </Tooltip>
-                </Popconfirm>
             </div>;
 
         setPageArray(oldPageArray => [...oldPageArray, newPage])
+        setNewPageName('');
+        setOpenNewPageModal(false);
     }
 
     const handleRemovePage = (pageId) => {
@@ -186,36 +182,74 @@ export function MarkedInput() {
             current.filter(({props}) => {
               return props.id !== pageId;
         }));
+        message.success('Página removida!');
     }
 
-    const confirm = (pageId) => {
-        handleRemovePage(pageId);
-        message.success('Página removida!');
-    };
+    const showNewPageModal = () => {
+        setOpenNewPageModal(true);
+        setHideMarkdownMenu(false);
+      };
+    
+      const canvelNewPageModal = () => {
+        setOpenNewPageModal(false);
+      };
+
+      console.log('hideMarkdownMenu', hideMarkdownMenu)
 
     return (
         <MarkedInputContainer>
+            <Modal
+                open={openNewPageModal}
+                title={'Adicionar página'}
+                onCancel={canvelNewPageModal}
+                footer={[
+                <Button key="back" onClick={canvelNewPageModal}>
+                    Fechar
+                </Button>
+                ]}
+            >
+                <AddNewPageModal>
+                    <Input 
+                        placeholder="Nome da página" 
+                        autocomplete="new-password" 
+                        value={newPageName}
+                        onChange={(e) => setNewPageName(e.target.value)}
+                    />
+                    <Button 
+                        type="primary"
+                        disabled={newPageName.trim() === "" ? true : false}
+                        style={{
+                        opacity: newPageName.trim() === "" ? '' : '0.8',
+                        cursor: newPageName.trim() === "" ? 'not-allowed' : ''
+                        }}
+                        onClick={() => handleCreateNewPage()}
+                    >Adicionar</Button>
+                </AddNewPageModal>
+            </Modal>
             <MarkedInputMenu hideMarkdownMenu={hideMarkdownMenu}>
                 {hideMarkdownMenu ? 
                     <Tooltip placement="right" title="Menu de páginas">
-                    <FaAngleDoubleRight onClick={() => handleShowPagesMenu()} /> 
+                        <FaAngleDoubleRight onClick={() => setHideMarkdownMenu(false)} /> 
                     </Tooltip>  : 
                     <FaAngleDoubleLeft onClick={() => setHideMarkdownMenu(true)} /> 
                 }
                 <section>
                     {pageArray}
                 </section>
-                <footer onClick={() => handleCreateNewPage()}><FaPlus />Adicionar página</footer>
+                <footer onClick={() => showNewPageModal()}><FaPlus />Adicionar página</footer>
             </MarkedInputMenu>
-            <MarketdInputTextArea 
-                onInput={e => onInputChange(e.currentTarget.textContent)}
-                onPointerUp={(e) => handleRemoveMarkuptPanel(e)}
-                onKeyUp={() => setMarkdownPanelVisible('none')}
-                onClick={(e) => handleShowMarkupPanel(e)}
-                contentEditable
-            >
-                { [...Array(15)].map((_, index) =>  <div key={index}><br /></div>) }
-            </MarketdInputTextArea>
+            <MarketdInputTextAreaContainer>
+                <h1>Página 1</h1>
+                <MarketdInputTextArea 
+                    onInput={e => onInputChange(e.currentTarget.textContent)}
+                    onPointerUp={(e) => handleRemoveMarkuptPanel(e)}
+                    onKeyUp={() => setMarkdownPanelVisible('none')}
+                    onClick={(e) => handleShowMarkupPanel(e)}
+                    contentEditable
+                >
+                    { [...Array(15)].map((_, index) =>  <div key={index}><br /></div>) }
+                </MarketdInputTextArea>
+            </MarketdInputTextAreaContainer>
             <MarkdownPanel 
                 markdownPanelVisible={markdownPanelVisible} 
                 rect={selectedCoordinates}

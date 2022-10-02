@@ -45,31 +45,31 @@ export const MarkedInputMenu = styled.div`
     display: ${props => props.hideMarkdownMenu ? 'none' : 'block'};
 
     > div {
-      cursor: pointer;
-      padding: 10px 0 10px 0;
-      font-weight: bold;
+        cursor: pointer;
+        padding: 10px 0 10px 0;
+        font-weight: bold;
 
-      > input {
-        width: 60%;
-        border: none;
-        outline: none;
-        border-radius: 3px;
-        padding-left: 5px;
-      }
+        > input {
+          width: 60%;
+          border: none;
+          outline: none;
+          border-radius: 3px;
+          padding-left: 5px;
+        }
 
-      &:hover {
-        background: lightgray;
-        transition: 0.3s;
-      }
+        &:hover {
+          background: lightgray;
+          transition: 0.3s;
+        }
 
-      svg {
-        margin: 0 10px -2px 10px;
-      }
+        svg {
+          margin: 0 10px -2px 10px;
+        }
 
-      svg:nth-child(3):hover {
-        color: red;
-        transition: 0.2s;
-      }
+        svg:nth-child(3):hover {
+          color: red;
+          transition: 0.2s;
+        }
     }
   }
 
@@ -147,9 +147,13 @@ export const MarkdownPanel = styled.div`
   }
 `;
 
+export const MarketdInputTextAreaContainer = styled.div`
+  width: 100%;
+
+`;
+
 export const MarketdInputTextArea = styled.div`
   outline: none;
-  width: 100%;
 
   > div {
       border-bottom: 1px solid lightgray;
@@ -176,24 +180,9 @@ export const MarketdInputTextArea = styled.div`
   */
 `;
 
-export const ResultContainer = styled.div`
-  width: 50%;
-  height: 100%;
-  padding: 13px;
-  font-family: "Lato", sans-serif;
-`;
-
-export const ResultTitle = styled.div`
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 1em;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(15, 15, 15, 0.3);
-`;
-
-export const ResultArea = styled.div`
-  width: 100%;
-  height: 100%;
-  border: none;
-  font-size: 17px;
+export const AddNewPageModal = styled.div`
+  button {
+    width: 100%;
+    margin-top: 10px;
+  }
 `;
