@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Dropdown, Menu, Tooltip, message, Modal, Button, Input } from 'antd';
+import { Popconfirm, Dropdown, Menu, Tooltip, message, Modal, Button, Input } from 'antd';
 import { FaTimes, FaPlus, FaRegFile, FaTimesCircle, FaAngleDoubleLeft, FaAngleDoubleRight, FaAngleDown } from "react-icons/fa";
 import { MarkedInputContainer, MarkedInputMenu, MarketdInputTextAreaContainer, MarketdInputTextArea, MarkdownPanel, AddNewPageModal } from "./styles";
 import { v4 } from 'uuid';
@@ -156,6 +156,10 @@ export function MarkedInput() {
         setMarkdownPanelVisible('block');
     }
 
+    const confirm = (pageId) => {
+        handleRemovePage(pageId);
+      };
+
     const handleCreateNewPage = () => {
         let pageId = v4();
         let newPage = 
@@ -167,9 +171,11 @@ export function MarkedInput() {
                     autocomplete="new-password" 
                     value={newPageName}
                 />
-                <Tooltip placement="right" title="Excluir página">
-                    <FaTimesCircle onClick={() => handleRemovePage(pageId)} />
-                </Tooltip>
+                <Popconfirm placement="right" title={'Realmente deseja excluir está página?'} onConfirm={() => confirm(pageId)} okText="Sim" cancelText="Não">
+                    <Tooltip placement="right" title="Excluir página">
+                        <FaTimesCircle />
+                    </Tooltip>
+                </Popconfirm>
             </div>;
 
         setPageArray(oldPageArray => [...oldPageArray, newPage])
