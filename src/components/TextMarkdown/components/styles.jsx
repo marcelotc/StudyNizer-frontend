@@ -9,10 +9,10 @@ export const MarkedInputContainer = styled.div`
 `;
 
 export const MarkedInputMenu = styled.div`
-  display: flex ;
+  display: flex;
   flex-direction: column;
   height: 500px;
-  width: 18%;
+  width: ${props => props.hideMarkdownMenu ? '4%' : '18%'};
   margin-right: 50px;
   border-top: 1px solid #000;
   border-right: 1px solid #000;
@@ -21,9 +21,23 @@ export const MarkedInputMenu = styled.div`
   border-bottom-left-radius: 0;
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
+  transition: 0.3s;
+
+  > svg {
+    font-size: 25px;
+    cursor: pointer;
+    align-self: flex-end;
+    margin: 10px 10px 0 0;
+
+    &:hover {
+      color: gray;
+      transition: 0.3s;
+    }
+  }
 
   section {
     height: 100%;
+    display: ${props => props.hideMarkdownMenu ? 'none' : 'block'};
 
     > div {
       cursor: pointer;
@@ -48,6 +62,7 @@ export const MarkedInputMenu = styled.div`
     width: 100%;
     text-align: center;
     font-weight: bold;
+    display: ${props => props.hideMarkdownMenu ? 'none' : 'block'};
 
     > svg {
       margin-bottom: -2px;
@@ -67,11 +82,13 @@ export const MarkdownPanel = styled.div`
   align-items: center;
   position: absolute;
   display: ${props => props.markdownPanelVisible};
-  width: 305px;
+  padding: 0 30px;
   height: 40px; 
   border-radius: 2px;
   background-color: #fff;
-  left: ${props => `calc(${props?.rect.left}px + calc(${props?.rect.width}px / 2) - 40px)`};
+  border-radius: 10px;
+  left: 250px;
+  right: 250px;
   top:  ${props => `calc(${props?.rect.top}px - 48px)`};
   box-shadow: 0 1px 2px rgba(0,0,0,0.07), 
                 0 2px 4px rgba(0,0,0,0.07), 

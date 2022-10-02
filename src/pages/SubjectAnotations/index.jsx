@@ -9,7 +9,7 @@ export function SubjectAnotations() {
   return (
     <Container>
       <Header />
-      <BackButton to="/SubjectsList">
+      <BackButton to="/subjectsList">
         <FaChevronLeft />
         Voltar
       </BackButton>
