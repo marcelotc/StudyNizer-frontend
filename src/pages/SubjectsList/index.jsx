@@ -142,7 +142,7 @@ export function SubjectsList() {
                     to={`/subjectAnotations/${subject.id}`} 
                     state={{ subject: subject }}
                   >
-                    <Tooltip placement="bottom" title="Ver resumos da disicplina">
+                    <Tooltip placement="bottom" title="Ver resumos da disciplina">
                       <Card key={subject.id} className="subjectCard">
                         <img alt="example" src="https://static.thenounproject.com/png/3282617-200.png" />
                         <h1>{subject.title}</h1>
