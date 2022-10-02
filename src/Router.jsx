@@ -11,6 +11,7 @@ export function Router() {
             <Route path="/" element={<Board />} />
             <Route path="/subjectsList" element={<SubjectsList />} />
             <Route path="/subjectAnotations/:subject" element={<SubjectAnotations />} />
+            <Route path="/subjectAnotations/:subject/:subjectPage" element={<SubjectAnotations />} />
             <Route path="/calendar" element={<CalendComponent />} />
         </Routes>
     )

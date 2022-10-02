@@ -44,18 +44,20 @@ export const MarkedInputMenu = styled.div`
   section {
     display: ${props => props.hideMarkdownMenu ? 'none' : 'block'};
 
+    a {
+        width: 100%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        color: #000;
+    }
+
     > div {
+        display: flex;
+        justify-content: space-between;
         cursor: pointer;
         padding: 10px 0 10px 0;
         font-weight: bold;
-
-        > input {
-          width: 60%;
-          border: none;
-          outline: none;
-          border-radius: 3px;
-          padding-left: 5px;
-        }
 
         &:hover {
           background: lightgray;
@@ -64,6 +66,7 @@ export const MarkedInputMenu = styled.div`
 
         svg {
           margin: 0 10px -2px 10px;
+          font-size: 18px;
         }
 
         svg:nth-child(3):hover {
@@ -150,6 +153,10 @@ export const MarkdownPanel = styled.div`
 export const MarketdInputTextAreaContainer = styled.div`
   width: 100%;
 
+  h1 {
+    text-align: center;
+  }
+
 `;
 
 export const MarketdInputTextArea = styled.div`
@@ -178,6 +185,19 @@ export const MarketdInputTextArea = styled.div`
         pointer-events: all;
     }
   */
+`;
+
+export const BlankAnotationContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 20px;
+
+  > svg {
+    font-size: 80px;
+    margin-right: 20px;
+  }
 `;
 
 export const AddNewPageModal = styled.div`

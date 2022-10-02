@@ -1,16 +1,21 @@
 import React, { useState } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Popconfirm, Dropdown, Menu, Tooltip, message, Modal, Button, Input } from 'antd';
-import { FaTimes, FaPlus, FaRegFile, FaTimesCircle, FaAngleDoubleLeft, FaAngleDoubleRight, FaAngleDown } from "react-icons/fa";
-import { MarkedInputContainer, MarkedInputMenu, MarketdInputTextAreaContainer, MarketdInputTextArea, MarkdownPanel, AddNewPageModal } from "./styles";
+import { FaTimes, FaPlus, FaRegFile, FaRegFileAlt, FaTimesCircle, FaAngleDoubleLeft, FaAngleDoubleRight, FaAngleDown } from "react-icons/fa";
+import { MarkedInputContainer, MarkedInputMenu, MarketdInputTextAreaContainer, BlankAnotationContainer, MarketdInputTextArea, MarkdownPanel, AddNewPageModal } from "./styles";
 import { v4 } from 'uuid';
 
 export function MarkedInput() {
+    const location = useLocation();
+    const history = useNavigate();
+
     const [selectedCoordinates, setSelectedCoordinates] = useState(0);
     const [markdownPanelVisible, setMarkdownPanelVisible] = useState('none');
-    const [hideMarkdownMenu, setHideMarkdownMenu] = useState(true);
+    const [hideMarkdownMenu, setHideMarkdownMenu] = useState(false);
     const [pageArray, setPageArray] = useState([]);
     const [openNewPageModal, setOpenNewPageModal] = useState(false);
     const [newPageName, setNewPageName] = useState('');
+    const [pageName, setPageName] = useState('');
 
     const onInputChange = value => {
         setMarkdownText(value);
@@ -158,19 +163,24 @@ export function MarkedInput() {
 
     const confirm = (pageId) => {
         handleRemovePage(pageId);
-      };
+    };
 
     const handleCreateNewPage = () => {
         let pageId = v4();
+
+        const subjectPageLink = `/subjectAnotations/${location.state.subject.title.replace(/ /g, '-').toLowerCase()}-${location.state.subject.id}/${newPageName.replace(/ /g, '-').toLowerCase()}`;
+
         let newPage = 
             <div id={pageId}>
                 <FaRegFile />
-                <input 
+                <NavLink 
                     id={pageId}
-                    placeholder="Nome da página" 
-                    autocomplete="new-password" 
-                    value={newPageName}
-                />
+                    to={subjectPageLink}
+                    state={location.state}
+                    onClick={() => setPageName(newPageName)}
+                >
+                    {newPageName}
+                </NavLink>
                 <Popconfirm placement="right" title={'Realmente deseja excluir está página?'} onConfirm={() => confirm(pageId)} okText="Sim" cancelText="Não">
                     <Tooltip placement="right" title="Excluir página">
                         <FaTimesCircle />
@@ -178,8 +188,11 @@ export function MarkedInput() {
                 </Popconfirm>
             </div>;
 
+
+        history(subjectPageLink, { state: location.state });
         setPageArray(oldPageArray => [...oldPageArray, newPage])
         setNewPageName('');
+        setPageName(newPageName)
         setOpenNewPageModal(false);
     }
 
@@ -194,22 +207,20 @@ export function MarkedInput() {
     const showNewPageModal = () => {
         setOpenNewPageModal(true);
         setHideMarkdownMenu(false);
-      };
+    };
     
-      const canvelNewPageModal = () => {
+      const cancelNewPageModal = () => {
         setOpenNewPageModal(false);
-      };
-
-      console.log('hideMarkdownMenu', hideMarkdownMenu)
+    };
 
     return (
         <MarkedInputContainer>
             <Modal
                 open={openNewPageModal}
                 title={'Adicionar página'}
-                onCancel={canvelNewPageModal}
+                onCancel={cancelNewPageModal}
                 footer={[
-                <Button key="back" onClick={canvelNewPageModal}>
+                <Button key="back" onClick={cancelNewPageModal}>
                     Fechar
                 </Button>
                 ]}
@@ -245,7 +256,9 @@ export function MarkedInput() {
                 <footer onClick={() => showNewPageModal()}><FaPlus />Adicionar página</footer>
             </MarkedInputMenu>
             <MarketdInputTextAreaContainer>
-                <h1>Página 1</h1>
+                <h1>{location.state.subject.title}</h1>
+                <h2>{pageName}</h2>
+                {pageArray.length !== 0 ? (
                 <MarketdInputTextArea 
                     onInput={e => onInputChange(e.currentTarget.textContent)}
                     onPointerUp={(e) => handleRemoveMarkuptPanel(e)}
@@ -254,7 +267,11 @@ export function MarkedInput() {
                     contentEditable
                 >
                     { [...Array(15)].map((_, index) =>  <div key={index}><br /></div>) }
-                </MarketdInputTextArea>
+                </MarketdInputTextArea> 
+                ) : <BlankAnotationContainer>
+                        <FaRegFileAlt /> Página vazia, adicione uma página de resumo
+                    </BlankAnotationContainer>
+                }
             </MarketdInputTextAreaContainer>
             <MarkdownPanel 
                 markdownPanelVisible={markdownPanelVisible} 
