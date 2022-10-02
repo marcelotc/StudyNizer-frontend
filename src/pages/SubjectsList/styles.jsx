@@ -99,7 +99,7 @@ export const AddCard = styled.div`
     border-radius: 10px;
     margin: 0px 30px 30px 0px;
     width: calc(20% - 30px);
-    border: 1px dashed gray;
+    border: 3px dashed lightgray;
 
     &:hover {
         cursor: pointer;
