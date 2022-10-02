@@ -4,7 +4,7 @@ import { FaTimes, FaPlus, FaRegFile, FaAngleDoubleLeft, FaAngleDoubleRight, FaAn
 import { MarkedInputContainer, MarkedInputMenu, MarketdInputTextArea, MarkdownPanel } from "./styles";
 
 export function MarkedInput() {
-    const [selectedCoordinates, setSelecterdCoordinates] = useState('');
+    const [selectedCoordinates, setSelectedCoordinates] = useState(0);
     const [markdownPanelVisible, setMarkdownPanelVisible] = useState('none');
     const [hideMarkdownMenu, setHideMarkdownMenu] = useState(true);
 
@@ -18,9 +18,9 @@ export function MarkedInput() {
         let rect = selection.getRangeAt(0).getBoundingClientRect();
 
         if(rect !== undefined) {
-            setSelecterdCoordinates(rect);
+            setSelectedCoordinates(rect.top);
         }
-        setMarkdownPanelVisible('unset');
+        setMarkdownPanelVisible('none');
     }
 
     function handleApplyMarkup(markup, fontSize) {
@@ -116,7 +116,7 @@ export function MarkedInput() {
         />
     );
 
-      const markupPanelMenu = (
+    const markupPanelMenu = (
         <Menu
             items={[
                 {
@@ -147,12 +147,22 @@ export function MarkedInput() {
         />
     );
 
+    const handleShowMarkupPanel = (e) => {
+        setSelectedCoordinates(e.pageY - 30);
+        setMarkdownPanelVisible('block');
+    }
+
+    const handleShowPagesMenu = () => {
+        setHideMarkdownMenu(false); 
+        setMarkdownPanelVisible('none');
+    }
+
     return (
         <MarkedInputContainer>
             <MarkedInputMenu hideMarkdownMenu={hideMarkdownMenu}>
                 {hideMarkdownMenu ? 
                     <Tooltip placement="right" title="Menu de páginas">
-                    <FaAngleDoubleRight onClick={() => setHideMarkdownMenu(false)} /> 
+                    <FaAngleDoubleRight onClick={() => handleShowPagesMenu()} /> 
                     </Tooltip>  : 
                     <FaAngleDoubleLeft onClick={() => setHideMarkdownMenu(true)} /> 
                 }
@@ -163,12 +173,13 @@ export function MarkedInput() {
                     <div><FaRegFile />Página 4</div>
                     <div><FaRegFile />Página 5</div>
                 </section>
-                <footer><FaPlus /> Adicionar página</footer>
+                <footer onClick={() => {}}><FaPlus />Adicionar página</footer>
             </MarkedInputMenu>
             <MarketdInputTextArea 
                 onInput={e => onInputChange(e.currentTarget.textContent)}
                 onPointerUp={(e) => handleRemoveMarkuptPanel(e)}
                 onKeyUp={() => setMarkdownPanelVisible('none')}
+                onClick={(e) => handleShowMarkupPanel(e)}
                 contentEditable
             >
                 { [...Array(15)].map((_, index) =>  <div key={index}><br /></div>) }

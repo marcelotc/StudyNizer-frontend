@@ -63,9 +63,10 @@ export const MarkedInputMenu = styled.div`
     text-align: center;
     font-weight: bold;
     display: ${props => props.hideMarkdownMenu ? 'none' : 'block'};
+    padding: 10px;
 
     > svg {
-      margin-bottom: -2px;
+      margin: 0 10px -2px 0;
     }
 
     &:hover {
@@ -89,7 +90,7 @@ export const MarkdownPanel = styled.div`
   border-radius: 10px;
   left: 250px;
   right: 250px;
-  top:  ${props => `calc(${props?.rect.top}px - 48px)`};
+  top:  ${props => `calc(${props?.rect}px - 48px)`};
   box-shadow: 0 1px 2px rgba(0,0,0,0.07), 
                 0 2px 4px rgba(0,0,0,0.07), 
                 0 4px 8px rgba(0,0,0,0.07), 
