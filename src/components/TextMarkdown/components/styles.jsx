@@ -68,7 +68,7 @@ export const MarkedInputMenu = styled.div`
         margin: 0 10px -2px 10px;
       }
 
-      svg:nth-child(2):hover {
+      svg:nth-child(3):hover {
         color: red;
         transition: 0.2s;
       }
