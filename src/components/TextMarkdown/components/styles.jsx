@@ -22,6 +22,11 @@ export const MarkedInputMenu = styled.div`
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
   transition: 0.3s;
+  overflow-y: auto;
+  
+  ::-webkit-scrollbar {
+    display: none;
+  }
 
   > svg {
     font-size: 25px;
@@ -42,17 +47,30 @@ export const MarkedInputMenu = styled.div`
     > div {
       cursor: pointer;
       margin-bottom: 10px;
-      padding: 10px;
+      padding: 10px 0 10px 0;
       font-weight: bold;
+      margin-top: 10px;
+
+      > input {
+        width: 60%;
+        border: none;
+        outline: none;
+        border-radius: 3px;
+        padding-left: 5px;
+      }
 
       &:hover {
         background: lightgray;
         transition: 0.3s;
       }
 
-      > svg {
-        margin-right: 10px;
-        margin-bottom: -2px;
+      svg {
+        margin: 0 10px -2px 10px;
+      }
+
+      svg:nth-child(2):hover {
+        color: red;
+        transition: 0.2s;
       }
     }
   }

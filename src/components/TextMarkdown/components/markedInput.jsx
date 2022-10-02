@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Dropdown, Menu, Tooltip } from 'antd';
-import { FaTimes, FaPlus, FaRegFile, FaAngleDoubleLeft, FaAngleDoubleRight, FaAngleDown } from "react-icons/fa";
+import { FaTimes, FaPlus, FaRegFile, FaTimesCircle, FaAngleDoubleLeft, FaAngleDoubleRight, FaAngleDown } from "react-icons/fa";
 import { MarkedInputContainer, MarkedInputMenu, MarketdInputTextArea, MarkdownPanel } from "./styles";
+import { v4 } from 'uuid';
 
 export function MarkedInput() {
     const [selectedCoordinates, setSelectedCoordinates] = useState(0);
     const [markdownPanelVisible, setMarkdownPanelVisible] = useState('none');
     const [hideMarkdownMenu, setHideMarkdownMenu] = useState(true);
+    const [pageArray, setPageArray] = useState([]);
+    const [newPageInput, setNewPageInput] = useState(false);
 
     const onInputChange = value => {
         setMarkdownText(value);
@@ -157,6 +160,20 @@ export function MarkedInput() {
         setMarkdownPanelVisible('none');
     }
 
+    const handleCreateNewPage = () => {
+        let pageId = v4();
+        let newPage = <div id={pageId}><FaRegFile /><input placeholder="Nome da página" /><FaTimesCircle onClick={() => handleRemovePage(pageId)} /></div>;
+
+        setPageArray(oldPageArray => [...oldPageArray, newPage])
+    }
+
+    const handleRemovePage = (pageId) => {
+        setPageArray(current =>
+            current.filter(({props}) => {
+              return props.id !== pageId;
+        }));
+    }
+
     return (
         <MarkedInputContainer>
             <MarkedInputMenu hideMarkdownMenu={hideMarkdownMenu}>
@@ -167,13 +184,9 @@ export function MarkedInput() {
                     <FaAngleDoubleLeft onClick={() => setHideMarkdownMenu(true)} /> 
                 }
                 <section>
-                    <div><FaRegFile />Página 1</div>
-                    <div><FaRegFile />Página 2</div>
-                    <div><FaRegFile />Página 3</div>
-                    <div><FaRegFile />Página 4</div>
-                    <div><FaRegFile />Página 5</div>
+                    {pageArray}
                 </section>
-                <footer onClick={() => {}}><FaPlus />Adicionar página</footer>
+                <footer onClick={() => handleCreateNewPage()}><FaPlus />Adicionar página</footer>
             </MarkedInputMenu>
             <MarketdInputTextArea 
                 onInput={e => onInputChange(e.currentTarget.textContent)}

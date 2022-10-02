@@ -44,7 +44,7 @@ export function SubjectsList() {
       description: "bem loca essa disciplina"
     },
     {
-      id: "ksfkasds",
+      id: "ksfkasds11",
       title: "Disciplina 8",
       description: "bem loca essa disciplina"
     }
@@ -126,7 +126,7 @@ export function SubjectsList() {
           <CardContainerList>
             {subjects?.map((subject, index) => {
               return (
-                <CardContainer>
+                <CardContainer key={subject.id}>
                   <div>
                     <Tooltip placement="top" title="Editar nome da disicplina">
                       <FaPencilAlt onClick={() => showModal(subject.title, 'Editar')} />
