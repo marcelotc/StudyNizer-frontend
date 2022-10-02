@@ -6,7 +6,7 @@ import { Container } from './styles';
 export const Header = () => (
     <Container>
         <NavLink to={'/'} activeClassName="active">Board</NavLink>
-        <NavLink to={'/subjectsList'} activeClassName="active">Disciplinas</NavLink>
+        <NavLink to={'/subjects-list'} activeClassName="active">Disciplinas</NavLink>
         <NavLink to={'/calendar'} activeClassName="active">Calendário</NavLink>
     </Container>
 );

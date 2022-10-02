@@ -168,7 +168,7 @@ export function MarkedInput() {
     const handleCreateNewPage = () => {
         let pageId = v4();
 
-        const subjectPageLink = `/subjectAnotations/${location.state.subject.title.replace(/ /g, '-').toLowerCase()}-${location.state.subject.id}/${newPageName.replace(/ /g, '-').toLowerCase()}`;
+        const subjectPageLink = `/subject-anotations/${location.state.subject.title.replace(/ /g, '-').toLowerCase()}-${location.state.subject.id}/${newPageName.replace(/ /g, '-').toLowerCase()}-${pageId}`;
 
         let newPage = 
             <div id={pageId}>
@@ -201,6 +201,7 @@ export function MarkedInput() {
             current.filter(({props}) => {
               return props.id !== pageId;
         }));
+        setPageName('');
         message.success('Página removida!');
     }
 
@@ -269,7 +270,8 @@ export function MarkedInput() {
                     { [...Array(15)].map((_, index) =>  <div key={index}><br /></div>) }
                 </MarketdInputTextArea> 
                 ) : <BlankAnotationContainer>
-                        <FaRegFileAlt /> Página vazia, adicione uma página de resumo
+                        <FaRegFileAlt /> 
+                        <p>Página vazia, adicione uma página de resumo no meu à esquerda</p>
                     </BlankAnotationContainer>
                 }
             </MarketdInputTextAreaContainer>

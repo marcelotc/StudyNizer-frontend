@@ -191,12 +191,13 @@ export const BlankAnotationContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   height: 100%;
   font-size: 20px;
 
   > svg {
     font-size: 80px;
-    margin-right: 20px;
+    margin: 0 20px 35px 0;
   }
 `;
 

@@ -139,7 +139,7 @@ export function SubjectsList() {
                   </div>
                   <CardLink 
                     title={subject.title}
-                    to={`/subjectAnotations/${subject.title.replace(/ /g, '-').toLowerCase()}-${subject.id}`} 
+                    to={`/subject-anotations/${subject.title.replace(/ /g, '-').toLowerCase()}-${subject.id}`} 
                     state={{ subject: subject }}
                   >
                     <Tooltip placement="bottom" title="Ver resumos da disciplina">

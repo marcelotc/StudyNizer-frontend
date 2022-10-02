@@ -9,9 +9,9 @@ export function Router() {
     return (
         <Routes>
             <Route path="/" element={<Board />} />
-            <Route path="/subjectsList" element={<SubjectsList />} />
-            <Route path="/subjectAnotations/:subject" element={<SubjectAnotations />} />
-            <Route path="/subjectAnotations/:subject/:subjectPage" element={<SubjectAnotations />} />
+            <Route path="/subjects-list" element={<SubjectsList />} />
+            <Route path="/subject-anotations/:subject" element={<SubjectAnotations />} />
+            <Route path="/subject-anotations/:subject/:subjectPage" element={<SubjectAnotations />} />
             <Route path="/calendar" element={<CalendComponent />} />
         </Routes>
     )
