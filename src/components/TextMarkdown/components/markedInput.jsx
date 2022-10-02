@@ -9,7 +9,6 @@ export function MarkedInput() {
     const [markdownPanelVisible, setMarkdownPanelVisible] = useState('none');
     const [hideMarkdownMenu, setHideMarkdownMenu] = useState(true);
     const [pageArray, setPageArray] = useState([]);
-    const [newPageInput, setNewPageInput] = useState(false);
 
     const onInputChange = value => {
         setMarkdownText(value);
@@ -162,7 +161,7 @@ export function MarkedInput() {
 
     const handleCreateNewPage = () => {
         let pageId = v4();
-        let newPage = <div id={pageId}><FaRegFile /><input placeholder="Nome da página" /><FaTimesCircle onClick={() => handleRemovePage(pageId)} /></div>;
+        let newPage = <div id={pageId}><FaRegFile /><input placeholder="Nome da página" autocomplete="new-password" /><FaTimesCircle onClick={() => handleRemovePage(pageId)} /></div>;
 
         setPageArray(oldPageArray => [...oldPageArray, newPage])
     }

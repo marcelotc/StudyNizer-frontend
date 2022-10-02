@@ -33,6 +33,7 @@ export const MarkedInputMenu = styled.div`
     cursor: pointer;
     align-self: flex-end;
     margin: 10px 10px 0 0;
+    margin-bottom: 10px;
 
     &:hover {
       color: gray;
@@ -41,15 +42,12 @@ export const MarkedInputMenu = styled.div`
   }
 
   section {
-    height: 100%;
     display: ${props => props.hideMarkdownMenu ? 'none' : 'block'};
 
     > div {
       cursor: pointer;
-      margin-bottom: 10px;
       padding: 10px 0 10px 0;
       font-weight: bold;
-      margin-top: 10px;
 
       > input {
         width: 60%;
