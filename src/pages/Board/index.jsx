@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
+import { useDispatch } from 'react-redux';
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
 import _ from "lodash";
 import {v4} from "uuid";
 import { Popconfirm, Modal, Input, Button, Tooltip, Select, DatePicker, message } from 'antd';
 import { FaPlus, FaCalendarAlt, FaTrash } from "react-icons/fa";
 import moment from 'moment';
+
+import { setCalendarDate } from '../../store/modules/calendarDate/actions';
 
 import { Header } from '../../components/Header'
 
@@ -85,6 +88,7 @@ export function Board() {
       items: [item6]
     }
   })
+  const dispatch = useDispatch();
   const [column, setColumn] = useState('Tarefas');
   const [open, setOpen] = useState(false);
   const [taskDueDate, setTaskDueDate] = useState("");
@@ -147,6 +151,7 @@ export function Board() {
     setPriority("");
     setOpen(false);
     message.success('Tarefa adicionada!');
+    dispatch(setCalendarDate(taskDueDate));
   }
 
   // TODO - Remover task pelo ID e não pelo index

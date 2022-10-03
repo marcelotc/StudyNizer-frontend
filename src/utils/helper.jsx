@@ -19,7 +19,7 @@ const colors = [
 
 export const generateDemoEvents = (
   date = DateTime.now(),
-  count = 250
+  count = 1
 ) => {
   const events = [];
 
@@ -32,7 +32,6 @@ export const generateDemoEvents = (
     .plus({ month: 2 })
     .toFormat('yyyy-MM-dd');
 
-  for (let i = 1; i < count; i += 1) {
     const dateStart = faker.date.between(start, end);
 
     const hour = Math.floor(Math.random() * 23) + 1;
@@ -44,12 +43,6 @@ export const generateDemoEvents = (
       minute: minute,
     });
     const endDate = startDate.plus({ minute: minuteDuration });
-
-    console.log('startDate.toUTC().toString()', startDate.toUTC().toString())
-    console.log('endDate.toUTC().toString()', endDate.toUTC().toString())
-    console.log('faker.commerce.department()', faker.commerce.department())
-    console.log('colors[Math.floor(Math.random() * colors.length - 1) + 1]', colors[Math.floor(Math.random() * colors.length - 1) + 1])
-    console.log('endDate.day !== startDate.day', endDate.day !== startDate.day)
 
     const Event = (props) => {
       return (
@@ -64,21 +57,17 @@ export const generateDemoEvents = (
     const endAt = endDate.toUTC().toString();
     const startTime = startDate.toLocaleString(DateTime.TIME_SIMPLE).toString();
     const endTime = endDate.toLocaleString(DateTime.TIME_SIMPLE).toString();
-    
+
+    console.log('startAt', startAt)
+
     const event= {
       id: v4(),
-      startAt,
-      endAt,
+      startAt: '2022-10-03T13:14:17+00:00',
+      endAt: '2022-10-03T14:22:17.48+00:00',
       summary,
       color: colors[Math.floor(Math.random() * colors.length - 1) + 1],
       allDay: endDate.day !== startDate.day,
-      children: {
-        daysView: <Event 
-                    summary={summary} 
-                    startTime={startTime} 
-                    endTime={endTime} 
-                  /> // Opções: agendaView, daysView, monthView
-      }
+
 
       /* Estilização para mostar que um evento foi finalizado ou feito  */
       
@@ -91,7 +80,6 @@ export const generateDemoEvents = (
     };
 
     events.push(event);
-  }
 
   return events;
 };

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import { DateTime } from 'luxon';
 import Kalend, { CalendarView, OnEventDragFinish } from 'kalend';
 import { CALENDAR_VIEW } from 'kalend-layout';
@@ -11,6 +12,10 @@ import { Container } from "./styles";
 
 export const CalendComponent = (props) => {
     const kalendRef = useRef();
+    const taskDate = useSelector(state => state.calendarDate.date);
+
+    console.log('taskDate', taskDate.format("YYYY-MM-DDTHH:mm:ssZ"))
+
     const [demoEvents, setDemoEvents] = useState([]);
     const [selectedView, setSelectedView] = useState(CALENDAR_VIEW.MONTH);
     const [selectedDate, setSelectedDate] = useState(
