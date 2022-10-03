@@ -13,6 +13,7 @@
     "@faker-js/faker": "^7.5.0",
     "@lourenci/react-kanban": "^2.1.0",
     "antd": "^4.23.0",
+    "dompurify": "^2.4.0",
     "immer": "^9.0.15",
     "kalend": "^0.15.8",
     "luxon": "^3.0.3",
@@ -23,6 +24,7 @@
     "react-icons": "^4.4.0",
     "react-router-dom": "^6.3.0",
     "styled-components": "^5.3.5",
+    "use-debounce": "^8.0.4",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

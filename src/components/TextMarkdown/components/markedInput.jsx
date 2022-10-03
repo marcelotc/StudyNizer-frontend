@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useDebounce } from 'use-debounce';
 import { Popconfirm, Dropdown, Menu, Tooltip, message, Modal, Button, Input } from 'antd';
 import { FaTimes, FaPlus, FaRegFile, FaRegFileAlt, FaTimesCircle, FaAngleDoubleLeft, FaAngleDoubleRight, FaAngleDown } from "react-icons/fa";
 import { MarkedInputContainer, MarkedInputMenu, MarketdInputTextAreaContainer, BlankAnotationContainer, MarketdInputTextArea, MarkdownPanel, AddNewPageModal } from "./styles";
@@ -16,10 +17,8 @@ export function MarkedInput() {
     const [openNewPageModal, setOpenNewPageModal] = useState(false);
     const [newPageName, setNewPageName] = useState('');
     const [pageName, setPageName] = useState('');
-
-    const onInputChange = value => {
-        setMarkdownText(value);
-    };
+    const [markupContent, setMarkupContent] = useState([]);
+    const [markupContentToSave] = useDebounce(markupContent, 1000);
 
     const handleRemoveMarkuptPanel = () => {
         let selection = document.getSelection()
@@ -190,9 +189,9 @@ export function MarkedInput() {
 
 
         history(subjectPageLink, { state: location.state });
-        setPageArray(oldPageArray => [...oldPageArray, newPage])
+        setPageArray(oldPageArray => [...oldPageArray, newPage]);
         setNewPageName('');
-        setPageName(newPageName)
+        setPageName(newPageName);
         setOpenNewPageModal(false);
     }
 
@@ -213,6 +212,41 @@ export function MarkedInput() {
       const cancelNewPageModal = () => {
         setOpenNewPageModal(false);
     };
+
+    function handleMarkedInputTyping(e){
+        setMarkupContent(e.target);
+        setMarkdownPanelVisible('none');
+
+        // TODO - Pegar aqui o html e salvar no banco de dados
+
+        /* TODO - Ver se isso funciona melhor em vez da biblioteca use-debounce
+            function Search() {
+                const [searchTerm, setSearchTerm] = useState('')
+
+                useEffect(() => {
+                    const delayDebounceFn = setTimeout(() => {
+                    console.log(searchTerm)
+                    // Send Axios request here
+                    }, 3000)
+
+                    return () => clearTimeout(delayDebounceFn)
+                }, [searchTerm])
+
+                return (
+                    <input
+                    autoFocus
+                    type='text'
+                    autoComplete='off'
+                    className='live-search-field'
+                    placeholder='Search here...'
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                )
+            }
+        */
+    } 
+
+    console.log('markupContentToSave', markupContentToSave)
 
     return (
         <MarkedInputContainer>
@@ -260,19 +294,18 @@ export function MarkedInput() {
                 <h1>{location.state.subject.title}</h1>
                 <h2>{pageName}</h2>
                 {pageArray.length !== 0 ? (
-                <MarketdInputTextArea 
-                    onInput={e => onInputChange(e.currentTarget.textContent)}
-                    onPointerUp={(e) => handleRemoveMarkuptPanel(e)}
-                    onKeyUp={() => setMarkdownPanelVisible('none')}
-                    onClick={(e) => handleShowMarkupPanel(e)}
-                    contentEditable
-                >
-                    { [...Array(15)].map((_, index) =>  <div key={index}><br /></div>) }
-                </MarketdInputTextArea> 
-                ) : <BlankAnotationContainer>
-                        <FaRegFileAlt /> 
-                        <p>Página vazia, adicione uma página de resumo no meu à esquerda</p>
-                    </BlankAnotationContainer>
+                    <MarketdInputTextArea 
+                        onPointerUp={(e) => handleRemoveMarkuptPanel(e)}
+                        onKeyUp={(e) => handleMarkedInputTyping(e)}
+                        onClick={(e) => handleShowMarkupPanel(e)}
+                        contentEditable
+                    >
+                        { [...Array(15)].map((_, index) =>  <div key={index}><br /></div>) }
+                    </MarketdInputTextArea> 
+                    ) : <BlankAnotationContainer>
+                            <FaRegFileAlt /> 
+                            <p>Página vazia, adicione uma página de resumo no meu à esquerda</p>
+                        </BlankAnotationContainer>
                 }
             </MarketdInputTextAreaContainer>
             <MarkdownPanel 
