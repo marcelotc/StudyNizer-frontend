@@ -45,13 +45,43 @@ export const generateDemoEvents = (
     });
     const endDate = startDate.plus({ minute: minuteDuration });
 
+    console.log('startDate.toUTC().toString()', startDate.toUTC().toString())
+    console.log('endDate.toUTC().toString()', endDate.toUTC().toString())
+    console.log('faker.commerce.department()', faker.commerce.department())
+    console.log('colors[Math.floor(Math.random() * colors.length - 1) + 1]', colors[Math.floor(Math.random() * colors.length - 1) + 1])
+    console.log('endDate.day !== startDate.day', endDate.day !== startDate.day)
+
+    const Event = (props) => {
+      return (
+          <div>
+              <p style={{ fontSize: 15, color: '#fff' }}>{props.summary}</p>
+          </div>
+      );
+  };
+
+    const summary = faker.commerce.department();
+    const startAt = startDate.toUTC().toString();
+    const endAt = endDate.toUTC().toString();
+    const startTime = startDate.toLocaleString(DateTime.TIME_SIMPLE).toString();
+    const endTime = endDate.toLocaleString(DateTime.TIME_SIMPLE).toString();
+    
     const event= {
       id: v4(),
-      startAt: startDate.toUTC().toString(),
-      endAt: endDate.toUTC().toString(),
-      summary: faker.commerce.department(),
+      startAt,
+      endAt,
+      summary,
       color: colors[Math.floor(Math.random() * colors.length - 1) + 1],
       allDay: endDate.day !== startDate.day,
+      children: {
+        daysView: <Event 
+                    summary={summary} 
+                    startTime={startTime} 
+                    endTime={endTime} 
+                  /> // Opções: agendaView, daysView, monthView
+      }
+
+      /* Estilização para mostar que um evento foi finalizado ou feito  */
+      
       // style: {
       //   textDecoration: 'line-through',
       //   border: 'solid 1px red',

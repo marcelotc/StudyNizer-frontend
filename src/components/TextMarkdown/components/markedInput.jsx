@@ -12,6 +12,8 @@ export function MarkedInput() {
 
     const [selectedCoordinates, setSelectedCoordinates] = useState(0);
     const [markdownPanelVisible, setMarkdownPanelVisible] = useState('none');
+    const [fontColor, setFontColor] = useState('');
+    const [fontHilightColor, setFontHilightColor] = useState('');
     const [hideMarkdownMenu, setHideMarkdownMenu] = useState(false);
     const [pageArray, setPageArray] = useState([]);
     const [openNewPageModal, setOpenNewPageModal] = useState(false);
@@ -31,7 +33,7 @@ export function MarkedInput() {
         setMarkdownPanelVisible('none');
     }
 
-    function handleApplyMarkup(markup, fontSize) {
+    const handleApplyMarkup = (markup, fontSize) => {
         if (markup === "text") {
             document.execCommand("removeformat");
         } else if (markup === "bold") {
@@ -155,6 +157,60 @@ export function MarkedInput() {
         />
     );
 
+    const handleFontColorMenu = (e) => {
+        setFontColor(e.target.value);
+        document.execCommand("foreColor", false, fontColor);
+    }
+
+    const handleFontHighlightMenu = (e) => {
+        setFontHilightColor(e.target.value);
+        document.execCommand("hiliteColor", false, fontHilightColor);
+    }
+
+    const fontColorMenu = (
+        <Menu
+            items={[
+                {
+                    key: '1',
+                    label: (
+                        <div 
+                            onClick={(e) => e?.stopPropagation()}
+                            style={{display: 'flex', alignItems: 'center', fontWeight: 'bold' }}>
+                            Selecione a cor: 
+                            <input 
+                                type="color" 
+                                style={{ marginLeft: '10px' }}
+                                value={fontColor}
+                                onChange={(e) => handleFontColorMenu(e)}
+                            /></div>
+                    ),
+                },
+            ]}
+        />
+    );
+
+    const fontHighlightMenu = (
+        <Menu
+            items={[
+                {
+                    key: '1',
+                    label: (
+                        <div 
+                            onClick={(e) => e?.stopPropagation()}
+                            style={{display: 'flex', alignItems: 'center', fontWeight: 'bold' }}>
+                            Selecione a cor: 
+                            <input 
+                                type="color" 
+                                style={{ marginLeft: '10px' }}
+                                value={fontHilightColor}
+                                onChange={(e) => handleFontHighlightMenu(e)}
+                            /></div>
+                    ),
+                },
+            ]}
+        />
+    );
+
     const handleShowMarkupPanel = (e) => {
         setSelectedCoordinates(e.pageY - 30);
         setMarkdownPanelVisible('block');
@@ -162,6 +218,7 @@ export function MarkedInput() {
 
     const confirm = (pageId) => {
         handleRemovePage(pageId);
+        setMarkdownPanelVisible('none');
     };
 
     const handleCreateNewPage = () => {
@@ -213,7 +270,7 @@ export function MarkedInput() {
         setOpenNewPageModal(false);
     };
 
-    function handleMarkedInputTyping(e){
+    const handleMarkedInputTyping = (e) => {
         setMarkupContent(e.target);
         setMarkdownPanelVisible('none');
 
@@ -320,6 +377,12 @@ export function MarkedInput() {
                 <div className="markdownPanel" onMouseDown={(event) => event.preventDefault()}>
                     <Dropdown overlay={markupPanelMenu}>
                         <div>Alinhamento <FaAngleDown /></div>
+                    </Dropdown>
+                    <Dropdown overlay={fontColorMenu}>
+                        <div>Cor <FaAngleDown /></div>
+                    </Dropdown>
+                    <Dropdown overlay={fontHighlightMenu}>
+                        <div>Destacar <FaAngleDown /></div>
                     </Dropdown>
                     <div onClick={() => handleApplyMarkup('text')}>Texto</div>
                     <div onClick={() => handleApplyMarkup('bold')}>Negrito</div>

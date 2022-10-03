@@ -106,8 +106,8 @@ export const MarkdownPanel = styled.div`
   border-radius: 2px;
   background-color: #fff;
   border-radius: 10px;
-  left: 250px;
-  right: 250px;
+  left: 180px;
+  right: 180px;
   top:  ${props => `calc(${props?.rect}px - 48px)`};
   box-shadow: 0 1px 2px rgba(0,0,0,0.07), 
                 0 2px 4px rgba(0,0,0,0.07), 
