@@ -246,6 +246,11 @@ export function MarkedInput() {
         */
     } 
 
+    /*
+        const markupTest = '<div contenteditable="true" class="sc-dmRaPn dnRShI"><div>asd</div><div><br></div><div><br></div><div><br></div><div><br></div><div><u>sadsad</u></div><div><br></div><div><br></div><div><br></div><div><font size="7">asdsa</font></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div></div>';
+        <MarketdInputTextArea dangerouslySetInnerHTML={{__html: markupTest}}></MarketdInputTextArea>
+    */
+
     console.log('markupContentToSave', markupContentToSave)
 
     return (
