@@ -1,6 +1,6 @@
-export function setCalendarDate(data) {
+export function setCalendarDate(date) {
     return {
         type: 'SET-DATE',
-        payload: {data}
+        payload: {date}
     }
 }  

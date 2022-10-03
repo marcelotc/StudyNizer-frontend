@@ -14,8 +14,6 @@ export const CalendComponent = (props) => {
     const kalendRef = useRef();
     const taskDate = useSelector(state => state.calendarDate.date);
 
-    console.log('taskDate', taskDate.format("YYYY-MM-DDTHH:mm:ssZ"))
-
     const [demoEvents, setDemoEvents] = useState([]);
     const [selectedView, setSelectedView] = useState(CALENDAR_VIEW.MONTH);
     const [selectedDate, setSelectedDate] = useState(
@@ -24,7 +22,7 @@ export const CalendComponent = (props) => {
 
     // Create and load demo events
     useEffect(() => {
-        setDemoEvents(generateDemoEvents(DateTime.now(), 80));
+        setDemoEvents(generateDemoEvents(taskDate));
     }, []);
 
     const onNewEventClick = (data) => {
