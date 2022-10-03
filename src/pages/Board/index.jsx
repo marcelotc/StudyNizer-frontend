@@ -211,9 +211,11 @@ export function Board() {
   }
 
   const handleFilterCard = (el) => {
+    console.log('el', el?.date)
     if (
-      (el?.date[0].toDate().getTime()) >= searchTermTaskDueData.min && 
-      (el?.date[0].toDate().getTime()) <= searchTermTaskDueData.max
+      el?.date !== undefined &&
+      (el?.date[0]?.toDate().getTime()) >= searchTermTaskDueData.min && 
+      (el?.date[0]?.toDate().getTime()) <= searchTermTaskDueData.max
     ) {
       return el;
     } else if (
