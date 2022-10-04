@@ -19,15 +19,20 @@ export function SubjectsList() {
   const subjectTitleBlank = subjectTitle?.trim() === "";
 
   useEffect(() => {
-    setSubjects(getSubjects);
+    if (getSubjects) {
+      setSubjects(getSubjects);
+    } else {
+      setSubjects([]);
+    }
   }, []);
 
   const saveSubjectsToLocalStorage = (subjects) => {
     let subjectsArr = [];
     subjectsArr = JSON.parse(localStorage.getItem('@StudyNizer:subjects')) || [];
-    subjectsArr.push(tasksTitleDate);
+    subjectsArr.push(subjects);
     localStorage.setItem('@StudyNizer:subjects', JSON.stringify(subjectsArr));
   }
+
 
   const handleAddSubject = () => {
     const subjectId = v4();
@@ -88,6 +93,7 @@ export function SubjectsList() {
               placeholder="Nome da disciplina" 
               value={subjectTitle} 
               onChange={(e) => setSubjectTitle(e.target.value)} 
+              maxlength="70"
             />
             <Button
               type='primary'
@@ -123,7 +129,7 @@ export function SubjectsList() {
                     <Tooltip placement="bottom" title="Ver resumos da disciplina">
                       <Card key={subject.id} className="subjectCard">
                         <img alt="example" src="https://static.thenounproject.com/png/3282617-200.png" />
-                        <h1>{subject.title}</h1>
+                        <p>{subject.title}</p>
                       </Card>
                     </Tooltip>
                   </CardLink>

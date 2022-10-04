@@ -50,6 +50,7 @@ export const CalendComponent = (props) => {
         current,
         data
     ) => {
+        alert('aa')
         setDemoEvents(data);
     };
 

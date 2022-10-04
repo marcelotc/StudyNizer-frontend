@@ -19,6 +19,7 @@ export const CardContainerList = styled.div`
     flex-wrap: wrap;
     align-items: center;
     align-content: center;
+    align-items: stretch;
 
     @media (max-width: 393px) {
         display: unset;
@@ -88,6 +89,17 @@ export const Card = styled.div`
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    
+
+    > p {
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #000;
+        font-weight: bold;
+        font-size: 23px;
+        text-align: center;
+    }
     
     &:hover {
         opacity: 0.3;
