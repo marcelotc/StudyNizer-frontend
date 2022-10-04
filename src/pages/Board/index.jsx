@@ -6,8 +6,6 @@ import { Popconfirm, Modal, Input, Button, Tooltip, Select, DatePicker, message 
 import { FaPlus, FaCalendarAlt, FaTrash } from "react-icons/fa";
 import moment from 'moment';
 
-import { setCalendarDate } from '../../store/modules/calendarDate/actions';
-
 import { Header } from '../../components/Header'
 
 import { Container, BoardFilter, AddTaskContainer, BoardContainer, Column, Card, Item, CardHeader, PriorityColor, CardTaskDetails } from "./styles";

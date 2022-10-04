@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { useDebounce } from 'use-debounce';
+/*import { useDebounce } from 'use-debounce'; talvez usar isso para salvar markup no banco*/
 import { Popconfirm, Dropdown, Menu, Tooltip, message, Modal, Button, Input } from 'antd';
 import { FaTimes, FaPlus, FaRegFile, FaRegFileAlt, FaTimesCircle, FaAngleDoubleLeft, FaAngleDoubleRight, FaAngleDown } from "react-icons/fa";
 import { MarkedInputContainer, MarkedInputMenu, MarketdInputTextAreaContainer, BlankAnotationContainer, MarketdInputTextArea, MarkdownPanel, AddNewPageModal } from "./styles";
@@ -19,8 +19,6 @@ export function MarkedInput() {
     const [openNewPageModal, setOpenNewPageModal] = useState(false);
     const [newPageName, setNewPageName] = useState('');
     const [pageName, setPageName] = useState('');
-    const [markupContent, setMarkupContent] = useState([]);
-    const [markupContentToSave] = useDebounce(markupContent, 1000);
 
     const handleRemoveMarkuptPanel = () => {
         let selection = document.getSelection()
@@ -250,6 +248,9 @@ export function MarkedInput() {
         setNewPageName('');
         setPageName(newPageName);
         setOpenNewPageModal(false);
+
+        const mockedMarkup = '<div contenteditable="true" class="sc-dmRaPn dnRShI"><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div></div>';
+        localStorage.setItem('@StudyNizer:subjectsAnnotations', mockedMarkup);
     }
 
     const handleRemovePage = (pageId) => {
@@ -271,8 +272,8 @@ export function MarkedInput() {
     };
 
     const handleMarkedInputTyping = (e) => {
-        setMarkupContent(e.target);
         setMarkdownPanelVisible('none');
+        localStorage.setItem('@StudyNizer:subjectsAnnotations', e.target.innerHTML);
 
         // TODO - Pegar aqui o html e salvar no banco de dados
 
@@ -304,11 +305,31 @@ export function MarkedInput() {
     } 
 
     /*
-        const markupTest = '<div contenteditable="true" class="sc-dmRaPn dnRShI"><div>asd</div><div><br></div><div><br></div><div><br></div><div><br></div><div><u>sadsad</u></div><div><br></div><div><br></div><div><br></div><div><font size="7">asdsa</font></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div></div>';
-        <MarketdInputTextArea dangerouslySetInnerHTML={{__html: markupTest}}></MarketdInputTextArea>
+        const mockedMarkup = '<div contenteditable="true" class="sc-dmRaPn dnRShI"><div>asd</div><div><br></div><div><br></div><div><br></div><div><br></div><div><u>sadsad</u></div><div><br></div><div><br></div><div><br></div><div><font size="7">asdsa</font></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div></div>';
+        <MarketdInputTextArea dangerouslySetInnerHTML={{__html: mockedMarkup}}></MarketdInputTextArea>
     */
 
-    console.log('markupContentToSave', markupContentToSave)
+    let getLocalStorageMarkup = localStorage.getItem('@StudyNizer:subjectsAnnotations') || [];
+    const renderMarketdInputTextArea = () => {
+         if(getLocalStorageMarkup.length !== 0) {
+            return <MarketdInputTextArea 
+                        //onPointerUp={(e) => handleRemoveMarkuptPanel(e)}
+                        //onPointerDown={(e) =>  handleShowMarkupPanel(e)}
+                        onKeyUp={(e) => handleMarkedInputTyping(e)}
+                        //onKeyDown={(e) => handleRemoveMarkuptPanel(e)}
+                        onClick={(e) => handleShowMarkupPanel(e)}
+                        contentEditable
+                        dangerouslySetInnerHTML={{__html: getLocalStorageMarkup}}
+                    />;
+        }  else if(getLocalStorageMarkup.length === 0 ) {
+            return (
+                <BlankAnotationContainer>
+                    <FaRegFileAlt /> 
+                    <p>Página vazia, adicione uma página de resumo no meu à esquerda</p>
+                </BlankAnotationContainer> 
+            )
+        }
+    }
 
     return (
         <MarkedInputContainer>
@@ -355,20 +376,7 @@ export function MarkedInput() {
             <MarketdInputTextAreaContainer>
                 <h1>{location.state.subject.title}</h1>
                 <h2>{pageName}</h2>
-                {pageArray.length !== 0 ? (
-                    <MarketdInputTextArea 
-                        onPointerUp={(e) => handleRemoveMarkuptPanel(e)}
-                        onKeyUp={(e) => handleMarkedInputTyping(e)}
-                        onClick={(e) => handleShowMarkupPanel(e)}
-                        contentEditable
-                    >
-                        { [...Array(15)].map((_, index) =>  <div key={index}><br /></div>) }
-                    </MarketdInputTextArea> 
-                    ) : <BlankAnotationContainer>
-                            <FaRegFileAlt /> 
-                            <p>Página vazia, adicione uma página de resumo no meu à esquerda</p>
-                        </BlankAnotationContainer>
-                }
+                {renderMarketdInputTextArea()}
             </MarketdInputTextAreaContainer>
             <MarkdownPanel 
                 markdownPanelVisible={markdownPanelVisible} 
