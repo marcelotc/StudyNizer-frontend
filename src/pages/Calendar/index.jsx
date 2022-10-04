@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useSelector } from 'react-redux';
 import { DateTime } from 'luxon';
 import Kalend, { CalendarView, OnEventDragFinish } from 'kalend';
 import { CALENDAR_VIEW } from 'kalend-layout';

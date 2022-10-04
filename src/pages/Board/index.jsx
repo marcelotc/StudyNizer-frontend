@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import { useDispatch } from 'react-redux';
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
 import _ from "lodash";
 import {v4} from "uuid";
@@ -57,8 +56,6 @@ export function Board() {
     min: 0,
     max: 0
   });
-
-  const dispatch = useDispatch();
 
   localStorage.setItem('@StudyNizer:boardTasks', JSON.stringify(state));
 
@@ -130,7 +127,6 @@ export function Board() {
     setPriority("");
     setOpen(false);
     message.success('Tarefa adicionada!');
-    dispatch(setCalendarDate(taskDueDate));
   }
 
   // TODO - Remover task pelo ID e não pelo index
