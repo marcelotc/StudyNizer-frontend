@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { v4 } from "uuid";
 import { Modal, Button, Input, Tooltip, message, Popconfirm } from 'antd';
 import { FaPlus, FaPencilAlt, FaTrashAlt } from "react-icons/fa";
  
@@ -7,66 +8,43 @@ import { Container, ListContainer, CardLink, CardContainer, Card, AddCard, AddSu
 
 export function SubjectsList() {
 
-  const subjectsArr = [
-    {
-      id: "diras",
-      title: "Disciplina 1",
-      description: "bem loca essa disciplina"
-    },
-    {
-      id: "jknkasf",
-      title: "Disciplina 2",
-      description: "bem loca essa disciplina"
-    },
-    {
-      id: "pkooff",
-      title: "Disciplina 3",
-      description: "bem loca essa disciplina"
-    },
-    {
-      id: "lkfmskf",
-      title: "Disciplina 4",
-      description: "bem loca essa disciplina"
-    },
-    {
-      id: "ksfkasds",
-      title: "Disciplina 5",
-      description: "bem loca essa disciplina"
-    },
-    {
-      id: "ksfks22",
-      title: "Disciplina 6",
-      description: "bem loca essa disciplina"
-    },
-    {
-      id: "ksfksasd",
-      title: "Disciplina 7",
-      description: "bem loca essa disciplina"
-    },
-    {
-      id: "ksfkasds11",
-      title: "Disciplina 8",
-      description: "bem loca essa disciplina"
-    }
-  ]
-
   const [subjects, setSubjects] = useState([]);
   const [open, setOpen] = useState(false);
   const [subjectTitle, setSubjectTitle] = useState("");
   const [modalMode, setModalMode] = useState("Adicionar");
 
+  const getSubjects = JSON.parse(localStorage.getItem('@StudyNizer:subjects'))
+  localStorage.setItem('@StudyNizer:subjects', JSON.stringify(subjects));
+
   const subjectTitleBlank = subjectTitle?.trim() === "";
 
   useEffect(() => {
-    setSubjects(subjectsArr);
+    setSubjects(getSubjects);
   }, []);
 
+  const saveSubjectsToLocalStorage = (subjects) => {
+    let subjectsArr = [];
+    subjectsArr = JSON.parse(localStorage.getItem('@StudyNizer:subjects')) || [];
+    subjectsArr.push(tasksTitleDate);
+    localStorage.setItem('@StudyNizer:subjects', JSON.stringify(subjectsArr));
+  }
+
   const handleAddSubject = () => {
+    const subjectId = v4();
+
     setSubjects(subjects => [...subjects, {
-      id: "ksfks",
+      id: subjectId,
       title: subjectTitle,
     }]);
+
+    const subjects = {
+      id: subjectId,
+      title: subjectTitle,
+    };
+
     setOpen(false);
+
+    saveSubjectsToLocalStorage(subjects);
   }
 
   const showModal = (subjectTitle, modalMode) => {

@@ -138,6 +138,7 @@ export function Board() {
 
       return copy;
     })
+
     const getTasksTitleDate = JSON.parse(localStorage.getItem('@StudyNizer:tasksTitleDate'))
     getTasksTitleDate.splice(index, 1);
     localStorage.setItem('@StudyNizer:tasksTitleDate', JSON.stringify(getTasksTitleDate));
