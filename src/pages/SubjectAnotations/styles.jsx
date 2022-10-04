@@ -18,4 +18,9 @@ export const BackButton = styled(NavLink)`
         color: gray;
         transition: 0.3s;
     }
+
+    @media (max-width: 990px) {
+        display: table;
+        margin: 20px auto;
+    }
 `

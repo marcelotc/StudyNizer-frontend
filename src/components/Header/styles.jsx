@@ -32,4 +32,9 @@ export const Container = styled.div`
         cursor:pointer;  
         transition: 0.3s;
     }
+
+    @media (max-width: 990px) {
+        flex-direction: column;
+        text-align: center;
+    }
 `;

@@ -6,6 +6,11 @@ export const MarkedInputContainer = styled.div`
   height: 100%;
   padding: 13px 13px 13px 0;
   font-family: "Lato", sans-serif;
+
+  @media (max-width: 990px) {
+      flex-direction: column-reverse;
+      padding: 0;
+    }
 `;
 
 export const MarkedInputMenu = styled.div`
@@ -74,6 +79,11 @@ export const MarkedInputMenu = styled.div`
           transition: 0.2s;
         }
     }
+
+    @media (max-width: 990px) {
+      height: 150px;
+      overflow: scroll;
+    }
   }
 
   footer {
@@ -92,6 +102,16 @@ export const MarkedInputMenu = styled.div`
       background: lightgray;
       transition: 0.3s;
     }
+
+    @media (max-width: 990px) {
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 990px) {
+    width: 100%;
+    height: 200px;
+    overflow: scroll;
   }
 `;
 
@@ -153,7 +173,7 @@ export const MarkdownPanel = styled.div`
 export const MarketdInputTextAreaContainer = styled.div`
   width: 100%;
 
-  h1 {
+  h1, h2 {
     text-align: center;
   }
 
@@ -198,6 +218,14 @@ export const BlankAnotationContainer = styled.div`
   > svg {
     font-size: 80px;
     margin: 0 20px 35px 0;
+  }
+
+  @media (max-width: 990px) {
+    text-align: center;
+
+    > svg {
+      margin: 10px 0;
+    }
   }
 `;
 

@@ -136,7 +136,7 @@ export function SubjectsList() {
                 </CardContainer>
               )})}
             <Tooltip placement="bottom" title="Adicionar Disciplina">
-              <AddCard onClick={() => showModal("", 'Adicionar')}>
+              <AddCard isSubjectsEmpty={subjects.length === 0} onClick={() => showModal("", 'Adicionar')}>
                 <div className='addCardHeader'></div>
                 <div className='addCardBody'>
                   <FaPlus />
@@ -144,6 +144,7 @@ export function SubjectsList() {
               </AddCard>
             </Tooltip>
           </CardContainerList>
+          {subjects.length === 0 && <p className='subjectsEmpty'>Nenhuma disciplina cadastrada, clique no botão para adicionar</p>}
         </ListInnerContainer>
       </ListContainer>
     </Container>

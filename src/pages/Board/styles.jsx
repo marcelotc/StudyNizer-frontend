@@ -23,7 +23,12 @@ export const BoardFilter = styled.div`
         > input, .ant-select, .ant-picker {
             width: 100%;
         }
+
+        @media (max-width: 990px) {
+            flex-direction: column;
+        }
     }
+    
 `;
 
 export const Column= styled.div`
@@ -47,6 +52,10 @@ export const AddTaskContainer= styled.div`
 
 export const BoardContainer= styled.div`
     display: flex;
+
+    @media (max-width: 990px) {
+        flex-direction: column;
+    }
 `;
 
 export const CardTaskDetails = styled.div`
@@ -82,6 +91,11 @@ export const CardTaskDetails = styled.div`
 
         > p {
             margin: 0 15px 0 0;
+        }
+
+        @media (max-width: 1136px) {
+            flex-direction: column;
+            padding: 5px;
         }
     }
 `;

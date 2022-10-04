@@ -12,6 +12,12 @@ export const ListContainer = styled.div`
 
 export const ListInnerContainer = styled.div`
     width: 86.5%;
+
+    .subjectsEmpty {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 20px;
+    }
 `;
 
 export const CardContainerList = styled.div`
@@ -69,7 +75,7 @@ export const CardContainer = styled.div`
     
 
     @media (max-width: 990px) {
-        width: calc(50% - 30px);
+        width: 100%;
         margin: 0 15px 30px 15px;
     }
     @media (max-width: 510px) {
@@ -108,8 +114,9 @@ export const Card = styled.div`
 `;
 
 export const AddCard = styled.div`
+    display: ${props => props.isSubjectsEmpty ? 'table' : 'unset'};
     border-radius: 10px;
-    margin: 0px 30px 30px 0px;
+    margin:${props => props.isSubjectsEmpty ? '0 auto' : '0px 30px 30px 0px'};
     width: calc(20% - 30px);
     border: 3px dashed lightgray;
 
@@ -135,7 +142,7 @@ export const AddCard = styled.div`
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 297px;
+        height: 100%;
         border-radius: 10px;
 
         > svg {
@@ -147,7 +154,7 @@ export const AddCard = styled.div`
     
 
     @media (max-width: 990px) {
-        width: calc(50% - 30px);
+        width: 100%;
         margin: 0 15px 30px 15px;
     }
     @media (max-width: 510px) {
