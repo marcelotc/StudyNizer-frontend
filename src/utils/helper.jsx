@@ -28,15 +28,23 @@ export const generateDemoEvents = (taskDate) => {
     );
   };
 
-  const summary = faker.commerce.department();
+  const renderPriorityColor = (priority) => {
+    if(priority === 'Alta') {
+      return '#E77669';
+    } else if (priority === 'Baixa') {
+      return '#BEEC5A';
+    }
+
+    return '#EEE950'
+  }
 
   let taskEvents = taskDate.map(task => {
     const taskEvent = {
       id: v4(),
-      startAt: task[0].format("YYYY-MM-DDTHH:mm:ssZ"),
-      endAt: task[1].format("YYYY-MM-DDTHH:mm:ssZ"),
-      summary,
-      color: colors[Math.floor(Math.random() * colors.length - 1) + 1],
+      startAt: task.date[0],
+      endAt: task.date[1],
+      summary: task.name,
+      color: renderPriorityColor(task.priority),
       allDay: false /*endDate.day !== startDate.day*/,
 
 

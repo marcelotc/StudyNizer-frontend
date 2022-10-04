@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useDispatch } from 'react-redux';
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
 import _ from "lodash";
@@ -20,76 +20,32 @@ const { RangePicker } = DatePicker;
 
 const dateFormat = "DD/MM/YYYY HH:mm:ss";
 
-const item = {
-  id: v4(),
-  name: "Revisar conteúdo",
-  description: "Lorem celou is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-  priority: "Alta",
-  date: [moment('11/02/2022 13:11:11', dateFormat), moment('02/02/2022 15:11:11', dateFormat)],
-}
-
-const item2 = {
-  id: v4(),
-  name: "Resumo de programação",
-  description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-  priority: "Média",
-  date: [moment('01/01/2022 09:11:11', dateFormat), moment('02/01/2022 11:11:11', dateFormat)],
-}
-
-const item3 = {
-  id: v4(),
-  name: "Revisar SO",
-  description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-  priority: "Baixa",
-  date: [moment('08/05/2022 12:11:11', dateFormat), moment('13/05/2022 15:11:11', dateFormat)],
-}
-
-const item4 = {
-  id: v4(),
-  name: "Revisar matéria",
-  description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-  priority: "Alta",
-  date: [moment('11/11/2022 11:11:11', dateFormat), moment('12/11/2022 14:11:11', dateFormat)],
-}
-
-const item5 = {
-  id: v4(),
-  name: "Estudar para prova",
-  description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-  priority: "Média",
-  date: [moment('06/05/2022 08:11:11', dateFormat), moment('07/09/2022 09:11:11', dateFormat)],
-}
-
-const item6 = {
-  id: v4(),
-  name: "Fazer trabalho",
-  description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-  priority: "Baixa",
-  date: [moment('09/09/2022 11:11:11', dateFormat), moment('09/09/2022 12:11:11', dateFormat)],
-}
-
 const dialogText = 'Tem certeza que deseja excluir esta tarefa?';
 const cardTaskDetailsText = 'Clique para ver detalhes desta tarefa';
 
-
 export function Board() {
-  const [text, setText] = useState("")
-  const [description, setDescription] = useState("")
-  const [state, setState] = useState({
-    "Tarefas": {
-      title: "Tarefas",
-      items: [item, item2]
-    },
-    "Fazendo": {
-      title: "Fazendo",
-      items: [item3, item4, item5]
-    },
-    "Concluído": {
-      title: "Concluído",
-      items: [item6]
+  const getBoardTasks = localStorage.getItem('@StudyNizer:boardTasks');
+  const [state, setState] = useState(() => {
+    if (getBoardTasks) {
+      return JSON.parse(getBoardTasks);
+    } else {
+      return {
+        "Tarefas": {
+          title: "Tarefas",
+          items: []
+        },
+        "Fazendo": {
+          title: "Fazendo",
+          items: []
+        },
+        "Concluído": {
+          title: "Concluído",
+          items: []
+        }
     }
-  })
-  const dispatch = useDispatch();
+  }});
+  const [text, setText] = useState("");
+  const [description, setDescription] = useState("");
   const [column, setColumn] = useState('Tarefas');
   const [open, setOpen] = useState(false);
   const [taskDueDate, setTaskDueDate] = useState([]);
@@ -101,6 +57,10 @@ export function Board() {
     min: 0,
     max: 0
   });
+
+  const dispatch = useDispatch();
+
+  localStorage.setItem('@StudyNizer:boardTasks', JSON.stringify(state));
 
   const taskTextsBlank = text?.trim() === "" || description?.trim() === "" || taskDueDate === undefined || priority === undefined;
 
@@ -126,6 +86,15 @@ export function Board() {
     })
   }
 
+  const saveTasksToLocalStorage = (boardTasks, tasksTitleDate) => {
+    localStorage.setItem('@StudyNizer:boardTasks', JSON.stringify(boardTasks));
+
+    let tasksTitleDateArr = [];
+    tasksTitleDateArr = JSON.parse(localStorage.getItem('@StudyNizer:tasksTitleDate')) || [];
+    tasksTitleDateArr.push(tasksTitleDate);
+    localStorage.setItem('@StudyNizer:tasksTitleDate', JSON.stringify(tasksTitleDateArr));
+  }
+
   const addItem = () => {
     setState(prev => {
       return {
@@ -146,6 +115,15 @@ export function Board() {
       }
     })
 
+    const boardTasks = state;
+    const tasksTitleDate = {
+      name: text,
+      date: [taskDueDate[0], taskDueDate[1]],
+      priority: priority
+    };
+
+    saveTasksToLocalStorage(boardTasks, tasksTitleDate);
+
     setText("");
     setDescription("");
     setTaskDueDate([]);
@@ -164,6 +142,9 @@ export function Board() {
 
       return copy;
     })
+    const getTasksTitleDate = JSON.parse(localStorage.getItem('@StudyNizer:tasksTitleDate'))
+    getTasksTitleDate.splice(index, 1);
+    localStorage.setItem('@StudyNizer:tasksTitleDate', JSON.stringify(getTasksTitleDate));
   }
 
   const confirm = (data, index) => {
@@ -211,11 +192,11 @@ export function Board() {
   }
 
   const handleFilterCard = (el) => {
-    console.log('el', el?.date)
+    let taskDateStart = el?.date !== undefined ? new Date(el?.date[0]).getTime() : new Date();
+
     if (
-      el?.date !== undefined &&
-      (el?.date[0]?.toDate().getTime()) >= searchTermTaskDueData.min && 
-      (el?.date[0]?.toDate().getTime()) <= searchTermTaskDueData.max
+      (taskDateStart) >= searchTermTaskDueData.min && 
+      (taskDateStart) <= searchTermTaskDueData.max
     ) {
       return el;
     } else if (

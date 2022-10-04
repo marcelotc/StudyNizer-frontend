@@ -12,8 +12,8 @@ import { Container } from "./styles";
 
 export const CalendComponent = (props) => {
     const kalendRef = useRef();
-    const taskDate = useSelector(state => state.calendarDate.date);
-
+    const taskDate = JSON.parse(localStorage.getItem('@StudyNizer:tasksTitleDate')) || [];
+    console.log('taskDate', taskDate)
     const [demoEvents, setDemoEvents] = useState([]);
     const [selectedView, setSelectedView] = useState(CALENDAR_VIEW.MONTH);
     const [selectedDate, setSelectedDate] = useState(
