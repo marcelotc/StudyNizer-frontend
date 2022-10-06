@@ -128,6 +128,7 @@ export const MarkdownPanel = styled.div`
   border-radius: 10px;
   left: 180px;
   right: 180px;
+  z-index: 1;
   top:  ${props => `calc(${props?.rect}px - 48px)`};
   box-shadow: 0 1px 2px rgba(0,0,0,0.07), 
                 0 2px 4px rgba(0,0,0,0.07), 
@@ -161,10 +162,24 @@ export const MarkdownPanel = styled.div`
       height: 100%;
       margin: 0 10px;
       font-weight: bold;
+    }
 
-      &:hover{
-        background: #ebe8e8;
+    .editorToolBarButton {
+      background: none;
+      color: inherit;
+      border: none;
+      font: inherit;
+      cursor: pointer;
+      outline: inherit;    
+      margin: 0 10px;
+      padding: 5px;
+      height: 100%;
+
+      &:hover {
+        background: #000;
+        color: #fff;
         cursor: pointer;
+        border-radius: 3px;
       }
     }
   }
@@ -174,6 +189,37 @@ export const MarketdInputTextAreaContainer = styled.div`
   width: 100%;
 
   h1, h2 {
+    text-align: center;
+  }
+
+  .align-right div {
+    text-align: right;
+  }
+  .align-center div {
+      text-align: center;
+  }
+  .align-left div {
+      text-align: left;
+  }
+
+  .DraftEditor-root, .DraftEditor-editorContainer, .public-DraftEditor-conten {
+
+    div[data-contents=true] { 
+      > div {
+        border-bottom: 1px solid lightgray;
+
+        &:hover {
+          border-bottom: 1px solid #000;
+          transition: 0.4s;
+        }
+      }
+    }
+  }
+
+  .superFancyBlockquote {
+    color: #999;
+    font-family: 'Hoefler Text', Georgia, serif;
+    font-style: italic;
     text-align: center;
   }
 

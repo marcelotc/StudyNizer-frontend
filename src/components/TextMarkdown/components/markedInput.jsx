@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-/*import { useDebounce } from 'use-debounce'; talvez usar isso para salvar markup no banco*/
-import { Popconfirm, Dropdown, Menu, Tooltip, message, Modal, Button, Input } from 'antd';
+import { Editor, EditorState, ContentState, RichUtils, convertToRaw, convertFromRaw  } from "draft-js";
+import { Popconfirm, Tooltip, message, Modal, Button, Input } from 'antd';
 import { FaTimes, FaPlus, FaRegFile, FaRegFileAlt, FaTimesCircle, FaAngleDoubleLeft, FaAngleDoubleRight, FaAngleDown } from "react-icons/fa";
 import { MarkedInputContainer, MarkedInputMenu, MarketdInputTextAreaContainer, BlankAnotationContainer, MarketdInputTextArea, MarkdownPanel, AddNewPageModal } from "./styles";
 import { v4 } from 'uuid';
+
+import { initialEditorState } from './initialEditorState';
+import "draft-js/dist/Draft.css";
 
 export function MarkedInput() {
     const location = useLocation();
@@ -12,206 +15,113 @@ export function MarkedInput() {
 
     const [selectedCoordinates, setSelectedCoordinates] = useState(0);
     const [markdownPanelVisible, setMarkdownPanelVisible] = useState('none');
-    const [fontColor, setFontColor] = useState('');
-    const [fontHilightColor, setFontHilightColor] = useState('');
     const [hideMarkdownMenu, setHideMarkdownMenu] = useState(false);
     const [pageArray, setPageArray] = useState([]);
     const [openNewPageModal, setOpenNewPageModal] = useState(false);
     const [newPageName, setNewPageName] = useState('');
     const [pageName, setPageName] = useState('');
 
-    const handleRemoveMarkuptPanel = () => {
-        let selection = document.getSelection()
-        
-        let rect = selection.getRangeAt(0).getBoundingClientRect();
+    let rawContentFromStore = '';
 
-        if(rect !== undefined) {
-            setSelectedCoordinates(rect.top);
-        }
+    const storeRaw = localStorage.getItem('@StudyNizer:subjectsAnnotations');
+    if(storeRaw) {
+        rawContentFromStore = EditorState.createWithContent(convertFromRaw(JSON.parse(storeRaw)));
+    } else {
+        rawContentFromStore = EditorState.createWithContent(ContentState.createFromText(''))
+    }
+    
+    const [editorState, setEditorState] = useState(rawContentFromStore);
+
+    const editor = React.useRef(null);
+
+    const handleChangeEditor = (editorState) => {
+        let contentRaw = convertToRaw(editorState.getCurrentContent());
+        localStorage.setItem('@StudyNizer:subjectsAnnotations', JSON.stringify(contentRaw));
+        
+        setEditorState(editorState);
         setMarkdownPanelVisible('none');
     }
 
-    const handleApplyMarkup = (markup, fontSize) => {
-        if (markup === "text") {
-            document.execCommand("removeformat");
-        } else if (markup === "bold") {
-            document.execCommand("bold");
-        } else if (markup === "italic") {
-            document.execCommand("italic");
-        } else  if (markup === "underline") {
-            document.execCommand("underline");
-        } else if (markup === "fontSize") {
-            document.execCommand("fontSize", false, fontSize);
-        } else if (markup === "title") {
-            document.execCommand("fontSize", false, 7);
-        } else if (markup === "justifyFull") {
-            document.execCommand("justifyFull", false, 7);
-        } else if (markup === "justifyCenter") {
-            document.execCommand("justifyCenter");
-        } else if (markup === "justifyLeft") {
-            document.execCommand("justifyLeft");
-        } else if (markup === "justifyRight") {
-            document.execCommand("justifyRight");
+    function focusEditor() {
+        if(pageArray.length !== 0) {
+            editor.current.focus();
         }
     }
-
-    const handleFontSize = ({key}) => {
-        handleApplyMarkup('fontSize', key);
-    }
-
-    const fontSizeMenu = (
-        <Menu
-            onClick={handleFontSize}
-            items={[
-                {
-                    key: '1',
-                    label: (
-                    <span>
-                        1
-                    </span>
-                    ),
-                },
-                {
-                key: '2',
-                label: (
-                    <span>
-                        2
-                    </span>
-                ),
-                },
-                {
-                    key: '3',
-                    label: (
-                    <span>
-                        3
-                    </span>
-                    ),
-                },
-                {
-                    key: '4',
-                    label: (
-                    <span>
-                        4
-                    </span>
-                    ),
-                },
-                {
-                    key: '5',
-                    label: (
-                    <span>
-                        5
-                    </span>
-                    ),
-                },
-                {
-                    key: '6',
-                    label: (
-                    <span>
-                        6
-                    </span>
-                    ),
-                },
-                {
-                    key: '7',
-                    label: (
-                    <span>
-                        7
-                    </span>
-                    ),
-                },
-
-            ]}
-        />
-    );
-
-    const markupPanelMenu = (
-        <Menu
-            items={[
-                {
-                    key: '1',
-                    label: (
-                        <div onClick={() => handleApplyMarkup('justifyFull')}>Justificar texto</div>
-                    ),
-                },
-                {
-                    key: '2',
-                    label: (
-                        <div onClick={() => handleApplyMarkup('justifyLeft')}>Alinhar à esquerda</div>
-                    ),
-                },
-                {
-                    key: '3',
-                    label: (
-                        <div onClick={() => handleApplyMarkup('justifyCenter')}>Alinhar ao centro</div>
-                    ),
-                },
-                {
-                    key: '4',
-                    label: (
-                        <div onClick={() => handleApplyMarkup('justifyRight')}>Centralizar à direita</div>
-                    ),
-                },
-            ]}
-        />
-    );
-
-    const handleFontColorMenu = (e) => {
-        setFontColor(e.target.value);
-        document.execCommand("foreColor", false, fontColor);
-    }
-
-    const handleFontHighlightMenu = (e) => {
-        setFontHilightColor(e.target.value);
-        document.execCommand("hiliteColor", false, fontHilightColor);
-    }
-
-    const fontColorMenu = (
-        <Menu
-            items={[
-                {
-                    key: '1',
-                    label: (
-                        <div 
-                            onClick={(e) => e?.stopPropagation()}
-                            style={{display: 'flex', alignItems: 'center', fontWeight: 'bold' }}>
-                            Selecione a cor: 
-                            <input 
-                                type="color" 
-                                style={{ marginLeft: '10px' }}
-                                value={fontColor}
-                                onChange={(e) => handleFontColorMenu(e)}
-                            /></div>
-                    ),
-                },
-            ]}
-        />
-    );
-
-    const fontHighlightMenu = (
-        <Menu
-            items={[
-                {
-                    key: '1',
-                    label: (
-                        <div 
-                            onClick={(e) => e?.stopPropagation()}
-                            style={{display: 'flex', alignItems: 'center', fontWeight: 'bold' }}>
-                            Selecione a cor: 
-                            <input 
-                                type="color" 
-                                style={{ marginLeft: '10px' }}
-                                value={fontHilightColor}
-                                onChange={(e) => handleFontHighlightMenu(e)}
-                            /></div>
-                    ),
-                },
-            ]}
-        />
-    );
+  
+    useEffect(() => {
+      focusEditor();
+    }, []);
+  
+    const StyleButton = (props) => {
+      let onClickButton = (e) => {
+        e.preventDefault();
+        props.onToggle(props.style);
+      };
+      return <button className="editorToolBarButton" onMouseDown={onClickButton}>{props.label}</button>;
+    };
+  
+    const BLOCK_TYPES = [
+      { label: "H1", style: "header-one" },
+      { label: "H2", style: "header-two" },
+      { label: "H3", style: "header-three" },
+      { label: "H4", style: "header-four" },
+      { label: "H5", style: "header-five" },
+      { label: "H6", style: "header-six" },
+      { label: "UL", style: "unordered-list-item" },
+      { label: "OL", style: "ordered-list-item" },
+      { label: "Left", style: "left" },
+      { label: "Center", style: "center" },
+      { label: "Right", style: "right" },
+    ];
+  
+    const BlockStyleControls = (props) => {
+      return (
+        <div>
+          {BLOCK_TYPES.map((type) => (
+            <StyleButton
+              key={type.label}
+              label={type.label}
+              onToggle={props.onToggle}
+              style={type.style}
+            />
+          ))}
+        </div>
+      );
+    };
+  
+    const INLINE_STYLES = [
+      { label: "Bold", style: "BOLD" },
+      { label: "Italic", style: "ITALIC" },
+      { label: "Underline", style: "UNDERLINE" },
+    ];
+    const InlineStyleControls = (props) => {
+      return (
+        <div>
+          {INLINE_STYLES.map((type) => (
+            <StyleButton
+              key={type.label}
+              label={type.label}
+              onToggle={props.onToggle}
+              style={type.style}
+            />
+          ))}
+        </div>
+      );
+    };
+  
+    const onInlineClick = (e) => {
+      let nextState = RichUtils.toggleInlineStyle(editorState, e);
+      setEditorState(nextState);
+    };
+  
+    const onBlockClick = (e) => {
+      let nextState = RichUtils.toggleBlockType(editorState, e);
+      setEditorState(nextState);
+    };
 
     const handleShowMarkupPanel = (e) => {
         setSelectedCoordinates(e.pageY - 30);
-        setMarkdownPanelVisible('block');
+        setMarkdownPanelVisible('block');   
     }
 
     const confirm = (pageId) => {
@@ -248,9 +158,8 @@ export function MarkedInput() {
         setNewPageName('');
         setPageName(newPageName);
         setOpenNewPageModal(false);
-
-        const mockedMarkup = '<div contenteditable="true" class="sc-dmRaPn dnRShI"><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div></div>';
-        localStorage.setItem('@StudyNizer:subjectsAnnotations', mockedMarkup);
+        setMarkdownPanelVisible('none');
+        setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(JSON.stringify(initialEditorState)))));
     }
 
     const handleRemovePage = (pageId) => {
@@ -271,64 +180,17 @@ export function MarkedInput() {
         setOpenNewPageModal(false);
     };
 
-    const handleMarkedInputTyping = (e) => {
-        setMarkdownPanelVisible('none');
-        localStorage.setItem('@StudyNizer:subjectsAnnotations', e.target.innerHTML);
-
-        // TODO - Pegar aqui o html e salvar no banco de dados
-
-        /* TODO - Ver se isso funciona melhor em vez da biblioteca use-debounce
-            function Search() {
-                const [searchTerm, setSearchTerm] = useState('')
-
-                useEffect(() => {
-                    const delayDebounceFn = setTimeout(() => {
-                    console.log(searchTerm)
-                    // Send Axios request here
-                    }, 3000)
-
-                    return () => clearTimeout(delayDebounceFn)
-                }, [searchTerm])
-
-                return (
-                    <input
-                    autoFocus
-                    type='text'
-                    autoComplete='off'
-                    className='live-search-field'
-                    placeholder='Search here...'
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                )
-            }
-        */
-    } 
-
-    /*
-        const mockedMarkup = '<div contenteditable="true" class="sc-dmRaPn dnRShI"><div>asd</div><div><br></div><div><br></div><div><br></div><div><br></div><div><u>sadsad</u></div><div><br></div><div><br></div><div><br></div><div><font size="7">asdsa</font></div><div><br></div><div><br></div><div><br></div><div><br></div><div><br></div></div>';
-        <MarketdInputTextArea dangerouslySetInnerHTML={{__html: mockedMarkup}}></MarketdInputTextArea>
-    */
-
-    let getLocalStorageMarkup = localStorage.getItem('@StudyNizer:subjectsAnnotations') || [];
-    const renderMarketdInputTextArea = () => {
-         if(getLocalStorageMarkup.length !== 0) {
-            return <MarketdInputTextArea 
-                        //onPointerUp={(e) => handleRemoveMarkuptPanel(e)}
-                        //onPointerDown={(e) =>  handleShowMarkupPanel(e)}
-                        onKeyUp={(e) => handleMarkedInputTyping(e)}
-                        //onKeyDown={(e) => handleRemoveMarkuptPanel(e)}
-                        onClick={(e) => handleShowMarkupPanel(e)}
-                        contentEditable
-                        dangerouslySetInnerHTML={{__html: getLocalStorageMarkup}}
-                    />;
-        }  else if(getLocalStorageMarkup.length === 0 ) {
-            return (
-                <BlankAnotationContainer>
-                    <FaRegFileAlt /> 
-                    <p>Página vazia, adicione uma página de resumo no meu à esquerda</p>
-                </BlankAnotationContainer> 
-            )
-        }
+    const getBlockStyle = (block) => {
+        switch (block.getType()) {
+            case 'left':
+                return 'align-left';
+            case 'center':
+                return 'align-center';
+            case 'right':
+                return 'align-right';
+            default:
+                return null;
+        }   
     }
 
     return (
@@ -376,30 +238,27 @@ export function MarkedInput() {
             <MarketdInputTextAreaContainer>
                 <h1>{location.state.subject.title}</h1>
                 <h2>{pageName}</h2>
-                {renderMarketdInputTextArea()}
+                {pageArray.length === 0 ? (
+                <div onClick={(e) => handleShowMarkupPanel(e)}>
+                    <Editor
+                        ref={editor}
+                        editorState={editorState}
+                        onChange={(editorState) => handleChangeEditor(editorState)}
+                        blockStyleFn={getBlockStyle}
+                    />
+                </div>) :
+                (<BlankAnotationContainer>
+                    <FaRegFileAlt /> 
+                    <p>Página vazia, adicione uma página de resumo no meu à esquerda</p>
+                </BlankAnotationContainer>)}
             </MarketdInputTextAreaContainer>
             <MarkdownPanel 
                 markdownPanelVisible={markdownPanelVisible} 
                 rect={selectedCoordinates}
             >
                 <div className="markdownPanel" onMouseDown={(event) => event.preventDefault()}>
-                    <Dropdown overlay={markupPanelMenu}>
-                        <div>Alinhamento <FaAngleDown /></div>
-                    </Dropdown>
-                    <Dropdown overlay={fontColorMenu}>
-                        <div>Cor <FaAngleDown /></div>
-                    </Dropdown>
-                    <Dropdown overlay={fontHighlightMenu}>
-                        <div>Destacar <FaAngleDown /></div>
-                    </Dropdown>
-                    <div onClick={() => handleApplyMarkup('text')}>Texto</div>
-                    <div onClick={() => handleApplyMarkup('bold')}>Negrito</div>
-                    <div onClick={() => handleApplyMarkup('italic')}>Itálico</div>
-                    <div onClick={() => handleApplyMarkup('underline')}>Sublinhar</div>
-                    <Dropdown overlay={fontSizeMenu}>
-                        <div onClick={() => handleFontSize()}>Tamanho da fonte</div>
-                    </Dropdown>
-                    <div onClick={() => handleApplyMarkup('title')}>Título</div>
+                    <BlockStyleControls onToggle={onBlockClick} />
+                    <InlineStyleControls onToggle={onInlineClick} />
                     <FaTimes onClick={() => setMarkdownPanelVisible('none')} />
                 </div>
             </MarkdownPanel>
