@@ -17,6 +17,10 @@ export function MarkedInput() {
     const [markdownPanelVisible, setMarkdownPanelVisible] = useState('none');
     const [hideMarkdownMenu, setHideMarkdownMenu] = useState(false);
     const [pageArray, setPageArray] = useState([]);
+
+    const getPages = JSON.parse(localStorage.getItem('@StudyNizer:subjectsPages'))
+    localStorage.setItem('@StudyNizer:subjectsPages', JSON.stringify(pageArray));
+
     const [openNewPageModal, setOpenNewPageModal] = useState(false);
     const [newPageName, setNewPageName] = useState('');
     const [pageName, setPageName] = useState('');
@@ -43,14 +47,323 @@ export function MarkedInput() {
     }
 
     function focusEditor() {
-        if(pageArray.length !== 0) {
-            editor.current.focus();
-        }
+        editor?.current?.focus();
     }
-  
+
+    const subjectsAnotationsPages = [
+        {
+            id: "/subject-anotations/sistemas-operacionais-0041982d-98ba-4082-bec5-ea72e5c9e19b/teste-1-57c45417-fb65-48c2-8695-b3e736295738",
+            anotationBlock: {
+                entityMap: {},
+                blocks:[
+                  { 
+                    key: v4(),
+                    text: "teste 1",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  }
+                ]
+            }
+        },
+        {
+            id: "/subject-anotations/sistemas-operacionais-0041982d-98ba-4082-bec5-ea72e5c9e19b/teste-2-38ad4930-fc60-4b01-90eb-9c8d58ef1b86",
+            anotationBlock: {
+                entityMap: {},
+                blocks:[
+                  { 
+                    key: v4(),
+                    text: "teste 2",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  }
+                ]
+            }
+        },
+        {
+            id: "/subject-anotations/sistemas-operacionais-0041982d-98ba-4082-bec5-ea72e5c9e19b/teste-3-fb5630b4-321b-4761-9478-5715c087976d",
+            anotationBlock: {
+                entityMap: {},
+                blocks:[
+                  { 
+                    key: v4(),
+                    text: "teste 3",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  },
+                  { 
+                    key: v4(),
+                    text: "",
+                    type:"unstyled",
+                    depth:0,
+                    inlineStyleRanges:[],
+                    entityRanges: [],
+                    data: {}
+                  }
+                ]
+            }
+        },
+    ]
+    
     useEffect(() => {
       focusEditor();
+
+      if (getPages) {
+        setPageArray(getPages);
+      } else {
+        setPageArray([]);
+      }
     }, []);
+
+    useEffect(() => {
+        const filteredResult = subjectsAnotationsPages.find((e) => e.id === location.pathname);
+
+        if (filteredResult){
+          setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(JSON.stringify(filteredResult.anotationBlock)))));
+        }
+    }, [pageName])
   
     const StyleButton = (props) => {
       let onClickButton = (e) => {
@@ -132,42 +445,33 @@ export function MarkedInput() {
     const handleCreateNewPage = () => {
         let pageId = v4();
 
-        const subjectPageLink = `/subject-anotations/${location.state.subject.title.replace(/ /g, '-').toLowerCase()}-${location.state.subject.id}/${newPageName.replace(/ /g, '-').toLowerCase()}-${pageId}`;
+        let subjectPageLink = `/subject-anotations/${location.state.subject.title.replace(/ /g, '-').toLowerCase()}-${location.state.subject.id}/${newPageName.replace(/ /g, '-').toLowerCase()}-${pageId}`;
 
-        let newPage = 
-            <div id={pageId}>
-                <FaRegFile />
-                <NavLink 
-                    id={pageId}
-                    to={subjectPageLink}
-                    state={location.state}
-                    onClick={() => setPageName(newPageName)}
-                >
-                    {newPageName}
-                </NavLink>
-                <Popconfirm placement="right" title={'Realmente deseja excluir está página?'} onConfirm={() => confirm(pageId)} okText="Sim" cancelText="Não">
-                    <Tooltip placement="right" title="Excluir página">
-                        <FaTimesCircle />
-                    </Tooltip>
-                </Popconfirm>
-            </div>;
-
-
+        const newPageObj = {
+            id: v4(),
+            pageName: newPageName,
+            urlPath: subjectPageLink
+        }
+        
         history(subjectPageLink, { state: location.state });
-        setPageArray(oldPageArray => [...oldPageArray, newPage]);
+        setPageArray(oldPageArray => [...oldPageArray, newPageObj]);
         setNewPageName('');
-        setPageName(newPageName);
         setOpenNewPageModal(false);
         setMarkdownPanelVisible('none');
+        
         setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(JSON.stringify(initialEditorState)))));
+
+        let subjectsPageArr = [];
+        subjectsPageArr = JSON.parse(localStorage.getItem('@StudyNizer:subjectsPages')) || [];
+        subjectsPageArr.push(pageArray);
+        localStorage.setItem('@StudyNizer:subjectsPages', JSON.stringify(subjectsPageArr));
     }
 
     const handleRemovePage = (pageId) => {
         setPageArray(current =>
-            current.filter(({props}) => {
+            current.filter((props) => {
               return props.id !== pageId;
         }));
-        setPageName('');
         message.success('Página removida!');
     }
 
@@ -191,6 +495,26 @@ export function MarkedInput() {
             default:
                 return null;
         }   
+    }
+
+    const renderEditor = () => {
+        if(pageName === '' && pageArray.length === 0) {
+            return (<BlankAnotationContainer>
+                <FaRegFileAlt /> 
+                <p>Página vazia, adicione uma página de resumo no meu à esquerda</p>
+            </BlankAnotationContainer>)
+        } else if(pageName !== '' && pageArray.length !== 0) {
+            return (<div onClick={(e) => handleShowMarkupPanel(e)}>
+                <Editor
+                    ref={editor}
+                    editorState={editorState}
+                    onChange={(editorState) => handleChangeEditor(editorState)}
+                    blockStyleFn={getBlockStyle}
+                />
+            </div>)
+        } else {
+            return <></>
+        }
     }
 
     return (
@@ -231,26 +555,31 @@ export function MarkedInput() {
                     <FaAngleDoubleLeft onClick={() => setHideMarkdownMenu(true)} /> 
                 }
                 <section>
-                    {pageArray}
+                    {pageArray.map((page) => (
+                        <div id={page.id}>
+                            <FaRegFile />
+                            <NavLink 
+                                id={page.id}
+                                to={page.urlPath}
+                                state={location.state}
+                                onClick={() => setPageName(page.pageName)}
+                            >
+                                {page.pageName}
+                            </NavLink>
+                            <Popconfirm placement="right" title={'Realmente deseja excluir está página?'} onConfirm={() => confirm(page.id)} okText="Sim" cancelText="Não">
+                                <Tooltip placement="right" title="Excluir página">
+                                    <FaTimesCircle />
+                                </Tooltip>
+                            </Popconfirm>
+                        </div>
+                    ))}
                 </section>
                 <footer onClick={() => showNewPageModal()}><FaPlus />Adicionar página</footer>
             </MarkedInputMenu>
             <MarketdInputTextAreaContainer>
-                <h1>{location.state.subject.title}</h1>
+                <h1>{location?.state?.subject.title}</h1>
                 <h2>{pageName}</h2>
-                {pageArray.length === 0 ? (
-                <div onClick={(e) => handleShowMarkupPanel(e)}>
-                    <Editor
-                        ref={editor}
-                        editorState={editorState}
-                        onChange={(editorState) => handleChangeEditor(editorState)}
-                        blockStyleFn={getBlockStyle}
-                    />
-                </div>) :
-                (<BlankAnotationContainer>
-                    <FaRegFileAlt /> 
-                    <p>Página vazia, adicione uma página de resumo no meu à esquerda</p>
-                </BlankAnotationContainer>)}
+                {renderEditor()}
             </MarketdInputTextAreaContainer>
             <MarkdownPanel 
                 markdownPanelVisible={markdownPanelVisible} 
