@@ -59,10 +59,14 @@ export const MarkedInputMenu = styled.div`
 
     > div {
         display: flex;
+        align-items: center;
         justify-content: space-between;
         cursor: pointer;
-        padding: 10px 0 10px 0;
         font-weight: bold;
+
+        a {
+          padding: 10px 0 10px 0;
+        }
 
         &:hover {
           background: lightgray;
@@ -70,7 +74,7 @@ export const MarkedInputMenu = styled.div`
         }
 
         svg {
-          margin: 0 10px -2px 10px;
+          margin: 0 10px 0 10px;
           font-size: 18px;
         }
 
