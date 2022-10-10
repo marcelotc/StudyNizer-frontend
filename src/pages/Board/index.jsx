@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
 import _ from "lodash";
 import {v4} from "uuid";
-import { Popconfirm, Modal, Input, Button, Tooltip, Select, DatePicker, message } from 'antd';
-import { FaPlus, FaCalendarAlt, FaTrash } from "react-icons/fa";
+import { Popconfirm, Modal, Input, Button, Tooltip, Select, DatePicker, message, Checkbox } from 'antd';
+import { FaPlus, FaCalendarAlt, FaTrash, FaQuestionCircle } from "react-icons/fa";
 import moment from 'moment';
 
 import { Header } from '../../components/Header'
@@ -149,8 +149,7 @@ export function Board() {
 
   const showModal = (data, el, modalMode) => {
     setOpen(true);
-    setColumn(data.title)
-
+    setColumn(data.title);
     setText(el?.name);
     setDescription(el?.description);
     setPriority(el?.priority);
@@ -230,6 +229,31 @@ export function Board() {
     }
   };
 
+  const onChangeCheckBox = (e) => {
+    console.log(`checked = ${e.target.checked}`);
+  }
+
+  function formatDate(date, modalMode, arrayPosition) {
+    if(modalMode === 'Editar') {
+      var d = new Date(date[arrayPosition]),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+      if (month.length < 2)
+        month = '0' + month;
+      if (day.length < 2)
+        day = '0' + day;
+
+      let taskDate = [day, month, year].join('/');
+      let taskTime = [d.getHours(), d.getMinutes(), d.getSeconds()].join(':');
+
+      return taskDate + ' ' + taskTime;
+    } else {
+      return date[arrayPosition]
+    }
+  }
+
   return (
     <Container>
       <Header/>
@@ -256,7 +280,13 @@ export function Board() {
             <Option value="Média">Média</Option>
             <Option value="Baixa">Baixa</Option>
           </Select>
-          <RangePicker showTime format={dateFormat} value={taskDueDate !== undefined ? [moment(taskDueDate[0], dateFormat), moment(taskDueDate[1], dateFormat)] : null}  onChange={handleDateChange} />
+          <RangePicker showTime format={dateFormat} value={taskDueDate !== undefined ? [moment(formatDate(taskDueDate, modalMode, 0), dateFormat), moment(formatDate(taskDueDate, modalMode, 1), dateFormat)] : null}  onChange={handleDateChange} />
+          <div className='recurrentTask'>
+            <Checkbox onChange={onChangeCheckBox}>Tarefa recorrente</Checkbox>                          
+            <Tooltip placement="top" title="Tarefas que irão se repetir no dia da semana e horário selecionados">
+              <FaQuestionCircle />
+            </Tooltip>
+          </div>
           <Button
             type='primary'
             disabled={taskTextsBlank ? true : false}

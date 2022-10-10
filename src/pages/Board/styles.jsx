@@ -48,6 +48,22 @@ export const AddTaskContainer= styled.div`
     .ant-picker-dropdown, .ant-picker-dropdown-range, .ant-picker-dropdown-placement-bottomLeft  {
         height: 100% !important;
     }
+
+    .recurrentTask {
+        display: flex;
+        align-items: center;
+        margin: 10px 0 10px 6px;
+
+        > svg {
+            font-size: 15px;
+
+            &:hover {
+                cursor: pointer;
+                color: gray;
+                transition: 0.5s;
+            }
+        }
+    }
 `;
 
 export const BoardContainer= styled.div`
