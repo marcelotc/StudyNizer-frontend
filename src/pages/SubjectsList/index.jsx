@@ -93,7 +93,7 @@ export function SubjectsList() {
               placeholder="Nome da disciplina" 
               value={subjectTitle} 
               onChange={(e) => setSubjectTitle(e.target.value)} 
-              maxlength="70"
+              maxLength="70"
             />
             <Button
               type='primary'

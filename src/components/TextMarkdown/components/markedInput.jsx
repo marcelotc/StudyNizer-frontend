@@ -31,16 +31,7 @@ export function MarkedInput() {
     const [pageName, setPageName] = useState('');
     const [activePage, setActivePage] = useState(null);
 
-    let rawContentFromStore = '';
-
-    const storeRaw = localStorage.getItem('@StudyNizer:subjectsAnnotations');
-    if(storeRaw) {
-        rawContentFromStore = EditorState.createWithContent(convertFromRaw(JSON.parse(storeRaw)));
-    } else {
-        rawContentFromStore = EditorState.createWithContent(ContentState.createFromText(''))
-    }
-    
-    const [editorState, setEditorState] = useState(rawContentFromStore);
+    const [editorState, setEditorState] = useState(EditorState.createWithContent(ContentState.createFromText('')));
 
     const editor = React.useRef(null);
 
@@ -52,8 +43,6 @@ export function MarkedInput() {
         if (filteredResult){
             filteredResult.anotationBlock = contentRaw;
         }
-
-        localStorage.setItem('@StudyNizer:subjectsAnnotations', JSON.stringify(contentRaw));
         
         setEditorState(editorState);
         setMarkdownPanelVisible('none');
@@ -164,6 +153,20 @@ export function MarkedInput() {
         setMarkdownPanelVisible('none');
     };
 
+    const handleSaveSubjectsArray = () => {
+        let subjectsPageArr = [];
+        subjectsPageArr = JSON.parse(localStorage.getItem('@StudyNizer:subjectsPages')) || [];
+        subjectsPageArr.push(pageArray);
+        localStorage.setItem('@StudyNizer:subjectsPages', JSON.stringify(subjectsPageArr));
+    }
+
+    const handleSavePagesMarkdownArray = () => {
+        let pagesMarkdownArr = [];
+        pagesMarkdownArr = JSON.parse(localStorage.getItem('@StudyNizer:pagesMarkdown')) || [];
+        pagesMarkdownArr.push(pagesMarkdownArray);
+        localStorage.setItem('@StudyNizer:pagesMarkdown', JSON.stringify(pagesMarkdownArr));
+    }
+
     const handleCreateNewPage = () => {
         let pageId = v4();
 
@@ -179,7 +182,8 @@ export function MarkedInput() {
         const subjectsAnotationsPages = {
             id: subjectPageLink,
             pageId: pageId,
-            anotationBlock: initialEditorState
+            anotationBlock: initialEditorState,
+            subjectName: location.state.subject.title.replace(/ /g, '-').toLowerCase()
         }
         
         history(subjectPageLink, { state: location.state });
@@ -188,18 +192,10 @@ export function MarkedInput() {
         setNewPageName('');
         setOpenNewPageModal(false);
         setMarkdownPanelVisible('none');
-
         setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(JSON.stringify(initialEditorState)))));
-
-        let subjectsPageArr = [];
-        subjectsPageArr = JSON.parse(localStorage.getItem('@StudyNizer:subjectsPages')) || [];
-        subjectsPageArr.push(pageArray);
-        localStorage.setItem('@StudyNizer:subjectsPages', JSON.stringify(subjectsPageArr));
-
-        let pagesMarkdownArr = [];
-        pagesMarkdownArr = JSON.parse(localStorage.getItem('@StudyNizer:pagesMarkdown')) || [];
-        pagesMarkdownArr.push(pagesMarkdownArray);
-        localStorage.setItem('@StudyNizer:pagesMarkdown', JSON.stringify(pagesMarkdownArr));
+    
+        handleSaveSubjectsArray();
+        handleSavePagesMarkdownArray();
     }
 
     const handleRemovePage = (pageId) => {
