@@ -17,7 +17,7 @@ export const Container = styled.div`
         border-top-right-radius: 10px;
         border-bottom-left-radius: 0px;
         border-bottom-right-radius: 0px;
-        padding: 5px 20px;
+        padding: 8px 20px;
     }
 
     a.active {

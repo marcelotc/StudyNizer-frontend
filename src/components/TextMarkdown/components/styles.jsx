@@ -69,7 +69,8 @@ export const MarkedInputMenu = styled.div`
         }
 
         &:hover {
-          background: lightgray;
+          background: #ebe8e8;
+          border-right: 3px solid #000;
           transition: 0.3s;
         }
 
@@ -82,6 +83,11 @@ export const MarkedInputMenu = styled.div`
           color: red;
           transition: 0.2s;
         }
+    }
+
+    .activePageLink {
+      background: lightgray;
+      border-right: 3px solid #000;
     }
 
     @media (max-width: 990px) {
@@ -103,7 +109,7 @@ export const MarkedInputMenu = styled.div`
 
     &:hover {
       cursor: pointer;
-      background: lightgray;
+      background: #ebe8e8;
       transition: 0.3s;
     }
 
