@@ -146,6 +146,12 @@ export const MarkdownPanel = styled.div`
                 0 8px 16px rgba(0,0,0,0.07),
                 0 16px 32px rgba(0,0,0,0.07), 
                 0 32px 64px rgba(0,0,0,0.07);
+
+  @media (max-width: 1189px) {
+    height: 80px; 
+    overflow-x: scroll;
+    justify-content: start;
+  }
   
   .markdownPanel {
     display: flex;
@@ -246,21 +252,6 @@ export const MarketdInputTextArea = styled.div`
         transition: 0.4s;
       }
   }
-
-  /*
-    > div:hover:before {
-        content: "\f055";
-        font-family: 'Font Awesome 5 Free';
-        font-weight: 900;
-        font-size: 30px;
-        font-weight: bold;
-        vertical-align: middle;
-    }
-
-    > div:hover:before {
-        pointer-events: all;
-    }
-  */
 `;
 
 export const BlankAnotationContainer = styled.div`
