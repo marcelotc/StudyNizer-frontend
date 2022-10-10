@@ -172,7 +172,8 @@ export function MarkedInput() {
         const newPageObj = {
             id: pageId,
             pageName: newPageName,
-            urlPath: subjectPageLink
+            urlPath: subjectPageLink,
+            subjectName: location.state.subject.title.replace(/ /g, '-').toLowerCase()
         }
 
         const subjectsAnotationsPages = {
@@ -299,7 +300,7 @@ export function MarkedInput() {
                     <FaAngleDoubleLeft onClick={() => setHideMarkdownMenu(true)} /> 
                 }
                 <section>
-                    {pageArray.map((page) => (
+                    {pageArray.filter(pages => pages.subjectName === location.state.subject.title.replace(/ /g, '-').toLowerCase()).map((page) => (
                         <div 
                             id={page.id} 
                             className={`${activePage == page.pageName && 'activePageLink'}`}
