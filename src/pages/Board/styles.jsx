@@ -213,3 +213,30 @@ export const PriorityColor = styled.div`
         width: 20%;
     }
 `;
+
+export const RecurringTaskContainer = styled.div`
+    display: flex;
+    border: 1px solid lightgray;
+    margin: 6px 0 0 6px;
+    padding: 3px;
+    width: 100%;
+
+    > p {
+        font-weight: bold;
+        width: 100%;
+        margin: 3px;
+        padding: 5px;
+        cursor: pointer;
+        text-align: center;
+
+        &:hover {
+            background: lightgray; 
+            border-radius: 4px;
+        }
+    }
+
+    .activeWeek {
+        background: lightgray; 
+        border-radius: 4px;
+    }
+`;
