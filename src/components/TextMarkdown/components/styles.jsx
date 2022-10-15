@@ -254,7 +254,7 @@ export const MarketdInputTextArea = styled.div`
   }
 `;
 
-export const BlankAnotationContainer = styled.div`
+export const BlankAnnotationContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;

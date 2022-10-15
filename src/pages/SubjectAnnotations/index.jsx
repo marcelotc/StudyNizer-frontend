@@ -5,7 +5,7 @@ import { TextMarkdown } from '../../components/TextMarkdown';
 
 import { Container, BackButton } from './styles';
 
-export function SubjectAnotations() {
+export function SubjectAnnotations() {
   return (
     <Container>
       <Header />

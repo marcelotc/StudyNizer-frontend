@@ -13,6 +13,7 @@
     "@faker-js/faker": "^7.5.0",
     "@lourenci/react-kanban": "^2.1.0",
     "antd": "^4.23.0",
+    "axios": "^1.1.2",
     "dompurify": "^2.4.0",
     "draft-js": "^0.11.7",
     "immer": "^9.0.15",

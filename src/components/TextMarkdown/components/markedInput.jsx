@@ -2,8 +2,8 @@ import React, { useState, useEffect  } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Editor, EditorState, ContentState, RichUtils, convertToRaw, convertFromRaw  } from "draft-js";
 import { Popconfirm, Tooltip, message, Modal, Button, Input } from 'antd';
-import { FaTimes, FaPlus, FaRegFile, FaRegFileAlt, FaTimesCircle, FaAngleDoubleLeft, FaAngleDoubleRight, FaAngleDown } from "react-icons/fa";
-import { MarkedInputContainer, MarkedInputMenu, MarketdInputTextAreaContainer, BlankAnotationContainer, MarketdInputTextArea, MarkdownPanel, AddNewPageModal } from "./styles";
+import { FaTimes, FaPlus, FaRegFile, FaRegFileAlt, FaTimesCircle, FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
+import { MarkedInputContainer, MarkedInputMenu, MarketdInputTextAreaContainer, BlankAnnotationContainer, MarkdownPanel, AddNewPageModal } from "./styles";
 import { v4 } from 'uuid';
 
 import { initialEditorState } from './initialEditorState';
@@ -41,7 +41,7 @@ export function MarkedInput() {
         const filteredResult = pagesMarkdownArray.find((e) => e.id === location.pathname);
 
         if (filteredResult){
-            filteredResult.anotationBlock = contentRaw;
+            filteredResult.annotationBlock = contentRaw;
         }
         
         setEditorState(editorState);
@@ -72,7 +72,7 @@ export function MarkedInput() {
         const filteredResult = pagesMarkdownArray.find((e) => e.id === location.pathname);
 
         if (filteredResult){
-          setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(JSON.stringify(filteredResult.anotationBlock)))));
+          setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(JSON.stringify(filteredResult.annotationBlock)))));
         }
     }, [pageName])
   
@@ -170,7 +170,7 @@ export function MarkedInput() {
     const handleCreateNewPage = () => {
         let pageId = v4();
 
-        let subjectPageLink = `/subject-anotations/${location.state.subject.title.replace(/ /g, '-').toLowerCase()}-${location.state.subject.id}/${newPageName.replace(/ /g, '-').toLowerCase()}-${pageId}`;
+        let subjectPageLink = `/subject-annotations/${location.state.subject.title.replace(/ /g, '-').toLowerCase()}-${location.state.subject.id}/${newPageName.replace(/ /g, '-').toLowerCase()}-${pageId}`;
 
         const newPageObj = {
             id: pageId,
@@ -179,16 +179,16 @@ export function MarkedInput() {
             subjectName: location.state.subject.title.replace(/ /g, '-').toLowerCase()
         }
 
-        const subjectsAnotationsPages = {
+        const subjectsAnnotationsPages = {
             id: subjectPageLink,
             pageId: pageId,
-            anotationBlock: initialEditorState,
+            annotationBlock: initialEditorState,
             subjectName: location.state.subject.title.replace(/ /g, '-').toLowerCase()
         }
         
         history(subjectPageLink, { state: location.state });
         setPageArray(oldPageArray => [...oldPageArray, newPageObj]);
-        setPagesMarkdownArray(oldPagesMarkdownArray => [...oldPagesMarkdownArray, subjectsAnotationsPages]);
+        setPagesMarkdownArray(oldPagesMarkdownArray => [...oldPagesMarkdownArray, subjectsAnnotationsPages]);
         setNewPageName('');
         setOpenNewPageModal(false);
         setMarkdownPanelVisible('none');
@@ -237,10 +237,10 @@ export function MarkedInput() {
         if (pageDeleted) {
             return <></>
         } else if(pageName === '' && pageArray.length === 0) {
-            return (<BlankAnotationContainer>
+            return (<BlankAnnotationContainer>
                 <FaRegFileAlt /> 
                 <p>Página vazia, adicione uma página de resumo no meu à esquerda</p>
-            </BlankAnotationContainer>)
+            </BlankAnnotationContainer>)
         } else if(pageName !== '' && pageArray.length !== 0) {
             return (<div onClick={(e) => handleShowMarkupPanel(e)}>
                 <Editor
