@@ -1,11 +1,13 @@
 import React, {useState} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
 import _ from "lodash";
 import {v4} from "uuid";
-import { Popconfirm, Modal, Input, Button, Tooltip, Select, DatePicker, message, Checkbox, TimePicker } from 'antd';
+import { notification, Popconfirm, Modal, Input, Button, Tooltip, Select, DatePicker, message, Checkbox, TimePicker } from 'antd';
 import { FaPlus, FaCalendarAlt, FaTrash, FaQuestionCircle } from "react-icons/fa";
 import moment from 'moment';
 
+import { setCalendarDate } from '../../store/modules/userSession/actions';
 import { Header } from '../../components/Header'
 
 import { Container, BoardFilter, AddTaskContainer, BoardContainer, Column, Card, Item, CardHeader, PriorityColor, CardTaskDetails, RecurringTaskContainer } from "./styles";
@@ -21,7 +23,18 @@ const dialogText = 'Tem certeza que deseja excluir esta tarefa?';
 const cardTaskDetailsText = 'Clique para ver detalhes desta tarefa';
 
 export function Board() {
+  const dispatch = useDispatch();
   const getBoardTasks = localStorage.getItem('@StudyNizer:boardTasks');
+  const getUserInfo = useSelector(state => state.userSession.userInfo);
+
+  if(getUserInfo?.name !== '') {
+    notification.success({
+      message: `Bem vindo ${getUserInfo.name}!`,
+      placement: 'bottomLeft',
+    });
+    dispatch(setCalendarDate({ name: '' }));
+  }
+
   const [state, setState] = useState(() => {
     if (getBoardTasks) {
       return JSON.parse(getBoardTasks);
@@ -265,7 +278,6 @@ export function Board() {
   const onChangeRecurringTime = (time) => {
     setRecurringTime(time);
   }
-  console.log('setRecurringWeek', recurringWeek)
 
   const weekDays = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
 

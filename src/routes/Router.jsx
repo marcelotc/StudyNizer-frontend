@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 import { SignIn } from '../pages/session/SignIn'
 import { SignUp } from '../pages/session/SignUp'
@@ -9,9 +11,11 @@ import { CalendComponent } from '../pages/Calendar'
 import { AuthLayout } from './AuthLayout'
 
 export function Router() {
-    //const { signed } = store.getState().auth;
-    const signed = true;
-
+    const userSessionStorage = JSON.parse(localStorage.getItem('@StudyNizer:userSession'));
+    const userSession = useSelector(state => state.userSession.userInfo);
+    
+    let signed = userSessionStorage?.token || userSession?.token;
+   
     return (
         <Routes>
             <Route path="/sign-in" element={<SignIn signed={signed} />} />
