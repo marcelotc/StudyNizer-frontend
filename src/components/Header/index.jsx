@@ -19,7 +19,7 @@ export const Header = () => {
                 <NavLink to={'/calendar'} activeClassName="active">Calendário</NavLink>
             </Menu>
             <LogOut>
-                <NavLink to={'/'} onClick={handleClearSession}>Sair</NavLink>
+                <NavLink onClick={handleClearSession}>Sair</NavLink>
             </LogOut>
         </Container>
     );
