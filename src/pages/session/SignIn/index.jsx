@@ -38,6 +38,7 @@ export const SignIn = ({ signed }) => {
                 message: `${error?.response?.data?.error}`,
                 placement: 'top',
             });
+            setLoading(false);
         }
     }
 
