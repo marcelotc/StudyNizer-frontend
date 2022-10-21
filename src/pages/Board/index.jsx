@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
 import _ from "lodash";
@@ -6,6 +6,8 @@ import {v4} from "uuid";
 import { notification, Popconfirm, Modal, Input, Button, Tooltip, Select, DatePicker, message, Checkbox, TimePicker } from 'antd';
 import { FaPlus, FaCalendarAlt, FaTrash, FaQuestionCircle } from "react-icons/fa";
 import moment from 'moment';
+import Axios from 'axios';
+import api from '../../services/api';
 
 import { setCalendarDate } from '../../store/modules/userSession/actions';
 import { Header } from '../../components/Header'
@@ -25,6 +27,8 @@ const cardTaskDetailsText = 'Clique para ver detalhes desta tarefa';
 export function Board() {
   const dispatch = useDispatch();
   const getBoardTasks = localStorage.getItem('@StudyNizer:boardTasks');
+  const getUserSession = localStorage.getItem('@StudyNizer:userSession');
+
   const getUserInfo = useSelector(state => state.userSession.userInfo);
 
   if(getUserInfo?.name !== '') {
@@ -35,25 +39,80 @@ export function Board() {
     dispatch(setCalendarDate({ name: '' }));
   }
 
-  const [state, setState] = useState(() => {
-    if (getBoardTasks) {
-      return JSON.parse(getBoardTasks);
-    } else {
-      return {
+  const [boardTasksLoad, setBoardTasksLoad] = useState(false);
+
+
+  const [state, setState] = useState({});
+
+  useEffect(() => {
+    const getTasks = async () => {
+      const headers = { Authorization: `Bearer ${JSON.parse(getUserSession).token}` };
+      setBoardTasksLoad(true);
+      const [ resTasksTodo, resTasksDoing, resTasksCompleted ] =  await Axios.all([
+        api.get(`/user/board-tasks-todo/${JSON.parse(getUserSession).id}`, {headers}), 
+        api.get(`/user/board-tasks-doing/${JSON.parse(getUserSession).id}`, {headers}),
+        api.get(`/user/board-tasks-completed/${JSON.parse(getUserSession).id}`, {headers}),
+      ]);
+
+      let resTasksTodoArr = resTasksTodo.data.map((values) => {
+
+        const tasksTodo = {
+          id: values.task_id,
+          name: values.title,
+          description: values.description,
+          priority: values.priority,
+          date: [values.due_date_start, values.due_date_end],
+        }
+
+        return tasksTodo
+      })
+
+      let resTasksDoingArr = resTasksDoing.data.map((values) => {
+
+        const tasksDoing = {
+          id: values.task_id,
+          name: values.title,
+          description: values.description,
+          priority: values.priority,
+          date: [values.due_date_start, values.due_date_end],
+        }
+
+        return tasksDoing
+      })
+
+      let resTasksCompletedArr = resTasksCompleted.data.map((values) => {
+
+        const tasksCompleted = {
+          id: values.task_id,
+          name: values.title,
+          description: values.description,
+          priority: values.priority,
+          date: [values.due_date_start, values.due_date_end],
+        }
+
+        return tasksCompleted
+      })
+      
+      const boardInitialState = {
         "Tarefas": {
           title: "Tarefas",
-          items: []
+          items: resTasksTodoArr
         },
         "Fazendo": {
           title: "Fazendo",
-          items: []
+          items: resTasksDoingArr
         },
         "Concluído": {
           title: "Concluído",
-          items: []
+          items: resTasksCompletedArr
         }
     }
-  }});
+      setState(boardInitialState);
+      setBoardTasksLoad(false);
+    }
+    getTasks();
+  }, []);
+
   const [text, setText] = useState("");
   const [description, setDescription] = useState("");
   const [column, setColumn] = useState('Tarefas');
@@ -365,69 +424,73 @@ export function Board() {
       </BoardFilter>
       <BoardContainer>
         <DragDropContext onDragEnd={handleDragEnd}>
-          {_.map(state, (data, key) => {
-            return(
-              <Column key={key}>
-                <Droppable droppableId={key}>
-                  {(provided, snapshot) => {
-                    return(
-                      <>
-                        <CardHeader>
-                          <div>
-                            <h3>{data.title}</h3>
-                            <span>{state?.[data.title].items.length}</span>
-                          </div>
-                          <Tooltip placement="top" title="Adicionar Tarefa">
-                            <FaPlus color='#fff' onClick={() => showModal(data)} />
-                          </Tooltip>
-                        </CardHeader> 
-                        <Card
-                          ref={provided.innerRef}
-                          {...provided.droppableProps}
-                        >
-                          {data.items.filter((el) => handleFilterCard(el)).map((el, index) => {
-                            if (el !== undefined) {
-                              return(
-                                <Draggable key={el?.id} index={index} draggableId={el?.id}>
-                                  {(provided, snapshot) => {
-                                    return(
-                                      <Item
-                                        isDragging={snapshot.isDragging}
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}
-                                      >      
-                                        <Popconfirm placement="right" title={dialogText} onConfirm={() => confirm(data, index)} okText="Sim" cancelText="Não">
-                                          <Tooltip placement="right" title="Excluir Tarefa">
-                                            <FaTrash />
+          {!boardTasksLoad ? (
+          <>
+            {_.map(state, (data, key) => {
+              return(
+                <Column key={key}>
+                  <Droppable droppableId={key}>
+                    {(provided, snapshot) => {
+                      return(
+                        <>
+                          <CardHeader>
+                            <div>
+                              <h3>{data.title}</h3>
+                              <span>{state?.[data.title].items.length}</span>
+                            </div>
+                            <Tooltip placement="top" title="Adicionar Tarefa">
+                              <FaPlus color='#fff' onClick={() => showModal(data)} />
+                            </Tooltip>
+                          </CardHeader> 
+                          <Card
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                          >
+                            {data.items.filter((el) => handleFilterCard(el)).map((el, index) => {
+                              if (el !== undefined) {
+                                return(
+                                  <Draggable key={el?.id} index={index} draggableId={el?.id}>
+                                    {(provided, snapshot) => {
+                                      return(
+                                        <Item
+                                          isDragging={snapshot.isDragging}
+                                          ref={provided.innerRef}
+                                          {...provided.draggableProps}
+                                          {...provided.dragHandleProps}
+                                        >      
+                                          <Popconfirm placement="right" title={dialogText} onConfirm={() => confirm(data, index)} okText="Sim" cancelText="Não">
+                                            <Tooltip placement="right" title="Excluir Tarefa">
+                                              <FaTrash />
+                                            </Tooltip>
+                                          </Popconfirm>
+                                          <Tooltip placement="bottom" title={cardTaskDetailsText}>
+                                            <CardTaskDetails onClick={() => showModal(data, el, 'edit')}>
+                                              <h3>{el?.name}</h3>
+                                              <p className='taskDescription'>{el?.description}</p>
+                                              {renderPriorityColor(el?.priority)}
+                                              <div className='taskDate'>
+                                                <p>{moment(el?.date[0]).format(dateFormat)} - {moment(el?.date[1]).format(dateFormat)}</p>
+                                                <FaCalendarAlt />
+                                              </div>
+                                            </CardTaskDetails>
                                           </Tooltip>
-                                        </Popconfirm>
-                                        <Tooltip placement="bottom" title={cardTaskDetailsText}>
-                                          <CardTaskDetails onClick={() => showModal(data, el, 'edit')}>
-                                            <h3>{el?.name}</h3>
-                                            <p className='taskDescription'>{el?.description}</p>
-                                            {renderPriorityColor(el?.priority)}
-                                            <div className='taskDate'>
-                                              <p>{moment(el?.date[0]).format(dateFormat)} - {moment(el?.date[1]).format(dateFormat)}</p>
-                                              <FaCalendarAlt />
-                                            </div>
-                                          </CardTaskDetails>
-                                        </Tooltip>
-                                      </Item>
-                                    )
-                                  }}
-                                </Draggable>
-                              )}
-                            })}
-                          {provided.placeholder}
-                        </Card>
-                    </>
-                    )
-                  }}
-                </Droppable>
-              </Column>
-            )
+                                        </Item>
+                                      )
+                                    }}
+                                  </Draggable>
+                                )}
+                              })}
+                            {provided.placeholder}
+                          </Card>
+                      </>
+                      )
+                    }}
+                  </Droppable>
+                </Column>
+              )
           })}
+          </>
+        ) : 'Carregando...'}
         </DragDropContext>
       </BoardContainer>
     </Container>
