@@ -207,19 +207,22 @@ export function Board() {
   }
 
   // TODO - Remover task pelo ID e não pelo index
-  const removeitem = (data, index) => {
-    setState(current => {
-      const copy = {...current};
-
-      delete copy[data.title].items[index];
-
-      return copy;
-    })
+  const removeitem = async (columnType, el) => {
+    try {
+      await api.delete(`/user/board-tasks-${columnType}/${el?.id}`, {headers});
+      setBoardUpdate(!boardUpdate);
+      message.success('Tarefa removida!', );
+    } catch (error) {
+      notification.info({
+        message: `${error?.response?.data?.error}`,
+        placement: 'top',
+      });
+      setAddTaskLoad(false);
+    }
   }
 
-  const confirm = (data, index) => {
-    removeitem(data, index);
-    message.success('Tarefa removida!');
+  const confirm = (data, el) => {
+    removeitem(data?.columnType, el);
   };
 
   const showModal = (data, el, modalMode) => {
@@ -459,7 +462,7 @@ export function Board() {
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
                                           >      
-                                            <Popconfirm placement="right" title={dialogText} onConfirm={() => confirm(data, index)} okText="Sim" cancelText="Não">
+                                            <Popconfirm placement="right" title={dialogText} onConfirm={() => confirm(data, el)} okText="Sim" cancelText="Não">
                                               <Tooltip placement="right" title="Excluir Tarefa">
                                                 <FaTrash />
                                               </Tooltip>
