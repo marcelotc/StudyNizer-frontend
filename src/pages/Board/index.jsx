@@ -2,9 +2,9 @@ import React, {useState, useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
 import _ from "lodash";
-import {v4} from "uuid";
-import { notification, Popconfirm, Modal, Input, Button, Tooltip, Select, DatePicker, message, Checkbox, TimePicker } from 'antd';
+import { notification, Popconfirm, Modal, Input, Button, Tooltip, Select, Space, DatePicker, Skeleton, message, Checkbox, TimePicker, Spin } from 'antd';
 import { FaPlus, FaCalendarAlt, FaTrash, FaQuestionCircle } from "react-icons/fa";
+import { LoadingOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import Axios from 'axios';
 import api from '../../services/api';
@@ -18,6 +18,7 @@ import './styles.jsx';
 const { Option } = Select;
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
+const antIcon = <LoadingOutlined style={{ fontSize: 24, color: '#fff' }} spin />;
 
 const dateFormat = "DD/MM/YYYY HH:mm:ss";
 
@@ -26,9 +27,9 @@ const cardTaskDetailsText = 'Clique para ver detalhes desta tarefa';
 
 export function Board() {
   const dispatch = useDispatch();
-  const getBoardTasks = localStorage.getItem('@StudyNizer:boardTasks');
   const getUserSession = localStorage.getItem('@StudyNizer:userSession');
-
+  const headers = { Authorization: `Bearer ${JSON.parse(getUserSession).token}` };
+  const userId = JSON.parse(getUserSession).id;
   const getUserInfo = useSelector(state => state.userSession.userInfo);
 
   if(getUserInfo?.name !== '') {
@@ -42,11 +43,27 @@ export function Board() {
   const [boardTasksLoad, setBoardTasksLoad] = useState(false);
 
 
-  const [state, setState] = useState({});
+  const [state, setState] = useState({
+    "Tarefas": {
+      title: "Tarefas",
+      items: [],
+      columnType: 'todo'
+    },
+    "Fazendo": {
+      title: "Fazendo",
+      items: [],
+      columnType: 'doing'
+    },
+    "Concluído": {
+      title: "Concluído",
+      items: [],
+      columnType: 'completed'
+    }
+});
+  const [boardUpdate, setBoardUpdate] = useState(false);
 
   useEffect(() => {
     const getTasks = async () => {
-      const headers = { Authorization: `Bearer ${JSON.parse(getUserSession).token}` };
       setBoardTasksLoad(true);
       const [ resTasksTodo, resTasksDoing, resTasksCompleted ] =  await Axios.all([
         api.get(`/user/board-tasks-todo/${JSON.parse(getUserSession).id}`, {headers}), 
@@ -96,26 +113,30 @@ export function Board() {
       const boardInitialState = {
         "Tarefas": {
           title: "Tarefas",
-          items: resTasksTodoArr
+          items: resTasksTodoArr,
+          columnType: 'todo'
         },
         "Fazendo": {
           title: "Fazendo",
-          items: resTasksDoingArr
+          items: resTasksDoingArr,
+          columnType: 'doing'
         },
         "Concluído": {
           title: "Concluído",
-          items: resTasksCompletedArr
+          items: resTasksCompletedArr,
+          columnType: 'completed'
         }
     }
       setState(boardInitialState);
       setBoardTasksLoad(false);
     }
     getTasks();
-  }, []);
+  }, [boardUpdate]);
 
   const [text, setText] = useState("");
   const [description, setDescription] = useState("");
   const [column, setColumn] = useState('Tarefas');
+  const [columnType, setColumnType] = useState('');
   const [open, setOpen] = useState(false);
   const [taskDueDate, setTaskDueDate] = useState([]);
   const [priority, setPriority] = useState("");
@@ -125,12 +146,11 @@ export function Board() {
   const [recurringTask, setRecurringTask] = useState(false);
   const [recurringWeek, setRecurringWeek] = useState('');
   const [recurringTime, setRecurringTime] = useState('');
+  const [addTaskLoad, setAddTaskLoad] = useState(false);
   const [searchTermTaskDueData, setSearchTermTaskDueData] = useState({
     min: 0,
     max: 0
   });
-
-  localStorage.setItem('@StudyNizer:boardTasks', JSON.stringify(state));
 
   const taskTextsBlank = text?.trim() === "" || description?.trim() === "" || taskDueDate === undefined || priority === undefined;
 
@@ -156,49 +176,33 @@ export function Board() {
     })
   }
 
-  const saveTasksToLocalStorage = (boardTasks, tasksTitleDate) => {
-    localStorage.setItem('@StudyNizer:boardTasks', JSON.stringify(boardTasks));
+  const addItem = async () => {
+    setAddTaskLoad(true);
 
-    let tasksTitleDateArr = [];
-    tasksTitleDateArr = JSON.parse(localStorage.getItem('@StudyNizer:tasksTitleDate')) || [];
-    tasksTitleDateArr.push(tasksTitleDate);
-    localStorage.setItem('@StudyNizer:tasksTitleDate', JSON.stringify(tasksTitleDateArr));
-  }
-
-  const addItem = () => {
-    setState(prev => {
-      return {
-        ...prev,
-        [column]: {
-          title: column,
-          items: [
-            {
-              id: v4(),
-              name: text,
-              description: description,
-              priority: priority,
-              date: [taskDueDate[0], taskDueDate[1]],
-            },
-            ...prev?.[column].items
-          ]
-        }
-      }
-    })
-
-    const boardTasks = state;
-    const tasksTitleDate = {
-      name: text,
-      date: [taskDueDate[0], taskDueDate[1]],
-      priority: priority
-    };
-
-    saveTasksToLocalStorage(boardTasks, tasksTitleDate);
+    try {
+      await api.post(`/user/board-tasks-${columnType}`, {
+        users_id: userId,
+        title: text,
+        description: description,
+        priority: priority,
+        due_date_start: taskDueDate[0].format("YYYY-MM-DDTHH:mm:ssZ"),
+        due_date_end: taskDueDate[1].format("YYYY-MM-DDTHH:mm:ssZ")
+      }, {headers});
+      setBoardUpdate(!boardUpdate);
+    } catch (error) {
+      notification.info({
+        message: `${error?.response?.data?.error}`,
+        placement: 'top',
+      });
+      setAddTaskLoad(false);
+    }
 
     setText("");
     setDescription("");
     setTaskDueDate([]);
     setPriority("");
     setOpen(false);
+    setAddTaskLoad(false);
     message.success('Tarefa adicionada!');
   }
 
@@ -211,10 +215,6 @@ export function Board() {
 
       return copy;
     })
-
-    const getTasksTitleDate = JSON.parse(localStorage.getItem('@StudyNizer:tasksTitleDate'))
-    getTasksTitleDate.splice(index, 1);
-    localStorage.setItem('@StudyNizer:tasksTitleDate', JSON.stringify(getTasksTitleDate));
   }
 
   const confirm = (data, index) => {
@@ -229,11 +229,12 @@ export function Board() {
     setDescription(el?.description);
     setPriority(el?.priority);
     setTaskDueDate(el?.date);
+    setColumnType(data?.columnType);
 
     if(modalMode === "edit") {
       setModalMode("Editar");
     } else {
-      setModalMode("Salvar");
+      setModalMode("Salvar"); 
     }
   };
 
@@ -395,7 +396,7 @@ export function Board() {
               cursor: taskTextsBlank ? 'not-allowed' : ''
             }}
             onClick={addItem}
-          >{`${modalMode} Tarefa`}</Button>
+          >{!addTaskLoad ? `${modalMode} Tarefa` : <Spin indicator={antIcon} />}</Button>
         </AddTaskContainer>
       </Modal>
       <BoardFilter>
@@ -424,8 +425,6 @@ export function Board() {
       </BoardFilter>
       <BoardContainer>
         <DragDropContext onDragEnd={handleDragEnd}>
-          {!boardTasksLoad ? (
-          <>
             {_.map(state, (data, key) => {
               return(
                 <Column key={key}>
@@ -442,45 +441,49 @@ export function Board() {
                               <FaPlus color='#fff' onClick={() => showModal(data)} />
                             </Tooltip>
                           </CardHeader> 
-                          <Card
-                            ref={provided.innerRef}
-                            {...provided.droppableProps}
-                          >
-                            {data.items.filter((el) => handleFilterCard(el)).map((el, index) => {
-                              if (el !== undefined) {
-                                return(
-                                  <Draggable key={el?.id} index={index} draggableId={el?.id}>
-                                    {(provided, snapshot) => {
-                                      return(
-                                        <Item
-                                          isDragging={snapshot.isDragging}
-                                          ref={provided.innerRef}
-                                          {...provided.draggableProps}
-                                          {...provided.dragHandleProps}
-                                        >      
-                                          <Popconfirm placement="right" title={dialogText} onConfirm={() => confirm(data, index)} okText="Sim" cancelText="Não">
-                                            <Tooltip placement="right" title="Excluir Tarefa">
-                                              <FaTrash />
+                            <Card
+                              ref={provided.innerRef}
+                              {...provided.droppableProps}
+                            >
+                            {!boardTasksLoad ? (
+                              <>
+                              {data.items.filter((el) => handleFilterCard(el)).map((el, index) => {
+                                if (el !== undefined) {
+                                  return(
+                                    <Draggable key={el?.id} index={index} draggableId={el?.id}>
+                                      {(provided, snapshot) => {
+                                        return(
+                                          <Item
+                                            isDragging={snapshot.isDragging}
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                          >      
+                                            <Popconfirm placement="right" title={dialogText} onConfirm={() => confirm(data, index)} okText="Sim" cancelText="Não">
+                                              <Tooltip placement="right" title="Excluir Tarefa">
+                                                <FaTrash />
+                                              </Tooltip>
+                                            </Popconfirm>
+                                            <Tooltip placement="bottom" title={cardTaskDetailsText}>
+                                              <CardTaskDetails onClick={() => showModal(data, el, 'edit')}>
+                                                <h3>{el?.name}</h3>
+                                                <p className='taskDescription'>{el?.description}</p>
+                                                {renderPriorityColor(el?.priority)}
+                                                <div className='taskDate'>
+                                                  <p>{moment(el?.date[0]).format(dateFormat)} - {moment(el?.date[1]).format(dateFormat)}</p>
+                                                  <FaCalendarAlt />
+                                                </div>
+                                              </CardTaskDetails>
                                             </Tooltip>
-                                          </Popconfirm>
-                                          <Tooltip placement="bottom" title={cardTaskDetailsText}>
-                                            <CardTaskDetails onClick={() => showModal(data, el, 'edit')}>
-                                              <h3>{el?.name}</h3>
-                                              <p className='taskDescription'>{el?.description}</p>
-                                              {renderPriorityColor(el?.priority)}
-                                              <div className='taskDate'>
-                                                <p>{moment(el?.date[0]).format(dateFormat)} - {moment(el?.date[1]).format(dateFormat)}</p>
-                                                <FaCalendarAlt />
-                                              </div>
-                                            </CardTaskDetails>
-                                          </Tooltip>
-                                        </Item>
-                                      )
-                                    }}
-                                  </Draggable>
-                                )}
-                              })}
-                            {provided.placeholder}
+                                          </Item>
+                                        )
+                                      }}
+                                    </Draggable>
+                                  )}
+                                })}
+                                </>
+                              ) : <Skeleton active block />}
+                              {provided.placeholder}
                           </Card>
                       </>
                       )
@@ -489,8 +492,6 @@ export function Board() {
                 </Column>
               )
           })}
-          </>
-        ) : 'Carregando...'}
         </DragDropContext>
       </BoardContainer>
     </Container>
