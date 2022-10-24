@@ -213,8 +213,6 @@ export function Board() {
       setColumnTypeToDelete(data?.columnType);
   }
 
-  console.log('cardId', cardId)
-
   const addItem = async () => {
     try {
       setAddTaskLoad(true);
