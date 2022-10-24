@@ -192,10 +192,11 @@ export function Board() {
           await api.delete(`/user/board-tasks-${columnTypeToDelete}/${cardId}`, {headers})
         ]
       } catch (error) {
-        notification.info({
+        /*notification.info({
           message: `${error?.response?.data?.error}`,
           placement: 'top',
-        });
+        });*/
+        console.log('error?.response?.data?.error', error?.response?.data?.error)
       }
     }
   }
@@ -209,7 +210,7 @@ export function Board() {
       setCardId(el?.id)
   }
 
-  const handleCurrentCardIdToDelete = (data, el) => {
+  const handleCurrentCardIdToDelete = (data) => {
       setColumnTypeToDelete(data?.columnType);
   }
 
