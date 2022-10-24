@@ -7,6 +7,7 @@ import { FaPlus, FaCalendarAlt, FaTrash, FaQuestionCircle } from "react-icons/fa
 import { LoadingOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import Axios from 'axios';
+import { v4 } from 'uuid';
 import api from '../../services/api';
 
 import { setCalendarDate } from '../../store/modules/userSession/actions';
@@ -176,29 +177,26 @@ export function Board() {
       return prev
     })
 
-    try {
-      await api.post(`/user/board-tasks-${columnType}`, {
-        users_id: userId,
-        title: text,
-        description: description,
-        priority: priority,
-        due_date_start: taskDueDate[0],
-        due_date_end: taskDueDate[1]
-      }, {headers});
-    } catch (error) {
-      notification.info({
-        message: `${error?.response?.data?.error}`,
-        placement: 'top',
-      });
-    }
-
-    try {
-      await api.delete(`/user/board-tasks-${columnTypeToDelete}/${cardId}`, {headers});
-    } catch (error) {
-      notification.info({
-        message: `${error?.response?.data?.error}`,
-        placement: 'top',
-      });
+    if(columnType !== columnTypeToDelete) {
+      try {
+        await Axios.all[
+          await api.post(`/user/board-tasks-${columnType}`, {
+            id: cardId,
+            users_id: userId,
+            title: text,
+            description: description,
+            priority: priority,
+            due_date_start: taskDueDate[0],
+            due_date_end: taskDueDate[1]
+          }, {headers}),
+          await api.delete(`/user/board-tasks-${columnTypeToDelete}/${cardId}`, {headers})
+        ]
+      } catch (error) {
+        notification.info({
+          message: `${error?.response?.data?.error}`,
+          placement: 'top',
+        });
+      }
     }
   }
 
@@ -208,17 +206,20 @@ export function Board() {
       setDescription(el?.description);
       setPriority(el?.priority);
       setTaskDueDate(el?.date);
+      setCardId(el?.id)
   }
 
   const handleCurrentCardIdToDelete = (data, el) => {
-      setCardId(el?.id)
       setColumnTypeToDelete(data?.columnType);
   }
+
+  console.log('cardId', cardId)
 
   const addItem = async () => {
     try {
       setAddTaskLoad(true);
       await api.post(`/user/board-tasks-${columnType}`, {
+        id: v4(),
         users_id: userId,
         title: text,
         description: description,

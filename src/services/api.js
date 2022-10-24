@@ -4,4 +4,4 @@ const api = axios.create({
   baseURL: 'https://studynizer-backend-production.up.railway.app',
 });
 
-export default api;
+export default api; 
