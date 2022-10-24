@@ -47,16 +47,18 @@ export function SubjectsList() {
 
   const handleAddSubject = async () => {
     try {
+      setSubjectsLoad(true);
        await api.post(`/user/subjects`, {
         users_id: userId,
         title: subjectTitle
        }, {headers});
-
+       setSubjectsLoad(false);
     } catch (error) {
       notification.info({
         message: `${error?.response?.data?.error}`,
         placement: 'top',
       });
+      setSubjectsLoad(false);
     }
     setSubjects(subjects => [...subjects, {
       title: subjectTitle,
@@ -66,6 +68,7 @@ export function SubjectsList() {
 
   const handleEditSubject = async () => {
     try {
+      setSubjectsLoad(true);
        await api.put(`/user/subjects/${subjectId}`, {
         title: subjectTitle
        }, {headers});
@@ -75,6 +78,7 @@ export function SubjectsList() {
         message: `${error?.response?.data?.error}`,
         placement: 'top',
       });
+      setSubjectsLoad(false);
     }
     setOpen(false);
     setUpdateSubject(!updateSubject);
