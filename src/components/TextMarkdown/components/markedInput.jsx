@@ -1,17 +1,26 @@
 import React, { useState, useEffect  } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Editor, EditorState, ContentState, RichUtils, convertToRaw, convertFromRaw  } from "draft-js";
-import { Popconfirm, Tooltip, message, Modal, Button, Input } from 'antd';
+import { Popconfirm, Tooltip, message, Modal, Button, Input, notification, Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import { FaTimes, FaPlus, FaRegFile, FaRegFileAlt, FaTimesCircle, FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 import { MarkedInputContainer, MarkedInputMenu, MarketdInputTextAreaContainer, BlankAnnotationContainer, MarkdownPanel, AddNewPageModal } from "./styles";
 import { v4 } from 'uuid';
 
+import api from '../../../services/api';
 import { initialEditorState } from './initialEditorState';
+
 import "draft-js/dist/Draft.css";
+
+const antIcon = <LoadingOutlined style={{ fontSize: 24, color: '#fff' }} spin />;
 
 export function MarkedInput() {
     const location = useLocation();
     const history = useNavigate();
+
+    const getUserSession = localStorage.getItem('@StudyNizer:userSession');
+    const headers = { Authorization: `Bearer ${JSON.parse(getUserSession).token}` };
+    const userId = JSON.parse(getUserSession).id;
 
     const [selectedCoordinates, setSelectedCoordinates] = useState(0);
     const [markdownPanelVisible, setMarkdownPanelVisible] = useState('none');
@@ -19,6 +28,7 @@ export function MarkedInput() {
     const [pageArray, setPageArray] = useState([]);
     const [pagesMarkdownArray, setPagesMarkdownArray] = useState([]);
     const [pageDeleted, setPageDeleted] = useState(false);
+    const [addMarkdownLoad, setAddMarkdownLoad] = useState(false);
 
     const getPages = JSON.parse(localStorage.getItem('@StudyNizer:subjectsPages'))
     localStorage.setItem('@StudyNizer:subjectsPages', JSON.stringify(pageArray));
@@ -167,7 +177,7 @@ export function MarkedInput() {
         localStorage.setItem('@StudyNizer:pagesMarkdown', JSON.stringify(pagesMarkdownArr));
     }
 
-    const handleCreateNewPage = () => {
+    const handleCreateNewPage = async () => {
         let pageId = v4();
 
         let subjectPageLink = `/subject-annotations/${location.state.subject.title.replace(/ /g, '-').toLowerCase()}-${location.state.subject.id}/${newPageName.replace(/ /g, '-').toLowerCase()}-${pageId}`;
@@ -184,6 +194,24 @@ export function MarkedInput() {
             pageId: pageId,
             annotationBlock: initialEditorState,
             subjectName: location.state.subject.title.replace(/ /g, '-').toLowerCase()
+        }
+
+        try {
+            setAddMarkdownLoad(true);
+            await api.post('/user/markdown', {
+                annotation_block: { annotationBlock: initialEditorState },
+                url_id: subjectPageLink,
+                page_id: pageId,
+                subject_name: location.state.subject.title.replace(/ /g, '-').toLowerCase(),
+                users_id: userId
+            }, {headers});
+            setAddMarkdownLoad(false);
+        } catch (error) {
+            notification.info({
+                message: `${error?.response?.data?.error}`,
+                placement: 'top',
+            });
+            setAddMarkdownLoad(false);
         }
         
         history(subjectPageLink, { state: location.state });
@@ -285,7 +313,7 @@ export function MarkedInput() {
                         cursor: newPageName.trim() === "" ? 'not-allowed' : ''
                         }}
                         onClick={() => handleCreateNewPage()}
-                    >Adicionar</Button>
+                    >{!addMarkdownLoad ? 'Adicionar' : <Spin indicator={antIcon} />}</Button>
                 </AddNewPageModal>
             </Modal>
             <MarkedInputMenu hideMarkdownMenu={hideMarkdownMenu}>
