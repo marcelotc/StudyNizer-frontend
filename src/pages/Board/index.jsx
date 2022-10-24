@@ -2,16 +2,16 @@ import React, {useState, useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
 import _ from "lodash";
-import { notification, Popconfirm, Modal, Input, Button, Tooltip, Select, Space, DatePicker, Skeleton, message, Checkbox, TimePicker, Spin } from 'antd';
+import { notification, Popconfirm, Modal, Input, Button, Tooltip, Select, DatePicker, Skeleton, message, Checkbox, TimePicker, Spin } from 'antd';
 import { FaPlus, FaCalendarAlt, FaTrash, FaQuestionCircle } from "react-icons/fa";
 import { LoadingOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import Axios from 'axios';
 import { v4 } from 'uuid';
-import api from '../../services/api';
 
 import { setCalendarDate } from '../../store/modules/userSession/actions';
 import { Header } from '../../components/Header'
+import api from '../../services/api';
 
 import { Container, BoardFilter, AddTaskContainer, BoardContainer, Column, Card, Item, CardHeader, PriorityColor, CardTaskDetails, RecurringTaskContainer } from "./styles";
 import './styles.jsx';

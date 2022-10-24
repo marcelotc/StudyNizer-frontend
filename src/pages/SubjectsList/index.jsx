@@ -1,71 +1,108 @@
 import React, { useState, useEffect } from 'react';
 import { v4 } from "uuid";
-import { Modal, Button, Input, Tooltip, message, Popconfirm } from 'antd';
+import { Modal, Button, Input, Tooltip, message, Popconfirm, notification, Skeleton, Spin} from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import { FaPlus, FaPencilAlt, FaTrashAlt } from "react-icons/fa";
  
 import { Header } from '../../components/Header'
 import { Container, ListContainer, CardLink, CardContainer, Card, AddCard, AddSubjectModal, ListInnerContainer, CardContainerList } from './styles';
+import api from '../../services/api';
+
+const antIcon = <LoadingOutlined style={{ fontSize: 24, color: '#fff' }} spin />;
 
 export function SubjectsList() {
+  const getUserSession = localStorage.getItem('@StudyNizer:userSession');
+  const headers = { Authorization: `Bearer ${JSON.parse(getUserSession).token}` };
+  const userId = JSON.parse(getUserSession).id;
 
   const [subjects, setSubjects] = useState([]);
+  const [subjectsLoad, setSubjectsLoad] = useState(false);
+  const [updateSubject, setUpdateSubject] = useState(false);
+  const [subjectId, setSubjectId] = useState('');
   const [open, setOpen] = useState(false);
   const [subjectTitle, setSubjectTitle] = useState("");
   const [modalMode, setModalMode] = useState("Adicionar");
 
-  const getSubjects = JSON.parse(localStorage.getItem('@StudyNizer:subjects'))
-  localStorage.setItem('@StudyNizer:subjects', JSON.stringify(subjects));
-
   const subjectTitleBlank = subjectTitle?.trim() === "";
 
   useEffect(() => {
-    if (getSubjects) {
-      setSubjects(getSubjects);
-    } else {
-      setSubjects([]);
+    const getSubjects = async () => {
+      try {
+        setSubjectsLoad(true);
+        const res = await api.get(`/user/subjects/${userId}`, {headers});
+        setSubjects(res.data);
+        setSubjectsLoad(false);
+      } catch (error) {
+        notification.info({
+          message: `${error?.response?.data?.error}`,
+          placement: 'top',
+        });
+        setSubjectsLoad(false);
+      }
     }
-  }, []);
+    getSubjects();
+  }, [updateSubject]);
 
-  const saveSubjectsToLocalStorage = (subjects) => {
-    let subjectsArr = [];
-    subjectsArr = JSON.parse(localStorage.getItem('@StudyNizer:subjects')) || [];
-    subjectsArr.push(subjects);
-    localStorage.setItem('@StudyNizer:subjects', JSON.stringify(subjectsArr));
-  }
+  console.log(subjects)
 
+  const handleAddSubject = async () => {
+    try {
+       await api.post(`/user/subjects`, {
+        users_id: userId,
+        title: subjectTitle
+       }, {headers});
 
-  const handleAddSubject = () => {
-    const subjectId = v4();
-
+    } catch (error) {
+      notification.info({
+        message: `${error?.response?.data?.error}`,
+        placement: 'top',
+      });
+    }
     setSubjects(subjects => [...subjects, {
-      id: subjectId,
       title: subjectTitle,
     }]);
-
-    const subjects = {
-      id: subjectId,
-      title: subjectTitle,
-    };
-
     setOpen(false);
-
-    saveSubjectsToLocalStorage(subjects);
   }
 
-  const showModal = (subjectTitle, modalMode) => {
+  const handleEditSubject = async () => {
+    try {
+       await api.put(`/user/subjects/${subjectId}`, {
+        title: subjectTitle
+       }, {headers});
+       setSubjectsLoad(false);
+    } catch (error) {
+      notification.info({
+        message: `${error?.response?.data?.error}`,
+        placement: 'top',
+      });
+    }
+    setOpen(false);
+    setUpdateSubject(!updateSubject);
+  }
+
+  const showModal = (subjectTitle, modalMode, subject_id) => {
     setOpen(true);
     setSubjectTitle(subjectTitle);
     setModalMode(modalMode)
+    setSubjectId(subject_id)
   };
 
   const handleCancel = () => {
     setOpen(false);
   };
 
-  const handleRemoveSubject = (id) => {
+  const handleRemoveSubject = async (id) => {
+    try {
+      await api.delete(`/user/subjects/${id}`, {headers});
+    } catch (error) {
+      notification.info({
+        message: `${error?.response?.data?.error}`,
+        placement: 'top',
+      });
+    }
     setSubjects(current =>
       current.filter(subject => {
-        return subject.id !== id;
+        return subject.subject_id !== id;
     }));
   }
 
@@ -102,50 +139,60 @@ export function SubjectsList() {
                 opacity: subjectTitleBlank ? '' : '0.8',
                 cursor: subjectTitleBlank ? 'not-allowed' : ''
               }}
-              onClick={handleAddSubject}
-            >Salvar</Button>
+              onClick={modalMode !== 'Editar' ? handleAddSubject : handleEditSubject}
+            >{!subjectsLoad ? modalMode !== 'Editar' ? 'Salvar' : 'Editar' : <Spin indicator={antIcon} />}</Button>
           </AddSubjectModal>
         </Modal>
         <ListInnerContainer>
-          <CardContainerList>
-            {subjects?.map((subject, index) => {
-              return (
-                <CardContainer key={subject.id}>
-                  <div>
-                    <Tooltip placement="top" title="Editar nome da disicplina">
-                      <FaPencilAlt onClick={() => showModal(subject.title, 'Editar')} />
-                    </Tooltip>
-                    <Popconfirm placement="right" title={"Tem certeza que deseja excluir esta disciplina?"} onConfirm={() => confirm(subject.id)} okText="Sim" cancelText="Não">
-                      <Tooltip placement="top" title="Excluir disicplina">
-                        <FaTrashAlt />
-                      </Tooltip>
-                    </Popconfirm>
+        {!subjectsLoad ? (
+          <>
+            <CardContainerList>
+                  {subjects?.map((subject) => {
+                    return (
+                      <CardContainer key={subject.subject_id}>
+                        <div>
+                          <Tooltip placement="top" title="Editar nome da disicplina">
+                            <FaPencilAlt onClick={() => showModal(subject.title, 'Editar', subject.subject_id)} />
+                          </Tooltip>
+                          <Popconfirm placement="right" title={"Tem certeza que deseja excluir esta disciplina?"} onConfirm={() => confirm(subject.subject_id)} okText="Sim" cancelText="Não">
+                            <Tooltip placement="top" title="Excluir disicplina">
+                              <FaTrashAlt />
+                            </Tooltip>
+                          </Popconfirm>
+                        </div>
+                        <CardLink 
+                          title={subject.title}
+                          to={`/subject-annotations/${subject.title.replace(/ /g, '-').toLowerCase()}-${subject.subject_id}`} 
+                          state={{ subject: subject }}
+                        >
+                          <Tooltip placement="bottom" title="Ver resumos da disciplina">
+                            <Card key={subject.subject_id} className="subjectCard">
+                              <img alt="example" src="https://static.thenounproject.com/png/3282617-200.png" />
+                              <p>{subject.title}</p>
+                            </Card>
+                          </Tooltip>
+                        </CardLink>
+                      </CardContainer>
+                    )})}
+              <Tooltip placement="bottom" title="Adicionar Disciplina">
+                <AddCard isSubjectsEmpty={subjects.length === 0} onClick={() => showModal("", 'Adicionar')}>
+                  <div className='addCardHeader'></div>
+                  <div className='addCardBody'>
+                    <FaPlus />
                   </div>
-                  <CardLink 
-                    title={subject.title}
-                    to={`/subject-annotations/${subject.title.replace(/ /g, '-').toLowerCase()}-${subject.id}`} 
-                    state={{ subject: subject }}
-                  >
-                    <Tooltip placement="bottom" title="Ver resumos da disciplina">
-                      <Card key={subject.id} className="subjectCard">
-                        <img alt="example" src="https://static.thenounproject.com/png/3282617-200.png" />
-                        <p>{subject.title}</p>
-                      </Card>
-                    </Tooltip>
-                  </CardLink>
-                </CardContainer>
-              )})}
-            <Tooltip placement="bottom" title="Adicionar Disciplina">
-              <AddCard isSubjectsEmpty={subjects.length === 0} onClick={() => showModal("", 'Adicionar')}>
-                <div className='addCardHeader'></div>
-                <div className='addCardBody'>
-                  <FaPlus />
-                </div>
-              </AddCard>
-            </Tooltip>
-          </CardContainerList>
-          {subjects.length === 0 && <p className='subjectsEmpty'>Nenhuma disciplina cadastrada, clique no botão para adicionar</p>}
-        </ListInnerContainer>
+                </AddCard>
+              </Tooltip>
+            </CardContainerList>
+            {subjects.length === 0 && <p className='subjectsEmpty'>Nenhuma disciplina cadastrada, clique no botão para adicionar</p>}
+          </>
+          ) : <>
+                <br/>
+                <br/>
+                <br/>
+                <Skeleton active block />
+              </>
+          }
+          </ListInnerContainer>
       </ListContainer>
     </Container>
   );
