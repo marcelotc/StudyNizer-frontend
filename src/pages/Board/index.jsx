@@ -133,10 +133,12 @@ export function Board() {
     getTasks();
   }, [boardUpdate]);
 
+  const [cardId, setCardId] = useState("");
   const [text, setText] = useState("");
   const [description, setDescription] = useState("");
   const [column, setColumn] = useState('Tarefas');
   const [columnType, setColumnType] = useState('');
+  const [columnTypeToDelete, setColumnTypeToDelete] = useState('');
   const [open, setOpen] = useState(false);
   const [taskDueDate, setTaskDueDate] = useState([]);
   const [priority, setPriority] = useState("");
@@ -154,7 +156,7 @@ export function Board() {
 
   const taskTextsBlank = text?.trim() === "" || description?.trim() === "" || taskDueDate === undefined || priority === undefined;
 
-  const handleDragEnd = ({destination, source}) => {
+  const handleDragEnd = async ({destination, source}) => {
     if (!destination) {
       return
     }
@@ -169,17 +171,53 @@ export function Board() {
       prev = {...prev}
       prev[source.droppableId].items.splice(source.index, 1)
 
-
       prev[destination.droppableId].items.splice(destination.index, 0, itemCopy)
 
       return prev
     })
+
+    try {
+      await api.post(`/user/board-tasks-${columnType}`, {
+        users_id: userId,
+        title: text,
+        description: description,
+        priority: priority,
+        due_date_start: taskDueDate[0],
+        due_date_end: taskDueDate[1]
+      }, {headers});
+    } catch (error) {
+      notification.info({
+        message: `${error?.response?.data?.error}`,
+        placement: 'top',
+      });
+    }
+
+    try {
+      await api.delete(`/user/board-tasks-${columnTypeToDelete}/${cardId}`, {headers});
+    } catch (error) {
+      notification.info({
+        message: `${error?.response?.data?.error}`,
+        placement: 'top',
+      });
+    }
+  }
+
+  const handleFillStateForDragEnd = (data, el) => {
+      setColumn(data?.columnType);
+      setText(el?.name);
+      setDescription(el?.description);
+      setPriority(el?.priority);
+      setTaskDueDate(el?.date);
+  }
+
+  const handleCurrentCardIdToDelete = (data, el) => {
+      setCardId(el?.id)
+      setColumnTypeToDelete(data?.columnType);
   }
 
   const addItem = async () => {
-    setAddTaskLoad(true);
-
     try {
+      setAddTaskLoad(true);
       await api.post(`/user/board-tasks-${columnType}`, {
         users_id: userId,
         title: text,
@@ -206,12 +244,18 @@ export function Board() {
     message.success('Tarefa adicionada!');
   }
 
-  // TODO - Remover task pelo ID e não pelo index
-  const removeitem = async (columnType, el) => {
+  const editItem = async () => {
     try {
-      await api.delete(`/user/board-tasks-${columnType}/${el?.id}`, {headers});
+      setAddTaskLoad(true);
+      await api.put(`/user/board-tasks-${columnType}/${cardId}`, {
+        users_id: userId,
+        title: text,
+        description: description,
+        priority: priority,
+        due_date_start: taskDueDate[0],
+        due_date_end: taskDueDate[1]
+      }, {headers});
       setBoardUpdate(!boardUpdate);
-      message.success('Tarefa removida!', );
     } catch (error) {
       notification.info({
         message: `${error?.response?.data?.error}`,
@@ -219,10 +263,33 @@ export function Board() {
       });
       setAddTaskLoad(false);
     }
+    setAddTaskLoad(false);
+    setOpen(false);
+    message.success('Tarefa editada!');
   }
 
-  const confirm = (data, el) => {
-    removeitem(data?.columnType, el);
+  const removeitem = async (data, el, index) => {
+    try {
+      await api.delete(`/user/board-tasks-${data?.columnType}/${el?.id}`, {headers});
+      message.success('Tarefa removida!', );
+    } catch (error) {
+      notification.info({
+        message: `${error?.response?.data?.error}`,
+        placement: 'top',
+      });
+    }
+
+    setState(current => {
+      const copy = {...current};
+
+      delete copy[data.title].items[index];
+
+      return copy;
+    })
+  }
+
+  const confirm = (data, el, index) => {
+    removeitem(data, el, index);
   };
 
   const showModal = (data, el, modalMode) => {
@@ -398,7 +465,7 @@ export function Board() {
               opacity: taskTextsBlank ? '' : '0.8',
               cursor: taskTextsBlank ? 'not-allowed' : ''
             }}
-            onClick={addItem}
+            onClick={modalMode !== 'Editar' ? addItem : editItem}
           >{!addTaskLoad ? `${modalMode} Tarefa` : <Spin indicator={antIcon} />}</Button>
         </AddTaskContainer>
       </Modal>
@@ -430,7 +497,7 @@ export function Board() {
         <DragDropContext onDragEnd={handleDragEnd}>
             {_.map(state, (data, key) => {
               return(
-                <Column key={key}>
+                <Column key={key} onMouseOver={() => setColumnType(data?.columnType)}>
                   <Droppable droppableId={key}>
                     {(provided, snapshot) => {
                       return(
@@ -445,6 +512,7 @@ export function Board() {
                             </Tooltip>
                           </CardHeader> 
                             <Card
+                              id='taskCard'
                               ref={provided.innerRef}
                               {...provided.droppableProps}
                             >
@@ -453,7 +521,11 @@ export function Board() {
                               {data.items.filter((el) => handleFilterCard(el)).map((el, index) => {
                                 if (el !== undefined) {
                                   return(
-                                    <Draggable key={el?.id} index={index} draggableId={el?.id}>
+                                    <Draggable 
+                                      key={el?.id} 
+                                      index={index} 
+                                      draggableId={el?.id}
+                                    >
                                       {(provided, snapshot) => {
                                         return(
                                           <Item
@@ -461,8 +533,10 @@ export function Board() {
                                             ref={provided.innerRef}
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
+                                            onMouseOver={() => handleFillStateForDragEnd(data, el)}
+                                            onMouseDown={() => handleCurrentCardIdToDelete(data, el)}
                                           >      
-                                            <Popconfirm placement="right" title={dialogText} onConfirm={() => confirm(data, el)} okText="Sim" cancelText="Não">
+                                            <Popconfirm placement="right" title={dialogText} onConfirm={() => confirm(data, el, index)} okText="Sim" cancelText="Não">
                                               <Tooltip placement="right" title="Excluir Tarefa">
                                                 <FaTrash />
                                               </Tooltip>
