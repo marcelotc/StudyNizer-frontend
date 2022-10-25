@@ -93,7 +93,7 @@ export function MarkedInput() {
     }, [addMarkdownUpdate]);
 
     useEffect(() => {
-        const filteredResult = pageArray.find((e) => e.url_id === location.pathname);
+        const filteredResult = pageArray.find((obj) => obj.url_id === location.pathname);
 
         if (filteredResult){
           setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(JSON.stringify(filteredResult.annotation_block.annotationBlock)))));
