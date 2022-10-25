@@ -43,8 +43,6 @@ export function SubjectsList() {
     getSubjects();
   }, [updateSubject]);
 
-  console.log(subjects)
-
   const handleAddSubject = async () => {
     try {
       setSubjectsLoad(true);

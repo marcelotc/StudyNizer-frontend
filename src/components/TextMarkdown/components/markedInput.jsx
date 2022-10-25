@@ -93,10 +93,10 @@ export function MarkedInput() {
     }, [addMarkdownUpdate]);
 
     useEffect(() => {
-        const filteredResult = pagesMarkdownArray.find((e) => e.id === location.pathname);
+        const filteredResult = pageArray.find((e) => e.url_id === location.pathname);
 
         if (filteredResult){
-          setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(JSON.stringify(filteredResult.annotationBlock)))));
+          setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(JSON.stringify(filteredResult.annotation_block.annotationBlock)))));
         }
     }, [pageName])
   
@@ -194,7 +194,7 @@ export function MarkedInput() {
     const handleCreateNewPage = async () => {
         let pageId = v4();
 
-        let subjectPageLink = `/subject-annotations/${location.state.subject.title.replace(/ /g, '-').toLowerCase()}-${location.state.subject.id}/${newPageName.replace(/ /g, '-').toLowerCase()}-${pageId}`;
+        let subjectPageLink = `/subject-annotations/${location.state.subject.title.replace(/ /g, '-').toLowerCase()}-${location.state.subject.subject_id}/${newPageName.replace(/ /g, '-').toLowerCase()}-${pageId}`;
 
         const newPageObj = {
             id: pageId,
@@ -273,8 +273,6 @@ export function MarkedInput() {
                 return null;
         }   
     }
-
-    console.log('pppapap',pageArray)
 
     const renderEditor = () => {
         if (pageDeleted) {
