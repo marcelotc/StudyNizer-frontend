@@ -1,8 +1,7 @@
 import React, { useState, useEffect  } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { Editor, EditorState, ContentState, RichUtils, convertToRaw, convertFromRaw  } from "draft-js";
-import { Popconfirm, Tooltip, message, Modal, Button, Input, notification, Spin } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+import { Editor, EditorState, ContentState, RichUtils, convertToRaw, convertFromRaw } from "draft-js";
+import { Popconfirm, Tooltip, message, Modal, Button, Input, notification, Skeleton } from 'antd';
 import { FaTimes, FaPlus, FaRegFile, FaRegFileAlt, FaTimesCircle, FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 import { MarkedInputContainer, MarkedInputMenu, MarketdInputTextAreaContainer, BlankAnnotationContainer, MarkdownPanel, AddNewPageModal } from "./styles";
 import { v4 } from 'uuid';
@@ -11,8 +10,6 @@ import api from '../../../services/api';
 import { initialEditorState } from './initialEditorState';
 
 import "draft-js/dist/Draft.css";
-
-const antIcon = <LoadingOutlined style={{ fontSize: 24, color: '#fff' }} spin />;
 
 export function MarkedInput() {
     const location = useLocation();
@@ -29,6 +26,7 @@ export function MarkedInput() {
     const [pagesMarkdownArray, setPagesMarkdownArray] = useState([]);
     const [pageDeleted, setPageDeleted] = useState(false);
     const [addMarkdownLoad, setAddMarkdownLoad] = useState(false);
+    const [addMarkdownUpdate, setAddMarkdownUpdate] = useState(false);
 
     const getPages = JSON.parse(localStorage.getItem('@StudyNizer:subjectsPages'))
     localStorage.setItem('@StudyNizer:subjectsPages', JSON.stringify(pageArray));
@@ -65,18 +63,34 @@ export function MarkedInput() {
     useEffect(() => {
       focusEditor();
 
-      if (getPages) {
-        setPageArray(getPages);
-      } else {
-        setPageArray([]);
-      }
+        const getMakrdownPages = async () => {
+            setAddMarkdownLoad(true);
+            try {
+                const res = await api.get(`/user/markdown/${userId}`, { headers });
+                setPageArray(res.data);      
+            } catch (error) {
+                notification.info({
+                    message: `${error?.response?.data?.error}`,
+                    placement: 'top',
+                });
+            }
+            setAddMarkdownLoad(false);
+        }
 
-      if (getPagesMarkdown) {
-        setPagesMarkdownArray(getPagesMarkdown);
-      } else {
-        setPagesMarkdownArray([]);
-      }
-    }, []);
+        getMakrdownPages();
+
+        if (getPages) {
+            setPageArray(getPages);
+        } else {
+            setPageArray([]);
+        }
+
+        if (getPagesMarkdown) {
+            setPagesMarkdownArray(getPagesMarkdown);
+        } else {
+            setPagesMarkdownArray([]);
+        }
+    }, [addMarkdownUpdate]);
 
     useEffect(() => {
         const filteredResult = pagesMarkdownArray.find((e) => e.id === location.pathname);
@@ -197,21 +211,20 @@ export function MarkedInput() {
         }
 
         try {
-            setAddMarkdownLoad(true);
             await api.post('/user/markdown', {
                 annotation_block: { annotationBlock: initialEditorState },
+                page_name: newPageName,
                 url_id: subjectPageLink,
                 page_id: pageId,
                 subject_name: location.state.subject.title.replace(/ /g, '-').toLowerCase(),
                 users_id: userId
             }, {headers});
-            setAddMarkdownLoad(false);
+            setAddMarkdownUpdate(!addMarkdownUpdate);
         } catch (error) {
             notification.info({
                 message: `${error?.response?.data?.error}`,
                 placement: 'top',
             });
-            setAddMarkdownLoad(false);
         }
         
         history(subjectPageLink, { state: location.state });
@@ -229,7 +242,7 @@ export function MarkedInput() {
     const handleRemovePage = (pageId) => {
         setPageArray(current =>
             current.filter((props) => {
-              return props.id !== pageId;
+              return props.page_id !== pageId;
         }));
         setPagesMarkdownArray(current =>
             current.filter((props) => {
@@ -260,6 +273,8 @@ export function MarkedInput() {
                 return null;
         }   
     }
+
+    console.log('pppapap',pageArray)
 
     const renderEditor = () => {
         if (pageDeleted) {
@@ -313,7 +328,7 @@ export function MarkedInput() {
                         cursor: newPageName.trim() === "" ? 'not-allowed' : ''
                         }}
                         onClick={() => handleCreateNewPage()}
-                    >{!addMarkdownLoad ? 'Adicionar' : <Spin indicator={antIcon} />}</Button>
+                    >Adicionar</Button>
                 </AddNewPageModal>
             </Modal>
             <MarkedInputMenu hideMarkdownMenu={hideMarkdownMenu}>
@@ -324,28 +339,35 @@ export function MarkedInput() {
                     <FaAngleDoubleLeft onClick={() => setHideMarkdownMenu(true)} /> 
                 }
                 <section>
-                    {pageArray.filter(pages => pages.subjectName === location.state.subject.title.replace(/ /g, '-').toLowerCase()).map((page) => (
-                        <div 
-                            id={page.id} 
-                            className={`${activePage == page.pageName && 'activePageLink'}`}
-                            onClick={() => setActivePage(page.pageName)}
-                        >
-                            <FaRegFile />
-                            <NavLink 
-                                id={page.id}
-                                to={page.urlPath}
-                                state={location.state}
-                                onClick={(e) => handlePageLink(e, page.pageName)}
-                            >
-                                {page.pageName}
-                            </NavLink>
-                            <Popconfirm placement="right" title={'Realmente deseja excluir está página?'} onConfirm={() => confirm(page.id)} okText="Sim" cancelText="Não">
-                                <Tooltip placement="right" title="Excluir página">
-                                    <FaTimesCircle />
-                                </Tooltip>
-                            </Popconfirm>
+                    {!addMarkdownLoad ? (
+                        <>
+                            {pageArray.filter(pages => pages.subject_name === location.state.subject.title.replace(/ /g, '-').toLowerCase()).map((page) => (
+                                <div 
+                                    id={page.page_id} 
+                                    className={`${activePage == page.page_name && 'activePageLink'}`}
+                                    onClick={() => setActivePage(page.page_name)}
+                                >
+                                    <FaRegFile />
+                                    <NavLink 
+                                        id={page.page_id}
+                                        to={page.url_id}
+                                        state={location.state}
+                                        onClick={(e) => handlePageLink(e, page.page_name)}
+                                    >
+                                        {page.page_name}
+                                    </NavLink>
+                                    <Popconfirm placement="right" title={'Realmente deseja excluir está página?'} onConfirm={() => confirm(page.page_id)} okText="Sim" cancelText="Não">
+                                        <Tooltip placement="right" title="Excluir página">
+                                            <FaTimesCircle />
+                                        </Tooltip>
+                                    </Popconfirm>
+                                </div>
+                            ))}
+                        </>
+                    ) : <div style={{padding: '10px'}}>
+                            <Skeleton active block />
                         </div>
-                    ))}
+                    }
                 </section>
                 <footer onClick={() => showNewPageModal()}><FaPlus />Adicionar página</footer>
             </MarkedInputMenu>
