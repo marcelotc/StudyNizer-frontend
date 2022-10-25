@@ -46,12 +46,13 @@ export function MarkedInput() {
     const handleChangeEditor = (editorState) => {
         let contentRaw = convertToRaw(editorState.getCurrentContent());
 
-        const filteredResult = pagesMarkdownArray.find((e) => e.id === location.pathname);
+        const filteredResult = pageArray.find((obj) => obj.url_id === location.pathname);
 
         if (filteredResult){
-            filteredResult.annotationBlock = contentRaw;
+            filteredResult.annotation_block.annotationBlock = contentRaw;
         }
-        
+        console.log('contentRaw', contentRaw)
+
         setEditorState(editorState);
         setMarkdownPanelVisible('none');
     }
@@ -98,7 +99,7 @@ export function MarkedInput() {
         if (filteredResult){
           setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(JSON.stringify(filteredResult.annotation_block.annotationBlock)))));
         }
-    }, [pageName])
+    }, [pageName]);
   
     const StyleButton = (props) => {
       let onClickButton = (e) => {
