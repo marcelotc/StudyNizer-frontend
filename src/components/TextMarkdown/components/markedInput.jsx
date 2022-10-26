@@ -24,17 +24,9 @@ export function MarkedInput() {
     const [markdownPanelVisible, setMarkdownPanelVisible] = useState('none');
     const [hideMarkdownMenu, setHideMarkdownMenu] = useState(false);
     const [pageArray, setPageArray] = useState([]);
-    const [pagesMarkdownArray, setPagesMarkdownArray] = useState([]);
     const [pageDeleted, setPageDeleted] = useState(false);
     const [addMarkdownLoad, setAddMarkdownLoad] = useState(false);
     const [addMarkdownUpdate, setAddMarkdownUpdate] = useState(false);
-
-    const getPages = JSON.parse(localStorage.getItem('@StudyNizer:subjectsPages'))
-    localStorage.setItem('@StudyNizer:subjectsPages', JSON.stringify(pageArray));
-
-    const getPagesMarkdown = JSON.parse(localStorage.getItem('@StudyNizer:pagesMarkdown'))
-    localStorage.setItem('@StudyNizer:pagesMarkdown', JSON.stringify(pagesMarkdownArray));
-
     const [openNewPageModal, setOpenNewPageModal] = useState(false);
     const [newPageName, setNewPageName] = useState('');
     const [pageName, setPageName] = useState('');
@@ -98,18 +90,6 @@ export function MarkedInput() {
         }
 
         getMakrdownPages();
-
-        if (getPages) {
-            setPageArray(getPages);
-        } else {
-            setPageArray([]);
-        }
-
-        if (getPagesMarkdown) {
-            setPagesMarkdownArray(getPagesMarkdown);
-        } else {
-            setPagesMarkdownArray([]);
-        }
     }, [addMarkdownUpdate]);
 
     useEffect(() => {
@@ -196,20 +176,6 @@ export function MarkedInput() {
         setMarkdownPanelVisible('none');
     };
 
-    const handleSaveSubjectsArray = () => {
-        let subjectsPageArr = [];
-        subjectsPageArr = JSON.parse(localStorage.getItem('@StudyNizer:subjectsPages')) || [];
-        subjectsPageArr.push(pageArray);
-        localStorage.setItem('@StudyNizer:subjectsPages', JSON.stringify(subjectsPageArr));
-    }
-
-    const handleSavePagesMarkdownArray = () => {
-        let pagesMarkdownArr = [];
-        pagesMarkdownArr = JSON.parse(localStorage.getItem('@StudyNizer:pagesMarkdown')) || [];
-        pagesMarkdownArr.push(pagesMarkdownArray);
-        localStorage.setItem('@StudyNizer:pagesMarkdown', JSON.stringify(pagesMarkdownArr));
-    }
-
     const handleCreateNewPage = async () => {
         let pageId = v4();
 
@@ -248,7 +214,6 @@ export function MarkedInput() {
         
         history(subjectPageLink, { state: location.state });
         setPageArray(oldPageArray => [...oldPageArray, newPageObj]);
-        setPagesMarkdownArray(oldPagesMarkdownArray => [...oldPagesMarkdownArray, subjectsAnnotationsPages]);
         setNewPageName('');
         setOpenNewPageModal(false);
         setMarkdownPanelVisible('none');
@@ -256,7 +221,6 @@ export function MarkedInput() {
         setPageDeleted(true);
         setPageName('');
 
-        handleSaveSubjectsArray();
         handleSavePagesMarkdownArray();
     }
 
@@ -273,10 +237,6 @@ export function MarkedInput() {
         setPageArray(current =>
             current.filter((props) => {
               return props.page_id !== pageId;
-        }));
-        setPagesMarkdownArray(current =>
-            current.filter((props) => {
-              return props.pageId !== pageId;
         }));
         setPageDeleted(true);
         setPageName('');
