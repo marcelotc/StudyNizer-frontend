@@ -114,7 +114,6 @@ export function MarkedInput() {
 
     useEffect(() => {
         const filteredResult = pageArray.find((obj) => obj.url_id === location.pathname);
-        console.log('filteredResult', filteredResult)
         if (filteredResult){
           setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(JSON.stringify(filteredResult.annotation_block.annotationBlock)))));
         }
@@ -255,6 +254,7 @@ export function MarkedInput() {
         setMarkdownPanelVisible('none');
         setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(JSON.stringify(initialEditorState)))));
         setPageDeleted(true);
+        setPageName('');
 
         handleSaveSubjectsArray();
         handleSavePagesMarkdownArray();
@@ -279,7 +279,7 @@ export function MarkedInput() {
               return props.pageId !== pageId;
         }));
         setPageDeleted(true);
-        setPageName(true);
+        setPageName('');
         message.success('Página removida!');
     }
 
