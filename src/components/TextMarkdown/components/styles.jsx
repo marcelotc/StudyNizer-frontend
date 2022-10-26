@@ -264,7 +264,7 @@ export const BlankAnnotationContainer = styled.div`
 
   > svg {
     font-size: 80px;
-    margin: 0 20px 35px 0;
+    margin: 0 0 35px 0;
   }
 
   @media (max-width: 990px) {

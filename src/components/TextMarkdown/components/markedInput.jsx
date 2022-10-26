@@ -181,20 +181,6 @@ export function MarkedInput() {
 
         let subjectPageLink = `/subject-annotations/${location.state.subject.title.replace(/ /g, '-').toLowerCase()}-${location.state.subject.subject_id}/${newPageName.replace(/ /g, '-').toLowerCase()}-${pageId}`;
 
-        const newPageObj = {
-            id: pageId,
-            pageName: newPageName,
-            urlPath: subjectPageLink,
-            subjectName: location.state.subject.title.replace(/ /g, '-').toLowerCase()
-        }
-
-        const subjectsAnnotationsPages = {
-            id: subjectPageLink,
-            pageId: pageId,
-            annotationBlock: initialEditorState,
-            subjectName: location.state.subject.title.replace(/ /g, '-').toLowerCase()
-        }
-
         try {
             await api.post('/user/markdown', {
                 annotation_block: { annotationBlock: initialEditorState },
@@ -213,13 +199,14 @@ export function MarkedInput() {
         }
         
         history(subjectPageLink, { state: location.state });
-        setPageArray(oldPageArray => [...oldPageArray, newPageObj]);
+        
+        setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(JSON.stringify(initialEditorState)))));
         setNewPageName('');
         setOpenNewPageModal(false);
         setMarkdownPanelVisible('none');
-        setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(JSON.stringify(initialEditorState)))));
-        setPageDeleted(true);
         setPageName('');
+        setActivePage(newPageName);
+        setPageDeleted(true);
 
         handleSavePagesMarkdownArray();
     }
@@ -266,12 +253,15 @@ export function MarkedInput() {
     }
 
     const renderEditor = () => {
-        if (pageDeleted) {
-            return <></>
-        } else if(pageName === '' && pageArray.length === 0) {
+        if(pageName === '' && pageArray.length === 0) {
             return (<BlankAnnotationContainer>
                 <FaRegFileAlt /> 
                 <p>Página vazia, adicione uma página de resumo no meu à esquerda</p>
+            </BlankAnnotationContainer>)
+        } else if (pageDeleted) {
+            return (<BlankAnnotationContainer>
+                <FaRegFileAlt /> 
+                <p>Selecione uma página</p>
             </BlankAnnotationContainer>)
         } else if(pageName !== '' && pageArray.length !== 0) {
             return (<div onClick={(e) => handleShowMarkupPanel(e)}>
