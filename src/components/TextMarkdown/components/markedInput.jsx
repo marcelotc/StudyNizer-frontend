@@ -266,7 +266,7 @@ export function MarkedInput() {
 
         return (<BlankAnnotationContainer>
             <FaRegFileAlt /> 
-            <p>Clique ou adicione uma página de resumo no menu à esquerda</p>
+            <p>Clique ou adicione uma página no menu à esquerda</p>
         </BlankAnnotationContainer>)
     }
 
