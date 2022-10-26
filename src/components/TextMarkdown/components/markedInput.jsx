@@ -192,8 +192,8 @@ export function MarkedInput() {
         setMarkdownPanelVisible('block');   
     }
 
-    const confirm = (pageId) => {
-        handleRemovePage(pageId);
+    const confirm = (pageId, markdownId) => {
+        handleRemovePage(pageId, markdownId);
         setMarkdownPanelVisible('none');
     };
 
@@ -259,7 +259,16 @@ export function MarkedInput() {
         handleSavePagesMarkdownArray();
     }
 
-    const handleRemovePage = (pageId) => {
+    const handleRemovePage = (pageId, markdownId) => {
+        try {
+            api.delete(`/user/markdown/${markdownId}`, {headers});
+        } catch (error) {
+            notification.info({
+                message: `${error?.response?.data?.error}`,
+                placement: 'top',
+            });
+        }
+
         setPageArray(current =>
             current.filter((props) => {
               return props.page_id !== pageId;
@@ -377,7 +386,7 @@ export function MarkedInput() {
                                     >
                                         {page.page_name}
                                     </NavLink>
-                                    <Popconfirm placement="right" title={'Realmente deseja excluir está página?'} onConfirm={() => confirm(page.page_id)} okText="Sim" cancelText="Não">
+                                    <Popconfirm placement="right" title={'Realmente deseja excluir está página?'} onConfirm={() => confirm(page.page_id, page.markdown_id)} okText="Sim" cancelText="Não">
                                         <Tooltip placement="right" title="Excluir página">
                                             <FaTimesCircle />
                                         </Tooltip>
