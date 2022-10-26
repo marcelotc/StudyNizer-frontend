@@ -253,17 +253,7 @@ export function MarkedInput() {
     }
 
     const renderEditor = () => {
-        if(pageName === '' && pageArray.length === 0) {
-            return (<BlankAnnotationContainer>
-                <FaRegFileAlt /> 
-                <p>Página vazia, adicione uma página de resumo no meu à esquerda</p>
-            </BlankAnnotationContainer>)
-        } else if (pageDeleted) {
-            return (<BlankAnnotationContainer>
-                <FaRegFileAlt /> 
-                <p>Selecione uma página</p>
-            </BlankAnnotationContainer>)
-        } else if(pageName !== '' && pageArray.length !== 0) {
+        if(pageName !== '' && pageArray.length !== 0) {
             return (<div onClick={(e) => handleShowMarkupPanel(e)}>
                 <Editor
                     ref={editor}
@@ -273,6 +263,11 @@ export function MarkedInput() {
                 />
             </div>)
         }
+
+        return (<BlankAnnotationContainer>
+            <FaRegFileAlt /> 
+            <p>Clique ou adicione uma página de resumo no menu à esquerda</p>
+        </BlankAnnotationContainer>)
     }
 
     const handlePageLink = (e, pageName, pageId, markdown_id, url_id) => {
