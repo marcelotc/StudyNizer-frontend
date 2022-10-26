@@ -49,7 +49,7 @@ export const CardContainer = styled.div`
 
         > svg {
             display: none;
-            font-size: 18px;
+            font-size: 16px;
             margin-right: 10px;
             cursor: pointer;
         }

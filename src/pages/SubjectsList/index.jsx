@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { v4 } from "uuid";
 import { Modal, Button, Input, Tooltip, message, Popconfirm, notification, Skeleton, Spin} from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
-import { FaPlus, FaPencilAlt, FaTrashAlt } from "react-icons/fa";
+import { FaPlus, FaTrash } from "react-icons/fa";
  
 import { Header } from '../../components/Header'
 import { Container, ListContainer, CardLink, CardContainer, Card, AddCard, AddSubjectModal, ListInnerContainer, CardContainerList } from './styles';
@@ -158,7 +158,7 @@ export function SubjectsList() {
                           </Tooltip>*/}
                           <Popconfirm placement="right" title={"Tem certeza que deseja excluir esta disciplina?"} onConfirm={() => confirm(subject.subject_id)} okText="Sim" cancelText="Não">
                             <Tooltip placement="top" title="Excluir disicplina">
-                              <FaTrashAlt />
+                              <FaTrash />
                             </Tooltip>
                           </Popconfirm>
                         </div>
