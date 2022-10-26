@@ -54,13 +54,13 @@ export const CardContainer = styled.div`
             cursor: pointer;
         }
 
-        > svg:nth-child(1):hover {
+        /*> svg:nth-child(1):hover {
             color: blue;
             cursor: pointer;
             transition: 0.2s;
-        }
+        }*/
 
-        > svg:nth-child(2):hover {
+        > svg:nth-child(1):hover {
             color: red;
             cursor: pointer;
             transition: 0.2s;

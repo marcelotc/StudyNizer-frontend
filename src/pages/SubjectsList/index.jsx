@@ -153,9 +153,9 @@ export function SubjectsList() {
                     return (
                       <CardContainer key={subject.subject_id}>
                         <div>
-                          <Tooltip placement="top" title="Editar nome da disicplina">
+                          {/*<Tooltip placement="top" title="Editar nome da disicplina">
                             <FaPencilAlt onClick={() => showModal(subject.title, 'Editar', subject.subject_id)} />
-                          </Tooltip>
+                          </Tooltip>*/}
                           <Popconfirm placement="right" title={"Tem certeza que deseja excluir esta disciplina?"} onConfirm={() => confirm(subject.subject_id)} okText="Sim" cancelText="Não">
                             <Tooltip placement="top" title="Excluir disicplina">
                               <FaTrashAlt />
