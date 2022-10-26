@@ -1,9 +1,10 @@
-import React, { useState, useEffect  } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Editor, EditorState, ContentState, RichUtils, convertToRaw, convertFromRaw } from "draft-js";
 import { Popconfirm, Tooltip, message, Modal, Button, Input, notification, Skeleton } from 'antd';
 import { FaTimes, FaPlus, FaRegFile, FaRegFileAlt, FaTimesCircle, FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 import { MarkedInputContainer, MarkedInputMenu, MarketdInputTextAreaContainer, BlankAnnotationContainer, MarkdownPanel, AddNewPageModal } from "./styles";
+import { debounce } from 'lodash';
 import { v4 } from 'uuid';
 
 import api from '../../../services/api';
@@ -37,11 +38,27 @@ export function MarkedInput() {
     const [openNewPageModal, setOpenNewPageModal] = useState(false);
     const [newPageName, setNewPageName] = useState('');
     const [pageName, setPageName] = useState('');
+    const [pageId, setPageId] = useState('');
+    const [markdownId, setMarkdownId] = useState('');
     const [activePage, setActivePage] = useState(null);
 
     const [editorState, setEditorState] = useState(EditorState.createWithContent(ContentState.createFromText('')));
 
-    const editor = React.useRef(null);
+    const editor = useRef(null);
+
+    const debouncedSave = useRef(debounce(async (annotationBlockValue, pageName, pageId, markdownId) => {
+        try {
+            await api.put(`/user/markdown/${markdownId}`, {
+                annotation_block: { annotationBlock: annotationBlockValue },
+                page_name: pageName,
+                url_id: location.pathname,
+                page_id: pageId,
+                subject_name: location.state.subject.title.replace(/ /g, '-').toLowerCase(),
+            }, {headers});
+        } catch (error) {
+            console.log('error?.response?.data?.error', error?.response?.data?.error);
+        }         
+    }, 1000)).current;
 
     const handleChangeEditor = (editorState) => {
         let contentRaw = convertToRaw(editorState.getCurrentContent());
@@ -51,9 +68,10 @@ export function MarkedInput() {
         if (filteredResult){
             filteredResult.annotation_block.annotationBlock = contentRaw;
         }
-        console.log('contentRaw', contentRaw)
-
+        
         setEditorState(editorState);
+        debouncedSave(contentRaw, pageName, pageId, markdownId);
+
         setMarkdownPanelVisible('none');
     }
 
@@ -295,8 +313,10 @@ export function MarkedInput() {
         }
     }
 
-    const handlePageLink = (e, pageName) => {
+    const handlePageLink = (e, pageName, pageId, markdown_id) => {
         setPageName(pageName);
+        setPageId(pageId);
+        setMarkdownId(markdown_id);
         setPageDeleted(false);
     }
 
@@ -351,7 +371,7 @@ export function MarkedInput() {
                                         id={page.page_id}
                                         to={page.url_id}
                                         state={location.state}
-                                        onClick={(e) => handlePageLink(e, page.page_name)}
+                                        onClick={(e) => handlePageLink(e, page.page_name, page.page_id, page.markdown_id)}
                                     >
                                         {page.page_name}
                                     </NavLink>
