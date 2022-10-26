@@ -39,6 +39,7 @@ export function MarkedInput() {
     const [newPageName, setNewPageName] = useState('');
     const [pageName, setPageName] = useState('');
     const [pageId, setPageId] = useState('');
+    const [urlId, setUrlId] = useState('');
     const [markdownId, setMarkdownId] = useState('');
     const [activePage, setActivePage] = useState(null);
 
@@ -46,12 +47,12 @@ export function MarkedInput() {
 
     const editor = useRef(null);
 
-    const debouncedSave = useRef(debounce(async (annotationBlockValue, pageName, pageId, markdownId) => {
+    const debouncedSave = useRef(debounce(async (annotationBlockValue, pageName, pageId, markdownId, urlId) => {
         try {
             await api.put(`/user/markdown/${markdownId}`, {
                 annotation_block: { annotationBlock: annotationBlockValue },
                 page_name: pageName,
-                url_id: location.pathname,
+                url_id: urlId,
                 page_id: pageId,
                 subject_name: location.state.subject.title.replace(/ /g, '-').toLowerCase(),
             }, {headers});
@@ -70,7 +71,7 @@ export function MarkedInput() {
         }
         
         setEditorState(editorState);
-        debouncedSave(contentRaw, pageName, pageId, markdownId);
+        debouncedSave(contentRaw, pageName, pageId, markdownId, urlId);
 
         setMarkdownPanelVisible('none');
     }
@@ -113,7 +114,7 @@ export function MarkedInput() {
 
     useEffect(() => {
         const filteredResult = pageArray.find((obj) => obj.url_id === location.pathname);
-
+        console.log('filteredResult', filteredResult)
         if (filteredResult){
           setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(JSON.stringify(filteredResult.annotation_block.annotationBlock)))));
         }
@@ -313,9 +314,10 @@ export function MarkedInput() {
         }
     }
 
-    const handlePageLink = (e, pageName, pageId, markdown_id) => {
+    const handlePageLink = (e, pageName, pageId, markdown_id, url_id) => {
         setPageName(pageName);
         setPageId(pageId);
+        setUrlId(url_id);
         setMarkdownId(markdown_id);
         setPageDeleted(false);
     }
@@ -371,7 +373,7 @@ export function MarkedInput() {
                                         id={page.page_id}
                                         to={page.url_id}
                                         state={location.state}
-                                        onClick={(e) => handlePageLink(e, page.page_name, page.page_id, page.markdown_id)}
+                                        onClick={(e) => handlePageLink(e, page.page_name, page.page_id, page.markdown_id, page.url_id)}
                                     >
                                         {page.page_name}
                                     </NavLink>
