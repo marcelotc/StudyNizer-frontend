@@ -254,7 +254,8 @@ export function MarkedInput() {
         setOpenNewPageModal(false);
         setMarkdownPanelVisible('none');
         setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(JSON.stringify(initialEditorState)))));
-    
+        setPageDeleted(true);
+
         handleSaveSubjectsArray();
         handleSavePagesMarkdownArray();
     }
@@ -278,6 +279,7 @@ export function MarkedInput() {
               return props.pageId !== pageId;
         }));
         setPageDeleted(true);
+        setPageName(true);
         message.success('Página removida!');
     }
 
