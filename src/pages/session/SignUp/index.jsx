@@ -41,6 +41,7 @@ export const SignUp = ({ signed }) => {
 
     return (
         <Container>
+            <div className="logo"><h1>StudyNizer</h1></div>
             <LoginContainer>
                 <h1>Cadastro</h1>
                 <Input

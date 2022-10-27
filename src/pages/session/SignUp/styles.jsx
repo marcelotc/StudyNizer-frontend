@@ -6,6 +6,24 @@ export const Container = styled.div`
     justify-content: center;
     flex-direction: column;
     height: 100%;
+
+    .logo {
+        background: black;
+        width: 50%;
+        text-align: center;
+        margin-top: 10px;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;      
+
+        h1 {
+            color: white;
+            font-weight: bold;
+            margin: 0;
+            padding: 10px;
+        }
+    }
 `;
 
 export const LoginContainer = styled.div`

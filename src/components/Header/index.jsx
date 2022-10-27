@@ -12,7 +12,7 @@ export const Header = () => {
 
     return (
         <Container>
-            <div></div>
+            <div className='logo'><h1>StudyNizer</h1></div>
             <Menu>
                 <NavLink to={'/'} activeClassName="active">Board</NavLink>
                 <NavLink to={'/subjects-list'} activeClassName="active">Disciplinas</NavLink>

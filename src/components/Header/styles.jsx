@@ -6,13 +6,32 @@ export const Container = styled.div`
     align-items: center;
     justify-content: space-between;
 
-    div {
-        width: 100%;
+    .logo {
+        width: 40%;
+
+        h1 {
+            border-radius: 4px;
+            margin: 0 0 30px 30px;
+            font-weight: bold;
+            background: black;
+            color: white;
+            text-align: center;
+            padding: 0 50px;
+        }
     }
 
     @media (max-width: 990px) {
         flex-direction: column;
         text-align: center;
+
+        .logo {
+            width: 100%;
+
+            h1 {
+                margin: 0 0 30px 0;
+                border-radius: 0;
+            }
+        }
     }
 `;
 
