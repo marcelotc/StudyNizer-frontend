@@ -8,6 +8,7 @@ export const Container = styled.div`
 
     .logo {
         width: 40%;
+        cursor: default;
 
         h1 {
             border-radius: 4px;

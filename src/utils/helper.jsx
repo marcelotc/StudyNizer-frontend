@@ -17,7 +17,7 @@ const colors = [
   'gray',
 ];
 
-export const generateDemoEvents = (taskDate) => {
+export const generateDemoEvents = (taskData) => {
   const events = [];
 
   const Event = (props) => {
@@ -104,28 +104,27 @@ export const generateDemoEvents = (taskDate) => {
       priority: "Alta"
   }]
 //https://codesandbox.io/s/rschedule-starter-forked-dq359m?file=/src/index.ts
-    console.log('taskDate', taskDate)
+    console.log('taskData', taskData)
 
-  let taskEvents = taskDate.map(task => {
-    console.log('task', task.date)
+  let taskEvents = taskData.map(task => {
 
     const taskEvent = {
       id: v4(),
-      startAt: task.date[0],
-      endAt: task.date[1],
-      summary: task.name,
+      startAt: task.due_date_start,
+      endAt: task.due_date_end,
+      summary: task.title,
       color: renderPriorityColor(task.priority),
       allDay: false /*endDate.day !== startDate.day*/,
 
 
       /* Estilização para mostar que um evento foi finalizado ou feito  */
       
-      // style: {
-      //   textDecoration: 'line-through',
-      //   border: 'solid 1px red',
-      //   background: 'white',
-      //   color: 'black',
-      // },
+       /* style: {
+         textDecoration: 'line-through',
+         border: 'solid 1px black',
+         background: 'lightgray',
+         color: 'black',
+       }, */
     };
 
     return taskEvent;

@@ -2,7 +2,8 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
     height: 100%;
-
+    overflow: hidden;
+    
     .Kalend__CalendarBodyHours__text, .Kalend__CalendarBodyHours__text-dark {
         font-size: 1.9em;
 
@@ -15,4 +16,8 @@ export const Container = styled.div`
         padding-left: 100px !important;
     }
 
+`;
+
+export const LoadingContainer = styled.div`
+    padding: 30px;
 `;
