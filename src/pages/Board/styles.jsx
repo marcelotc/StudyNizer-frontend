@@ -19,6 +19,7 @@ export const BoardFilter = styled.div`
         background: lightgray;
         padding: 5px;
         border-radius: 5px;
+        margin: 20px 0;
 
         > input, .ant-select, .ant-picker {
             width: 100%;
@@ -68,6 +69,7 @@ export const AddTaskContainer= styled.div`
 
 export const BoardContainer= styled.div`
     display: flex;
+    margin: 0 19px;
 
     @media (max-width: 990px) {
         flex-direction: column;

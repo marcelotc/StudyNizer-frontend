@@ -8,10 +8,11 @@ export const Container = styled.div`
 export const ListContainer = styled.div`
     display: flex;
     justify-content: center;
+    margin-top: 35px;
 `;
 
 export const ListInnerContainer = styled.div`
-    width: 86.5%;
+    width: 95.5%;
 
     .subjectsEmpty {
         text-align: center;
