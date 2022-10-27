@@ -7,6 +7,17 @@ export const Container = styled.div`
     background: #fff;
     border-radius: 5px;
     margin-bottom: 10px;
+
+    .tour {
+        position: absolute;
+        bottom: 15px;
+        right: 30px;
+        cursor: pointer;
+
+        > svg {
+            font-size: 35px;
+        }
+    }
 `;
 
 export const BoardFilter = styled.div`

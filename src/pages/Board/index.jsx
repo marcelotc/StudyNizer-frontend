@@ -571,6 +571,7 @@ export function Board() {
           })}
         </DragDropContext>
       </BoardContainer>
+      <div className='tour' onClick={() => alert('Colocar um tour aqui')}><FaQuestionCircle /></div>
     </Container>
   );
 }
