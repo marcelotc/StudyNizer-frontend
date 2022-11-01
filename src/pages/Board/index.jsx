@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
 import _ from "lodash";
 import { notification, Popconfirm, Modal, Input, Button, Tooltip, Select, DatePicker, Skeleton, message, Checkbox, TimePicker, Spin } from 'antd';
-import { FaPlus, FaCalendarAlt, FaTrash, FaQuestionCircle } from "react-icons/fa";
+import { FaPlus, FaCalendarAlt, FaTrash } from "react-icons/fa";
 import { LoadingOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import Axios from 'axios';
@@ -533,7 +533,6 @@ export function Board() {
           })}
         </DragDropContext>
       </BoardContainer>
-      <div className='tour' onClick={() => alert('Colocar um tour aqui')}><FaQuestionCircle /></div>
     </Container>
   );
 }
