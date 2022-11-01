@@ -83,7 +83,9 @@ export const CalendComponent = (props) => {
         current,
         data
     ) => {
-        alert('aa')
+        console.log('prev',prev)
+        console.log('current',current)
+        console.log('data',data)
         setDemoEvents(data);
     };
 

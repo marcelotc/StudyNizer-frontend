@@ -37,81 +37,56 @@ export const generateDemoEvents = (taskData) => {
 
     return '#EEE950'
   }
-  
-  const testDate = [{
-      name: "Fazer exercico da lista 3",
-      date: [
-        "Sun Jan 02 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Jan 09 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Jan 16 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Jan 23 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Jan 30 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Feb 06 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Feb 13 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Feb 20 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Feb 27 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Mar 06 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Mar 13 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Mar 20 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Mar 27 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Apr 03 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Apr 10 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Apr 17 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Apr 24 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun May 01 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun May 08 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun May 15 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun May 22 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun May 29 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Jun 05 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Jun 12 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Jun 19 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Jun 26 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Jul 03 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Jul 10 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Jul 17 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Jul 24 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Jul 31 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Aug 07 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Aug 14 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Aug 21 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Aug 28 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Sep 04 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Sep 11 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Sep 18 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Sep 25 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Oct 02 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Oct 09 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Oct 16 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Oct 23 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Oct 30 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Nov 06 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Nov 13 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Nov 20 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Nov 27 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Dec 04 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Dec 11 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Dec 18 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Dec 25 2022 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Jan 01 2023 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Jan 08 2023 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Jan 15 2023 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Jan 22 2023 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Jan 29 2023 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Feb 05 2023 00:00:00 GMT-0300 (Horário Padrão de Brasília)",
-        "Sun Feb 12 2023 00:00:00 GMT-0300 (Horário Padrão de Brasília)"
-        ],
-      priority: "Alta"
-  }]
-//https://codesandbox.io/s/rschedule-starter-forked-dq359m?file=/src/index.ts
-    console.log('taskData', taskData)
 
-  let taskEvents = taskData.map(task => {
+  console.log('taskData', taskData)
+    
+  //https://codesandbox.io/s/rschedule-starter-forked-dq359m?file=/src/index.ts
+
+  /*FORMATO DAS TAREFAS RECORRENTES */
+
+  /** Dai mergear o atributo recurringTasks de cada 
+   * tabela de tasks todo, doing, completed etc... */
+
+    const recurringTaksObj = {
+      user_id: "f3d9395e-5029-4e43-b5ed-72db6d67452e",
+      name: "a",
+      email: "a",
+      task_id: "d010d33e-8c75-4f64-aac8-24cc61e79e0a",
+      title: "Revisar matéria semana 9",
+      description: "basd",
+      priority: "Baixa",
+      due_date_start: "2022-10-27T13:59:02.000Z",
+      due_date_end: "2022-10-27T22:43:01.000Z",
+      recurringTasks: [
+        /* EXEMPLO o usuário escolheu que cada segunda tem que fazer essa tarefa */
+        {
+          title: 'nome ta tarefa',
+          priority: 'Alta',
+          startAt: '2022-10-21T10:30:00.000Z',
+          endAt: '2022-10-21T19:30:00.000Z',
+        },
+        {
+          title: 'nome ta tarefa',
+          priority: 'Alta',
+          startAt: '2022-10-07T10:30:00.000Z',
+          endAt: '2022-10-07T10:30:00.000Z',
+        },
+        {
+          title: 'nome ta tarefa',
+          priority: 'Alta',
+          startAt: '2022-10-14T10:30:00.000Z',
+          endAt: '2022-10-14T10:30:00.000Z',
+        },
+      ]
+  }
+
+  let taskEvents = recurringTaksObj.recurringTasks.map(task => {
+    console.log('tasktask', task.due_date_start)
 
     const taskEvent = {
       id: v4(),
-      startAt: task.due_date_start,
-      endAt: task.due_date_end,
+      startAt: task.startAt,
+      endAt: task.endAt,
       summary: task.title,
       color: renderPriorityColor(task.priority),
       allDay: false /*endDate.day !== startDate.day*/,

@@ -8,6 +8,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import Axios from 'axios';
 import { v4 } from 'uuid';
+import { RRule, RRuleSet, rrulestr } from 'rrule';
 
 import { setCalendarDate } from '../../store/modules/userSession/actions';
 import { Header } from '../../components/Header'
@@ -311,6 +312,7 @@ export function Board() {
   const handleCancel = () => {
     setOpen(false);
     setRecurringTask(false);
+    generateRecurringTime();
   };
 
   const handleChange = (value) => {
@@ -401,6 +403,88 @@ export function Board() {
     }
   }
 
+  const generateRecurringTime = () => {
+    let weekDay;
+    
+    if (recurringWeek === 'Segunda') {
+        weekDay = RRule.MO
+    } else if (recurringWeek === 'Terça') {
+      weekDay = RRule.TU
+    } else if (recurringWeek === 'Quarta') {
+      weekDay = RRule.WE
+    } else if (recurringWeek === 'Quinta') {
+      weekDay = RRule.TH
+    } else if (recurringWeek === 'Sexta') {
+      weekDay = RRule.FR
+    } else if (recurringWeek === 'Sábado') {
+      weekDay = RRule.SA
+    } else {
+      weekDay = RRule.SU
+    }
+
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth();
+    const currentDay = new Date().getDay();
+
+    const ruleStart = new RRule({
+      freq: RRule.WEEKLY, 
+      byweekday: [weekDay, weekDay],
+      dtstart: new Date(currentYear, currentMonth, currentDay, recurringTime[0].hour(), recurringTime[0].minutes(), recurringTime[0].seconds()),
+      until: new Date(currentYear + 1, currentMonth, currentDay, recurringTime[0].hour(), recurringTime[0].minutes(), recurringTime[0].seconds()),
+    });
+    const datesStart = ruleStart.all()
+
+    const dateRuleStart = datesStart.map(date => date);
+
+    const ruleEnd = new RRule({
+      freq: RRule.WEEKLY, 
+      byweekday: [weekDay, weekDay],
+      dtstart: new Date(currentYear, currentMonth, currentDay, recurringTime[1].hour(), recurringTime[1].minutes(), recurringTime[1].seconds()),
+      until: new Date(currentYear + 1, currentMonth, currentDay, recurringTime[1].hour(), recurringTime[1].minutes(), recurringTime[1].seconds()),
+    });
+    const datesEnd = ruleEnd.all()
+
+    const dateRuleEnd = datesEnd.map(date => date);
+
+    // Faz o merge dos arrays e os intercala
+    let result = [],
+    i, l = Math.min(dateRuleStart.length, dateRuleEnd.length);
+    
+    for (i = 0; i < l; i++) {
+        result.push(dateRuleStart[i], dateRuleEnd[i]);
+    }
+    result.push(...dateRuleStart.slice(l), ...dateRuleEnd.slice(l));
+
+    const resultsEven = result.map((result, index) => {
+      const resultObj = {
+        startAt: index % 2 === 0 && result,
+      }
+        return resultObj;
+    })
+
+    const resultsEvenFinal = resultsEven.filter(res => res.startAt !== false);
+
+    const resultsOdd = result.map((result, index) => {
+      const resultObj = {
+        endAt: index % 2 !== 0 && result,
+      }
+        return resultObj;
+    })
+    console.log('mergedArrays', resultFinal);
+
+    const resultsOddFinal = resultsOdd.filter(res => res.endAt !== false);
+
+    // Faz o merge dos arrays e os intercala
+    let resultFinal = [],
+    iFinal, lFinal = Math.min(dateRuleStart.length, dateRuleEnd.length);
+    
+    for (iFinal = 0; iFinal < lFinal; iFinal++) {
+        resultFinal.push(resultsEvenFinal[iFinal], resultsOddFinal[iFinal]);
+    }
+    resultFinal.push(...resultsEvenFinal.slice(lFinal), ...resultsOddFinal.slice(lFinal));
+
+  }
+
   const onChangeRecurringWeek = (week) => {
     setRecurringWeek(week);
   }
@@ -448,7 +532,7 @@ export function Board() {
                     onClick={() => onChangeRecurringWeek(week)}>{week}</p>
                 ))}
               </RecurringTaskContainer>
-                <TimePicker onChange={onChangeRecurringTime} value={recurringTime !== '' ? moment(recurringTime, 'HH:mm:ss') : null} />
+                <TimePicker.RangePicker onChange={onChangeRecurringTime} value={recurringTime !== '' ? [moment(recurringTime[0], 'HH:mm:ss'), moment(recurringTime[1], 'HH:mm:ss')] : null} />
               </>
             )
           }
