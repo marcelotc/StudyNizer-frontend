@@ -13,7 +13,7 @@ import { setCalendarDate } from '../../store/modules/userSession/actions';
 import { Header } from '../../components/Header'
 import api from '../../services/api';
 
-import { Container, BoardFilter, AddTaskContainer, BoardContainer, Column, Card, Item, CardHeader, PriorityColor, CardTaskDetails, RecurringTaskContainer } from "./styles";
+import { Container, BoardFilter, AddTaskContainer, BoardContainer, Column, Card, Item, CardHeader, PriorityColor, CardTaskDetails } from "./styles";
 import './styles.jsx';
 
 const { Option } = Select;
@@ -146,9 +146,6 @@ export function Board() {
   const [modalMode, setModalMode] = useState("Salvar");
   const [searchTermTitle, setSearchTermTitle] = useState("");
   const [searchTermPriority, setSearchTermPriority] = useState(undefined);
-  const [recurringTask, setRecurringTask] = useState(false);
-  const [recurringWeek, setRecurringWeek] = useState('');
-  const [recurringTime, setRecurringTime] = useState('');
   const [addTaskLoad, setAddTaskLoad] = useState(false);
   const [searchTermTaskDueData, setSearchTermTaskDueData] = useState({
     min: 0,
@@ -310,7 +307,6 @@ export function Board() {
 
   const handleCancel = () => {
     setOpen(false);
-    setRecurringTask(false);
   };
 
   const handleChange = (value) => {
@@ -376,10 +372,6 @@ export function Board() {
     }
   };
 
-  const onChangeCheckBox = (e) => {
-    setRecurringTask(e.target.checked);
-  }
-
   function formatDate(date, modalMode, arrayPosition) {
     if(modalMode === 'Editar') {
       var d = new Date(date[arrayPosition]),
@@ -400,16 +392,6 @@ export function Board() {
       return date[arrayPosition]
     }
   }
-
-  const onChangeRecurringWeek = (week) => {
-    setRecurringWeek(week);
-  }
-
-  const onChangeRecurringTime = (time) => {
-    setRecurringTime(time);
-  }
-
-  const weekDays = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo']
 
   return (
     <Container>
@@ -437,27 +419,7 @@ export function Board() {
             <Option value="Média">Média</Option>
             <Option value="Baixa">Baixa</Option>
           </Select>
-          {!recurringTask ? 
-            <RangePicker showTime format={dateFormat} value={taskDueDate !== undefined ? [moment(formatDate(taskDueDate, modalMode, 0), dateFormat), moment(formatDate(taskDueDate, modalMode, 1), dateFormat)] : null}  onChange={handleDateChange} />
-            : (
-            <>
-              <RecurringTaskContainer>
-                {weekDays.map((week) => (
-                  <p
-                    className={`${recurringWeek == week && 'activeWeek'}`}
-                    onClick={() => onChangeRecurringWeek(week)}>{week}</p>
-                ))}
-              </RecurringTaskContainer>
-                <TimePicker onChange={onChangeRecurringTime} value={recurringTime !== '' ? moment(recurringTime, 'HH:mm:ss') : null} />
-              </>
-            )
-          }
-          <div className='recurrentTask'>
-            <Checkbox onChange={onChangeCheckBox} checked={recurringTask}>Tarefa recorrente</Checkbox>                          
-            <Tooltip placement="top" title="Tarefas que irão se repetir no dia da semana e horário selecionados">
-              <FaQuestionCircle />
-            </Tooltip>
-          </div>
+          <RangePicker showTime format={dateFormat} value={taskDueDate !== undefined ? [moment(formatDate(taskDueDate, modalMode, 0), dateFormat), moment(formatDate(taskDueDate, modalMode, 1), dateFormat)] : null}  onChange={handleDateChange} />
           <Button
             type='primary'
             disabled={taskTextsBlank ? true : false}
