@@ -125,7 +125,7 @@ export const CalendComponent = (props) => {
                     selectedView={props.selectedView}
                     showTimeLine={true}
                     isDark={false}
-                    autoScroll={true}
+                    autoScroll={false}
                     language={'ptBR'}
                 // disabledDragging={true}
                 // colors={{
