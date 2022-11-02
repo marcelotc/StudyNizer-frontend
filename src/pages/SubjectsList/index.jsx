@@ -267,7 +267,7 @@ export function SubjectsList() {
                 </AddCard>
               </Tooltip>
             </CardContainerList>
-            {subjects.length === 0 && <p className='subjectsEmpty'>Nenhuma disciplina cadastrada, clique no botão para adicionar</p>}
+            {subjects.length === 0 && <p className='subjectsEmpty'>Nenhuma disciplina cadastrada, clique em um botão para adicionar ou importar uma disciplina</p>}
           </>
           ) : <>
                 <br/>
