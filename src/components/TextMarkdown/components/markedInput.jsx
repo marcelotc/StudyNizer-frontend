@@ -24,7 +24,6 @@ export function MarkedInput() {
     const [markdownPanelVisible, setMarkdownPanelVisible] = useState('block');
     const [hideMarkdownMenu, setHideMarkdownMenu] = useState(false);
     const [pageArray, setPageArray] = useState([]);
-    const [pageDeleted, setPageDeleted] = useState(false);
     const [addMarkdownLoad, setAddMarkdownLoad] = useState(false);
     const [addMarkdownUpdate, setAddMarkdownUpdate] = useState(false);
     const [openNewPageModal, setOpenNewPageModal] = useState(false);
@@ -202,7 +201,6 @@ export function MarkedInput() {
         setMarkdownPanelVisible('none');
         setPageName('');
         setActivePage(newPageName);
-        setPageDeleted(true);
 
         handleSavePagesMarkdownArray();
     }
@@ -221,7 +219,6 @@ export function MarkedInput() {
             current.filter((props) => {
               return props.page_id !== pageId;
         }));
-        setPageDeleted(true);
         setPageName('');
         message.success('Página removida!');
     }
@@ -271,7 +268,6 @@ export function MarkedInput() {
         setPageId(pageId);
         setUrlId(url_id);
         setMarkdownId(markdown_id);
-        setPageDeleted(false);
     }
 
     return (
