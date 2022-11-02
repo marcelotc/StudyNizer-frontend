@@ -44,23 +44,32 @@ export function SubjectsList() {
   }, [updateSubject]);
 
   const handleAddSubject = async (fileNameExport) => {
-    try {
-      setSubjectsLoad(true);
-       await api.post(`/user/subjects`, {
-        users_id: userId,
-        title: subjectTitle || fileNameExport
-       }, {headers});
-       setSubjectsLoad(false);
-    } catch (error) {
+    console.log('subjectTitle', subjectTitle)
+    if(subjects.find(subject =>  subject.title.replace(/ /g, '-').toLowerCase() === subjectTitle.replace(/ /g, '-').toLowerCase())) {
       notification.info({
-        message: `${error?.response?.data?.error}`,
+        message: `Disciplina já adicionada!`,
         placement: 'top',
       });
-      setSubjectsLoad(false);
+      setFileName('');
+    } else {
+      try {
+        setSubjectsLoad(true);
+        await api.post(`/user/subjects`, {
+          users_id: userId,
+          title: subjectTitle || fileNameExport
+        }, {headers});
+        setSubjectsLoad(false);
+      } catch (error) {
+        notification.info({
+          message: `${error?.response?.data?.error}`,
+          placement: 'top',
+        });
+        setSubjectsLoad(false);
+      }
+      setSubjects(subjects => [...subjects, {
+        title: subjectTitle,
+      }]);
     }
-    setSubjects(subjects => [...subjects, {
-      title: subjectTitle,
-    }]);
     setOpen(false);
   }
 
