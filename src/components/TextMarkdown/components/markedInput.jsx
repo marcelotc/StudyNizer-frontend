@@ -65,7 +65,7 @@ export function MarkedInput() {
         setEditorState(editorState);
         debouncedSave(contentRaw, pageName, pageId, markdownId, urlId);
 
-        setMarkdownPanelVisible('block');
+        setMarkdownPanelVisible('none');
     }
 
     function focusEditor() {
@@ -114,11 +114,7 @@ export function MarkedInput() {
       { label: "H4", style: "header-four" },
       { label: "H5", style: "header-five" },
       { label: "H6", style: "header-six" },
-      { label: "UL", style: "unordered-list-item" },
-      { label: "OL", style: "ordered-list-item" },
-      { label: "Left", style: "left" },
-      { label: "Center", style: "center" },
-      { label: "Right", style: "right" },
+      { label: "Lista", style: "unordered-list-item" },
     ];
   
     const BlockStyleControls = (props) => {
@@ -137,9 +133,9 @@ export function MarkedInput() {
     };
   
     const INLINE_STYLES = [
-      { label: "Bold", style: "BOLD" },
-      { label: "Italic", style: "ITALIC" },
-      { label: "Underline", style: "UNDERLINE" },
+      { label: "Negrito", style: "BOLD" },
+      { label: "Itálico", style: "ITALIC" },
+      { label: "Sublinhar", style: "UNDERLINE" },
     ];
     const InlineStyleControls = (props) => {
       return (
