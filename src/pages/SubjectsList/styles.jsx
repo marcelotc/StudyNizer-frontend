@@ -55,13 +55,13 @@ export const CardContainer = styled.div`
             cursor: pointer;
         }
 
-        /*> svg:nth-child(1):hover {
+        > svg:nth-child(1):hover {
             color: blue;
             cursor: pointer;
             transition: 0.2s;
-        }*/
+        }
 
-        > svg:nth-child(1):hover {
+        > svg:nth-child(2):hover {
             color: red;
             cursor: pointer;
             transition: 0.2s;
@@ -153,6 +153,20 @@ export const AddCard = styled.div`
         }
     }
     
+    .importCard {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        height: 100%;
+        border-radius: 10px;
+
+        > svg {
+            font-size: 100px;
+            color: #BEEC5A;
+            margin-bottom: 50px;
+        }
+    }
 
     @media (max-width: 990px) {
         width: 100%;

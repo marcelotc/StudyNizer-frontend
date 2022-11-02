@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { v4 } from "uuid";
+import React, { useState, useEffect, useRef } from 'react';
+import FileSaver  from "file-saver";
 import { Modal, Button, Input, Tooltip, message, Popconfirm, notification, Skeleton, Spin} from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
-import { FaPlus, FaTrash } from "react-icons/fa";
+import { FaPlus, FaTrash, FaFileDownload, FaFileImport } from "react-icons/fa";
  
 import { Header } from '../../components/Header'
 import { Container, ListContainer, CardLink, CardContainer, Card, AddCard, AddSubjectModal, ListInnerContainer, CardContainerList } from './styles';
@@ -43,12 +43,12 @@ export function SubjectsList() {
     getSubjects();
   }, [updateSubject]);
 
-  const handleAddSubject = async () => {
+  const handleAddSubject = async (fileNameExport) => {
     try {
       setSubjectsLoad(true);
        await api.post(`/user/subjects`, {
         users_id: userId,
-        title: subjectTitle
+        title: subjectTitle || fileNameExport
        }, {headers});
        setSubjectsLoad(false);
     } catch (error) {
@@ -93,9 +93,10 @@ export function SubjectsList() {
     setOpen(false);
   };
 
-  const handleRemoveSubject = async (id) => {
+  const handleRemoveSubject = async (subjectId, subjectTitle) => {
     try {
-      await api.delete(`/user/subjects/${id}`, {headers});
+      await api.delete(`/user/subjectsMarkdown/${userId}/${subjectTitle}`, {headers});
+      await api.delete(`/user/subjects/${subjectId}`, {headers});
     } catch (error) {
       notification.info({
         message: `${error?.response?.data?.error}`,
@@ -104,15 +105,75 @@ export function SubjectsList() {
     }
     setSubjects(current =>
       current.filter(subject => {
-        return subject.subject_id !== id;
+        return subject.subject_id !== subjectId;
     }));
   }
 
-  const confirm = (data, index) => {
-    handleRemoveSubject(data, index);
+  const confirm = (subjectId, subjectTitle) => {
+    handleRemoveSubject(subjectId, subjectTitle);
     message.success('Disciplina removida!');
   };
-    
+
+  const handleExportSubject = async (subject) => {
+    try {
+      const res = await api.get(`/user/markdown/${userId}/${subject.title.replace(/ /g, '-').toLowerCase()}`, {headers});
+      var blob = new Blob([JSON.stringify(res.data)], {type: "text/plain;charset=utf-8"});
+      FileSaver.saveAs(blob, `${subject.title}.txt`);
+    } catch (error) {
+      notification.info({
+        message: `${error?.response?.data?.error}`,
+        placement: 'top',
+      });
+    }
+  }
+
+  const [fileContent, setFileContent] = useState("");
+  const [fileName, setFileName] = useState("");
+  let fileRef = useRef();
+
+  const readFile = e => {
+    const fileReader = new FileReader();
+    const { files } = e.target;
+
+    fileReader.readAsText(files[0], "UTF-8");
+    fileReader.onload = e => {
+      var content = e.target.result;
+      setFileContent(JSON.parse(content));
+      setFileName(files[0].name);
+    };
+
+  };
+
+  const handleImportSubject = async (e) => {
+    e.stopPropagation();
+    const removeParenthesis = fileName.replace(/[\])}[{(1-9]/g, '');
+    const removeExtension = removeParenthesis.replace('.txt', '');
+    const fileNameSanitized = removeExtension.trim();
+
+    if(subjects.find(subject =>  subject.title === fileNameSanitized)) {
+      notification.info({
+        message: `Disciplina já importada!`,
+        placement: 'top',
+      });
+      setFileName('');
+    } else {
+      try {
+        await api.post(`/user/markdownImport`, {
+         users_id: userId,
+         markdown_data: fileContent
+        }, {headers});
+     } catch (error) {
+       notification.info({
+         message: `${error?.response?.data?.error}`,
+         placement: 'top',
+       });
+     }
+     handleAddSubject(fileNameSanitized);
+     setFileName('');
+    }
+    setUpdateSubject(!updateSubject);
+  }
+
   return (
     <Container>
       <Header/>
@@ -153,10 +214,10 @@ export function SubjectsList() {
                     return (
                       <CardContainer key={subject.subject_id}>
                         <div>
-                          {/*<Tooltip placement="top" title="Editar nome da disicplina">
-                            <FaPencilAlt onClick={() => showModal(subject.title, 'Editar', subject.subject_id)} />
-                          </Tooltip>*/}
-                          <Popconfirm placement="right" title={"Tem certeza que deseja excluir esta disciplina?"} onConfirm={() => confirm(subject.subject_id)} okText="Sim" cancelText="Não">
+                          <Tooltip placement="top" title="Exportar disciplina">
+                            <FaFileDownload onClick={() => handleExportSubject(subject)} />
+                          </Tooltip>
+                          <Popconfirm placement="right" title={"Tem certeza que deseja excluir esta disciplina?"} onConfirm={() => confirm(subject.subject_id, subject.title.replace(/ /g, '-').toLowerCase())} okText="Sim" cancelText="Não">
                             <Tooltip placement="top" title="Excluir disicplina">
                               <FaTrash />
                             </Tooltip>
@@ -181,6 +242,18 @@ export function SubjectsList() {
                   <div className='addCardHeader'></div>
                   <div className='addCardBody'>
                     <FaPlus />
+                  </div>
+                </AddCard>
+              </Tooltip>
+              <Tooltip placement="bottom" title="Importar Disciplina">
+                <AddCard isSubjectsEmpty={subjects.length === 0} onClick={() => fileRef.current.click()}>
+                  <div className='addCardHeader'><input style={{display: 'none'}} ref={fileRef} type="file" onChange={readFile} /></div>
+                  <div className='importCard'>
+                    <FaFileImport />
+                    <p>{fileName}</p>
+                    {fileName && <Button type='primary' key="back" onClick={(e) => handleImportSubject(e)}>
+                      Importar disciplina
+                    </Button>}
                   </div>
                 </AddCard>
               </Tooltip>
