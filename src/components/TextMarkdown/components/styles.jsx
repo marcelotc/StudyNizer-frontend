@@ -152,6 +152,12 @@ export const MarkdownPanel = styled.div`
     overflow-x: scroll;
     justify-content: start;
   }
+
+  @media (max-width: 1162px) {
+    display: flex;
+    width: 200px;
+
+  }
   
   .markdownPanel {
     display: flex;
@@ -168,6 +174,10 @@ export const MarkdownPanel = styled.div`
 
       &:hover {
         color: gray;
+      }
+
+      @media (max-width: 1162px) {
+        display: none;
       }
     }
 

@@ -21,7 +21,7 @@ export function MarkedInput() {
     const userId = JSON.parse(getUserSession).id;
 
     const [selectedCoordinates, setSelectedCoordinates] = useState(0);
-    const [markdownPanelVisible, setMarkdownPanelVisible] = useState('none');
+    const [markdownPanelVisible, setMarkdownPanelVisible] = useState('block');
     const [hideMarkdownMenu, setHideMarkdownMenu] = useState(false);
     const [pageArray, setPageArray] = useState([]);
     const [pageDeleted, setPageDeleted] = useState(false);
@@ -65,7 +65,7 @@ export function MarkedInput() {
         setEditorState(editorState);
         debouncedSave(contentRaw, pageName, pageId, markdownId, urlId);
 
-        setMarkdownPanelVisible('none');
+        setMarkdownPanelVisible('block');
     }
 
     function focusEditor() {
