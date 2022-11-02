@@ -250,8 +250,8 @@ export function SubjectsList() {
                   <div className='addCardHeader'><input style={{display: 'none'}} ref={fileRef} type="file" onChange={readFile} /></div>
                   <div className='importCard'>
                     <FaFileImport />
-                    <p>{fileName}</p>
-                    {fileName && <Button type='primary' key="back" onClick={(e) => handleImportSubject(e)}>
+                    <p style={{textAlign: 'center'}}>{fileName}</p>
+                    {fileName && <Button style={{marginBottom: '10px'}} type='primary' key="back" onClick={(e) => handleImportSubject(e)}>
                       Importar disciplina
                     </Button>}
                   </div>
