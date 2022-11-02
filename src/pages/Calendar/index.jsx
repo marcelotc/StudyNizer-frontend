@@ -108,8 +108,8 @@ export const CalendComponent = (props) => {
                 <Kalend
                     kalendRef={props.kalendRef}
                     onNewEventClick={onNewEventClick}
-                    initialView={CalendarView.WEEK}
-                    disabledViews={[]}
+                    initialView={CalendarView.AGENDA}
+                    disabledViews={[CalendarView.THREE_DAYS, CalendarView.DAY, CalendarView.AGENDA]}
                     onEventClick={onEventClick}
                     events={demoEvents}
                     initialDate={new Date().toISOString()}
