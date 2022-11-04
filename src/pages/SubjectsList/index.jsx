@@ -44,7 +44,6 @@ export function SubjectsList() {
   }, [updateSubject]);
 
   const handleAddSubject = async (fileNameExport) => {
-    console.log('subjectTitle', subjectTitle)
     if(subjects.find(subject =>  subject.title.replace(/ /g, '-').toLowerCase() === subjectTitle.replace(/ /g, '-').toLowerCase())) {
       notification.info({
         message: `Disciplina já adicionada!`,
@@ -67,7 +66,7 @@ export function SubjectsList() {
         setSubjectsLoad(false);
       }
       setSubjects(subjects => [...subjects, {
-        title: subjectTitle,
+        title: subjectTitle || fileNameExport,
       }]);
     }
     setOpen(false);
