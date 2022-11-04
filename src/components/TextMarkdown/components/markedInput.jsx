@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import latinize from 'latinize';
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Editor, EditorState, ContentState, RichUtils, convertToRaw, convertFromRaw } from "draft-js";
 import { Popconfirm, Tooltip, message, Modal, Button, Input, notification, Skeleton } from 'antd';
@@ -174,12 +175,12 @@ export function MarkedInput() {
     const handleCreateNewPage = async () => {
         let pageId = v4();
 
-        let subjectPageLink = `/subject-annotations/${location.state.subject.title.replace(/ /g, '-').toLowerCase()}-${location.state.subject.subject_id}/${newPageName.replace(/ /g, '-').toLowerCase()}-${pageId}`;
+        let subjectPageLink = `/subject-annotations/${location.state.subject.title.replace(/ /g, '-').toLowerCase()}-${location.state.subject.subject_id}/${latinize(newPageName.replace(/ /g, '-').toLowerCase())}-${pageId}`;
 
         try {
             await api.post('/user/markdown', {
                 annotation_block: { annotationBlock: initialEditorState },
-                page_name: newPageName,
+                page_name: latinize(newPageName),
                 url_id: subjectPageLink,
                 page_id: pageId,
                 subject_name: location.state.subject.title.replace(/ /g, '-').toLowerCase(),
