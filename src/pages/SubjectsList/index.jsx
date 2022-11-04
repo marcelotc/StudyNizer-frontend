@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import latinize from 'latinize';
 import FileSaver  from "file-saver";
 import { Modal, Button, Input, Tooltip, message, Popconfirm, notification, Skeleton, Spin} from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -55,7 +56,7 @@ export function SubjectsList() {
         setSubjectsLoad(true);
         await api.post(`/user/subjects`, {
           users_id: userId,
-          title: subjectTitle || fileNameExport
+          title: latinize(subjectTitle) || fileNameExport
         }, {headers});
         setSubjectsLoad(false);
       } catch (error) {
@@ -66,7 +67,7 @@ export function SubjectsList() {
         setSubjectsLoad(false);
       }
       setSubjects(subjects => [...subjects, {
-        title: subjectTitle || fileNameExport,
+        title: latinize(subjectTitle) || fileNameExport,
       }]);
     }
     setOpen(false);
