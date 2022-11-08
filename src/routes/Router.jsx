@@ -25,7 +25,7 @@ export function Router() {
                 <Route path="/subjects-list" element={<SubjectsList />} />
                 <Route path="/subject-annotations/:subject" element={<SubjectAnnotations />} />
                 <Route path="/subject-annotations/:subject/:subjectPage" element={<SubjectAnnotations />} />
-                <Route path="/calendar" element={<CalendComponent />} />
+                <Route path="/agenda" element={<CalendComponent />} />
             </Route>
         </Routes>
     )
