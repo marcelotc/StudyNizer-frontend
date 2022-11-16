@@ -3,7 +3,7 @@ import latinize from 'latinize';
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Editor, EditorState, ContentState, RichUtils, convertToRaw, convertFromRaw } from "draft-js";
 import { Popconfirm, Tooltip, message, Modal, Button, Input, notification, Skeleton } from 'antd';
-import { FaTimes, FaPlus, FaRegFile, FaRegFileAlt, FaTimesCircle, FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
+import { FaTimes, FaSave, FaPlus, FaRegFile, FaRegFileAlt, FaTimesCircle, FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
 import { MarkedInputContainer, MarkedInputMenu, MarketdInputTextAreaContainer, BlankAnnotationContainer, MarkdownPanel, AddNewPageModal } from "./styles";
 import { debounce } from 'lodash';
 import { v4 } from 'uuid';
@@ -34,6 +34,7 @@ export function MarkedInput() {
     const [urlId, setUrlId] = useState('');
     const [markdownId, setMarkdownId] = useState('');
     const [activePage, setActivePage] = useState(null);
+    const [isSaving, setIsSaving] = useState(false);
 
     const [editorState, setEditorState] = useState(EditorState.createWithContent(ContentState.createFromText('')));
 
@@ -41,6 +42,7 @@ export function MarkedInput() {
 
     const debouncedSave = useRef(debounce(async (annotationBlockValue, pageName, pageId, markdownId, urlId) => {
         try {
+            setIsSaving(true);  
             await api.put(`/user/markdown/${markdownId}`, {
                 annotation_block: { annotationBlock: annotationBlockValue },
                 page_name: pageName,
@@ -48,10 +50,14 @@ export function MarkedInput() {
                 page_id: pageId,
                 subject_name: location.state.subject.title.replace(/ /g, '-').toLowerCase(),
             }, {headers});
+            setIsSaving(false);
         } catch (error) {
             console.log('error?.response?.data?.error', error?.response?.data?.error);
+            setIsSaving(false);
         }         
     }, 1000)).current;
+
+    console.log('isSaving', isSaving)
 
     const handleChangeEditor = (editorState) => {
         let contentRaw = convertToRaw(editorState.getCurrentContent());
@@ -342,7 +348,8 @@ export function MarkedInput() {
                 <footer onClick={() => showNewPageModal()}><FaPlus />Adicionar página</footer>
             </MarkedInputMenu>
             <MarketdInputTextAreaContainer>
-                <h1>{location?.state?.subject.title}</h1>
+                <h1>{location?.state?.subject.title}</h1> 
+                {isSaving ? <div className='savingMarkdown'><FaSave size={25} /> <h3>Salvando...</h3></div> : <div className='savingMarkdown'></div>}
                 <h2>{pageName}</h2>
                 {renderEditor()}
             </MarketdInputTextAreaContainer>

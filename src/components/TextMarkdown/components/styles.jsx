@@ -228,6 +228,17 @@ export const MarketdInputTextAreaContainer = styled.div`
       text-align: left;
   }
 
+  .savingMarkdown {
+    display: flex;
+    align-items: center;
+    min-height: 30px;
+
+    h3 {
+      margin: 0 0 -2px 10px;
+      font-weight: bold;
+    }
+  }
+
   .DraftEditor-root, .DraftEditor-editorContainer, .public-DraftEditor-conten {
 
     div[data-contents=true] { 
