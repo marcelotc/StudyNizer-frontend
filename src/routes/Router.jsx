@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
@@ -8,6 +7,7 @@ import { Board } from '../pages/Board'
 import { SubjectsList } from '../pages/SubjectsList'
 import { SubjectAnnotations } from '../pages/SubjectAnnotations'
 import { CalendComponent } from '../pages/Calendar'
+import { PomodoroComponent } from '../pages/Pomodoro'
 import { AuthLayout } from './AuthLayout'
 
 export function Router() {
@@ -26,6 +26,7 @@ export function Router() {
                 <Route path="/subject-annotations/:subject" element={<SubjectAnnotations />} />
                 <Route path="/subject-annotations/:subject/:subjectPage" element={<SubjectAnnotations />} />
                 <Route path="/agenda" element={<CalendComponent />} />
+                <Route path="/pomodoro" element={<PomodoroComponent />} />
             </Route>
         </Routes>
     )
