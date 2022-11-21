@@ -17,7 +17,6 @@ export const Header = () => {
                 <NavLink to={'/'} activeClassName="active">Board</NavLink>
                 <NavLink to={'/subjects-list'} activeClassName="active">Disciplinas</NavLink>
                 <NavLink to={'/agenda'} activeClassName="active">Agenda</NavLink>
-                <NavLink to={'/pomodoro'} activeClassName="active">Pomodoro</NavLink>
             </Menu>
             <LogOut>
                 <NavLink to={'#'} onClick={handleClearSession}>Sair</NavLink>
