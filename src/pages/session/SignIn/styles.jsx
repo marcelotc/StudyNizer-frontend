@@ -17,6 +17,10 @@ export const Container = styled.div`
         border-bottom-left-radius: 0px;
         border-bottom-right-radius: 0px;      
 
+        @media (max-width: 640px) {
+            width: 90%;
+        }
+
         h1 {
             color: white;
             font-weight: bold;
@@ -32,6 +36,10 @@ export const LoginContainer = styled.div`
     border-radius: 5px;
     padding: 50px;
     width: 50%;
+
+    @media (max-width: 640px) {
+         width: 90%;
+    }
 
     h1 {
         font-weight: bold;
