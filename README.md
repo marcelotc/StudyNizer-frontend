@@ -21,11 +21,6 @@ Backend: https://github.com/marcelotc/StudyNizer-backend
 </h1>
 
 <h1 align="center">
-    <img src="https://github.com/marcelotc/StudyNizer-frontend/blob/main/src/assets/Captura%20de%20tela%202023-02-13%20164312.jpg" />
-</h1>
-
-
-<h1 align="center">
     <img src="https://github.com/marcelotc/StudyNizer-frontend/blob/main/src/assets/Captura%20de%20tela%202023-02-13%20164338.jpg" />
 </h1>
 
