@@ -4,6 +4,8 @@ MVP of an application that mix features such as a kanban board, an anotation pag
 
 The backend of this web applciation was deployed to a free plan on railway, so maybe the services are down. Also I don't intend to pay for a plan for this :)
 
+Backend: https://github.com/marcelotc/StudyNizer-backend
+
 <p align="center">
   <a href="https://studynizer.netlify.app">
     <img alt="Demo on Netlify" src="https://res.cloudinary.com/lukemorales/image/upload/v1599785319/readme_logos/demo_on_netlify_umjmch.png">
