@@ -1,6 +1,6 @@
 # StudyNizer-frontend
 
-MVP of an application that mix features such as a kanban board, an anotation page with WYSIWYG text and a calendar. This was a case study for my capstone project in my last year in university: https://repositorio.ufsc.br/handle/123456789/243428
+MVP of an application that mix features such as a kanban board, an anotation page with WYSIWYG text and a calendar. This was a case study for my capstone project in my last year in university(<a href="https://ufsc.br/">UFSC<a/>): https://repositorio.ufsc.br/handle/123456789/243428
 
 The backend of this web applciation was deployed to a free plan on railway, so maybe the services are down. Also I don't intend to pay for a plan for this :)
 
