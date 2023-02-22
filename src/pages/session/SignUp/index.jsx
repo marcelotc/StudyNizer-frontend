@@ -31,7 +31,7 @@ export const SignUp = ({ signed }) => {
             navigate("/sign-in");
         } catch (error) {
             notification.info({
-                message: `${error?.response?.data?.error}`,
+                message: `${error?.response?.data?.error === undefined ? 'Serviço indisponível' : error?.response?.data?.error}`,
                 placement: 'top',
             });
         }
