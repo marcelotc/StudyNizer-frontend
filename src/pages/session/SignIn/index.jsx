@@ -35,7 +35,7 @@ export const SignIn = ({ signed }) => {
             setLoading(false);
         } catch (error) {
             notification.info({
-                message: `${error?.response?.data?.error}`,
+                message: `${error?.response?.data?.error === undefined ? 'Serviço indisponível' : error?.response?.data?.error}`,
                 placement: 'top',
             });
             setLoading(false);
