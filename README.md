@@ -2,9 +2,11 @@
 
 MVP of an application that mix features such as a kanban board, an anotation page with WYSIWYG text and a calendar. This was a case study for my capstone project in my last year at university(<a href="https://ufsc.br/">UFSC<a/>): https://repositorio.ufsc.br/handle/123456789/243428
 
-The backend of this web application was deployed to a free plan on railway, so maybe the services are down. Also I don't intend to pay for a plan for this :)
-
 Backend: https://github.com/marcelotc/StudyNizer-backend
+
+> [!NOTE]
+> The backend of this web application is currently deployed on a free plan on Railway, which may be experiencing downtime. I currently do not plan to upgrade to a paid plan for this project. :)
+
 
 <p align="center">
   <a href="https://studynizer.netlify.app">
